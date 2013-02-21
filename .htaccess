@@ -1,0 +1,20 @@
+DirectoryIndex index.html index.php
+Options +FollowSymLinks -Indexes
+#RewriteBase  /
+
+<IfModule mod_rewrite.c>
+ RewriteEngine On
+ 
+ RewriteRule ^.+min[^\/]+\.(js|css)$ _include/static.php [L]
+ 
+ RewriteCond %{REQUEST_FILENAME} -f [OR]
+ RewriteCond %{REQUEST_FILENAME} -d
+ RewriteRule ^(.+) - [PT,L]
+ 
+ RewriteRule ^(.*) index.php
+
+</IfModule>
+
+
+#php_value output_handler ob_gzhandler
+php_flag short_open_tag off

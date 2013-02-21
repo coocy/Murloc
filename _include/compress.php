@@ -1,0 +1,155 @@
+<?php
+
+function get_static_content($file_path, $get_origin_file = false) {
+
+	$file_path = '/'.ltrim($file_path, '\/\\');
+	$file_full_path = rtrim(ROOT_PATH, '\/\\').$file_path;
+	
+	$slash_pos = strrpos($file_full_path, '/');
+	if (false !== $slash_pos) {
+		$file_dir = substr($file_full_path, 0, $slash_pos);
+	} else {
+		$file_dir = $file_full_path;
+	}
+	
+	$file_dir = rtrim($file_dir, '\/\\').'/'; 
+
+	if (/*$_GET['t'] && */file_exists(ROOT_PATH.'debug') || (true === $get_origin_file)) {
+		
+		if (file_exists($file_full_path)) {
+			$file_contents = file_get_contents($file_full_path);
+		} else {
+			return('未找到配置文件: '.$file_full_path);
+		}
+		
+		$temp_array = array();
+		$required_files = array();
+		if (preg_match_all('/@requires\s+([^\s]+)/is', $file_contents, $temp_array)) {
+			$required_files = $temp_array[1];
+			$static_contents = '';
+			foreach ($required_files as $required_file) {
+				$required_file_full_path = $file_dir.ltrim($required_file, '\/\\');
+				
+				if (file_exists($required_file_full_path)) {
+					$static_contents .= "\r\n".trim(file_get_contents($required_file_full_path));
+				} else {
+					return('未找到文件: '.$required_file_full_path);
+				}
+			}
+
+		}
+		$static_contents .= "\r\n".trim($file_contents);
+
+	} else {
+	
+		$file = rtrim(OUTPUT_DIR, '\/\\').$file_path;
+		if (file_exists($file)) {
+			$static_contents = file_get_contents($file);
+		} else {
+			return('未找到文件: '.$file);
+		}
+	}
+	
+	return $static_contents;
+}
+
+function compress_js($file_path) {
+
+	$file_path = '/'.ltrim($file_path, '\/\\');
+	$static_contents = get_static_content($file_path, true);
+	$output_file = OUTPUT_DIR.ltrim($file_path, '\/\\');
+	
+	$file_full_path = rtrim(ROOT_PATH, '\/\\').$file_path;
+	
+	$temp_file = $file_full_path.'____';
+	write_file($temp_file, $static_contents);
+	$static_contents = null;
+	
+	$level = 0;
+	$compilation_level = $level == 1 ? 'ADVANCED_OPTIMIZATIONS' : 'SIMPLE_OPTIMIZATIONS' ;
+
+	$parms = array(
+		'compilation_level' => $compilation_level,
+		"define" => "ENABLE_DEBUG=false",
+		'js_output_file' => $output_file,
+		'js ' => $temp_file
+	);
+	
+	foreach($parms as $k => $v) {
+		$parm_array[] = '--'.$k.' '.$v;
+	}
+	
+	$compiler_command = 'java -jar '.INCLUDE_PATH.'cmd/closure_compiler.jar '.join(' ', $parm_array);
+		
+	$_output = array();
+	exec($compiler_command, $_output , $code);
+	
+	unlink($temp_file);
+	
+	if (1 == $code) {
+		return false;
+	}
+	return true;
+}
+
+function compress_css($file_path) {
+
+	$file_path = '/'.ltrim($file_path, '\/\\');
+	$static_contents = get_static_content($file_path, true);
+	$output_file = OUTPUT_DIR.ltrim($file_path, '\/\\');
+	
+	$file_full_path = rtrim(ROOT_PATH, '\/\\').$file_path;
+	
+	$temp_file = $file_full_path.'____';
+	write_file($temp_file, $static_contents);
+	$static_contents = null;
+	
+	$compiler_command = 'java -jar '.INCLUDE_PATH.'cmd/yuicompressor-2.4.6.jar '.$temp_file.' -v --type css -o '.$output_file;
+	
+	exec($compiler_command, $return, $code);
+	unlink($temp_file);
+	
+	if (1 == $code) {
+		return false;
+	}
+	return true;
+}
+
+function compress_png($file_path) {
+
+	$file_path = '/'.ltrim($file_path, '\/\\');
+	$output_file = OUTPUT_DIR.ltrim($file_path, '\/\\');
+	
+	$file_full_path = rtrim(ROOT_PATH, '\/\\').$file_path;
+	
+	$compiler_command = INCLUDE_PATH.'cmd/pngcrush_1_7_42_w32.exe "'.$file_full_path.'" "'.$output_file.'"';
+	
+	exec($compiler_command, $return, $code);
+	
+	if (1 == $code) {
+		return false;
+	}
+	return true;
+
+}
+
+function compress_template($file_path) {
+	$temp = new mb_template($file_path, array(
+		'temp_dir' => ROOT_PATH,
+		'compile_dir' => ROOT_PATH.'_cache',
+		'force_compression' => true,
+		'compressHTML' => true,
+		'output_template' => true
+	), null);
+	
+	$output = $temp -> output_string();
+	
+	$file_dir = get_dir_of_path($file_path);
+	make_dir($file_dir, ROOT_PATH);
+	
+	write_file(rtrim(OUTPUT_DIR, '\/\\').$file_path, $output);
+	$output = null;
+
+}
+
+

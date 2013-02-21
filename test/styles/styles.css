@@ -1,0 +1,115 @@
+/**
+ * @description db样式reset，组件样式
+ * @author shibing.zhang
+ * @time 2013.01.13
+ */
+
+/* reset */
+div,p,dl,dd,a,b,u,h1,li,h2,em,input,textarea,button,select,form,section,label,span,td,li,nav,footer,body,ul,i{
+	-webkit-tap-highlight-color:rgba(0,0,0,0);
+	word-wrap:break-word;
+	word-break:break-all;
+	margin:0;
+	padding:0;
+	border:0;
+	list-style:none;
+	outline: none;
+}
+
+body,td,input,textarea,option,select,button{
+	-webkit-text-size-adjust: none;
+	font-family:Arial;
+	color: #666;
+}
+body{
+	overflow-x:hidden;
+}
+a{
+	color:#999;
+	text-decoration: none;
+}
+
+
+/* 原子类 */
+.fl{
+	float: left;
+}
+.fr{
+	float: right;
+}
+.cf:after{
+	visibility:hidden;
+	display:block;
+	font-size:0;
+	content:" ";
+	clear:both;
+	height:0;
+}
+*html .cf{
+	height: 1%;
+}
+
+.hide{
+	display: none;
+}
+
+.w960{
+	width: 960px;
+	margin: 0 auto;
+}
+.w640{
+	width: 640px;
+	margin: 0 auto;
+}
+.w500{
+	width: 500px;
+	margin: 0 auto;
+}
+input{
+	-webkit-appearance: none;
+}
+input[type=text],
+input[type=button],
+input[type=submit]
+{
+	border: 1px #c5c3c4 solid;
+	padding: 10px 8px;
+	-webkit-border-radius: 4px;
+	-moz-border-radius: 4px;
+	border-radius: 4px;
+	-webkit-box-shadow:0 0 2px #fff, inset 0 0 4px rgba(0, 0, 0, 0.2);
+	-moz-box-shadow:0 0 2px #fff, inset 0 0 4px rgba(0, 0, 0, 0.2);
+}
+input[type=text]:focus{
+	border-color: #aaa;
+}
+input[type=button],
+input[type=submit]
+{
+	-webkit-box-shadow:0 0 2px #fff,inset 0 0 1px #fff;
+	-moz-box-shadow:0 0 2px #fff,inset 0 0 1px #fff;
+	box-shadow:0 0 2px #fff,inset 0 0 1px #fff;
+	cursor: pointer;
+	font-weight: bold;
+	color:#666;
+	border: 1px #dcdbdb solid;
+	text-shadow:0 1px #fff;
+	background: #efefef;
+	background: -webkit-linear-gradient(#fff, #efefef);
+	background:-moz-linear-gradient(top, #fff, #efefef);
+	background:-o-linear-gradient(top, #fff, #efefef);
+	background:linear-gradient(to bottom, #fff, #efefef);
+}
+input:active[type=button],
+input:active[type=submit],
+input.active[type=button],
+input.active[type=submit]
+{
+	border-color:#aaa;
+	-webkit-box-shadow:0 0 2px #fff,inset 0 0 5px rgba(0,0,0,.2);
+}
+audio
+{
+	display:none;
+	height:0;
+}

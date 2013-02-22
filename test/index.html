@@ -8,22 +8,19 @@
 	<link rel="stylesheet" type="text/css" href="${www_root}test/styles/styles.css" />
 
 </head>
-<body>
-	<div id="box"></div>
+<body >
+	<p id="box">box</p>
+	<div class="div_a">div A</div>
+	<div class="div_b">div B</div>
 	
 	<script type="text/javascript">
 	
+		var el = $('#box');
+		el.remove();
 		
-		var el = $('div');
-		elA = $('p');
-		
-		
-		
-		var ell = $(el);
-		var w = el.width();
-		
-		width(el);
-		height();
+		$('div').remove();
+
+		$().ready(function(){alert(1)}).ready(function(){alert(2)});
 
 	</script>
 </body>

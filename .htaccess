@@ -6,6 +6,7 @@ Options +FollowSymLinks -Indexes
  RewriteEngine On
  
  RewriteRule ^.+min[^\/]+\.(js|css)$ _include/static.php [L]
+ RewriteRule ^.+min[^\/]+\.js.html$ _include/compress_test.php [L]
  
  RewriteCond %{REQUEST_FILENAME} -f [OR]
  RewriteCond %{REQUEST_FILENAME} -d

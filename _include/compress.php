@@ -53,11 +53,20 @@ function get_static_content($file_path, $get_origin_file = false) {
 	return $static_contents;
 }
 
-function compress_js($file_path) {
+function compress_js($file_path, $return_content = false) {
 
 	$file_path = '/'.ltrim($file_path, '\/\\');
 	$static_contents = get_static_content($file_path, true);
-	$output_file = OUTPUT_DIR.ltrim($file_path, '\/\\');
+	
+	if ($return_content === true) {
+	
+		$_file_path = '/'.ltrim($file_path, '\/\\');
+		$_file_full_path = rtrim(ROOT_PATH, '\/\\').$_file_path;
+	
+		$output_file = $_file_full_path.'___';
+	} else {
+		$output_file = OUTPUT_DIR.ltrim($file_path, '\/\\');
+	}
 	
 	$file_full_path = rtrim(ROOT_PATH, '\/\\').$file_path;
 	
@@ -65,7 +74,7 @@ function compress_js($file_path) {
 	write_file($temp_file, $static_contents);
 	$static_contents = null;
 	
-	$level = 0;
+	$level = 1;
 	$compilation_level = $level == 1 ? 'ADVANCED_OPTIMIZATIONS' : 'SIMPLE_OPTIMIZATIONS' ;
 
 	$parms = array(
@@ -85,6 +94,13 @@ function compress_js($file_path) {
 	exec($compiler_command, $_output , $code);
 	
 	unlink($temp_file);
+	
+	if ($return_content === true) {
+		$content = file_get_contents($output_file);
+
+		unlink($output_file);
+		return $content;
+	}
 	
 	if (1 == $code) {
 		return false;

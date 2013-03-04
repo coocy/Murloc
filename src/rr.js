@@ -42,9 +42,11 @@ var RR = {
 	 * @param {Object=} context (可选)
 	 * @return {{length: number}} 类似Array的DOM集合(只有length属性)
 	 */
-	selectorAll: function(selector, context) {
+	selectorAll: DOC.querySelectorAll ? function(selector, context) {
 		context = context || DOC;
 		return context.querySelectorAll(selector);
+	} : function(selector, context) {
+		return [];
 	},
 	
 	/**
@@ -56,28 +58,26 @@ var RR = {
 	fn: function(selector, context) {
 		if (!selector) {
 			this.length = 0;
-			return this;
-		}
+		} else 
 		
 		//单个DOM对象
 		if (selector.nodeType) {
 			this.context = this[0] = selector;
 			this.length = 1;
-			return this;
-		}
+		} else 
 		
 		//字符串选择符
 		if ('string' === typeof selector) {
 			this.context = RR.selectorAll(selector, context);
-			//console.log(this.context );
 			this.length = this.context.length;
-			return this;
-		}
+		} else 
 
 		//初始化过的对象直接返回，例如$($('div'))
 		if (selector instanceof RR.fn) {
 			return selector;
 		}
+
+		return this;
 	}
 
 };
@@ -87,7 +87,7 @@ RR.fn.prototype = {
 	each: function(fn) {
 		for (var i = 0, l = this.length, element; i < l; i++) {
 			element = this.context[i];
-			fn.call(this, i, element);
+			fn.call(this, element, i);
 		}
 		return this;
 	}

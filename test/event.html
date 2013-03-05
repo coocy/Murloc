@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>Test Page</title>
+	<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+	<meta content="" name="description" />
+	<link rel="stylesheet" type="text/css" href="${www_root}test/styles/styles.css" />
+	<style type="text/css">
+		table{
+			border:1px solid #000;
+		}
+		td{
+			border:1px solid #888;
+			padding:.5em;
+		}
+		textarea{
+			border:1px solid #888;
+			width:250px;
+		}
+		a{
+			display:inline-block;
+			background:#eee;
+			padding:.5em;
+			margin:1em;
+		}
+	</style>
+</head>
+<body>
+	<p id="box">box</p>
+	<div class="div_a">div A</div>
+	<div class="div_b">div B</div>
+	
+	<a href="#link">Link</a>
+
+	<table>
+		<tr>
+			<td>Cell A</td>
+			<td>Cell B</td>
+		</tr>
+		<tr>
+			<td>Cell C</td>
+			<td>Cell D</td>
+		</tr>
+	</table>
+
+	<textarea rows="5" cols="10"></textarea>
+	
+	<iframe frameborder="0" src="${www_root}src/min.test.event.js.html"></iframe>
+
+
+	<script type="text/javascript" src="${www_root}src/min.test.event.js"></script>
+	
+</body>
+</html>

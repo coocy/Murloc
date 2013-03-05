@@ -24,6 +24,11 @@ var DOC = document,
 	
 var RR = {
 
+	/* 
+	 * 唯一ID，用作缓存对象的Key
+	 */
+	uid: 1,
+
 	/**
 	 * 返回RR对象($对象)
 	 * @function
@@ -62,7 +67,7 @@ var RR = {
 		
 		//单个DOM对象
 		if (selector.nodeType) {
-			this.context = this[0] = selector;
+			this.context = [selector];
 			this.length = 1;
 		} else 
 		

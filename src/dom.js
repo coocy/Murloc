@@ -31,6 +31,10 @@ RR.fn.prototype.html =  function() {
 	}
 };
 
+RR.fn.uid = function(element) {
+	return element['__ruid'] || (element['__ruid'] = RR.uid++);
+};
+
 RR.loader = {
 
 	callbacks: [],

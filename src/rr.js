@@ -4,8 +4,15 @@
  * 在开发过程中可以使用这个变量放调试代码，压缩器会在压缩的时候把if (ENABLE_DEBUG) {...} 中的代码全部过滤掉
  * @define {boolean}
  */
-
 var ENABLE_DEBUG = true;
+
+/** 
+ * 标记是否需要支持IE的常量；
+ * 在使用Closure Compiler压缩JS的时候，传递--define='ENABLE_IE_SUPPORT=false'给压缩器，可以自动把此常量值改为false;
+ * 库中会有一些针对IE的代码，在不需要兼容IE的项目中，设置ENABLE_IE_SUPPORT=false可以减少压缩后的代码
+ * @define {boolean}
+ */
+ var ENABLE_IE_SUPPORT = true;
 
 /**
  * 如果浏览器不支持String原生trim的方法，模拟一个
@@ -19,8 +26,36 @@ if (!String.prototype.hasOwnProperty('trim')) {
 	}
 }
 
+/* 保存常用DOM的全局变量（变量名可以被压缩） */
 var DOC = document,
-	WIN = window;
+	WIN = window,
+
+	/* 
+	 * 设备是否支持触摸事件
+	 * 这里使用WIN.hasOwnProperty('ontouchstart')在Android上会得到错误的结果
+	 */
+	IsTouch = 'ontouchstart' in WIN,
+
+	UA = WIN.navigator.userAgent,
+
+	IsAndroid = /Android|HTC/i.test(UA), /* HTC Flyer平板的UA字符串中不包含Android关键词 */
+	IsIOS =  !IsAndroid && /iPod|iPad|iPhone/i.test(UA),
+	IsIPad = !IsAndroid && /iPad/i.test(UA),
+	IsIE = !!DOC.all,
+
+	/* 设备屏幕象素密度 */
+	PixelRatio = WIN.devicePixelRatio || 1,
+
+	/* 如果手指在屏幕上按下后再继续移动的偏移超过这个值，则取消touchend中click事件的触发，Android和iOS下的值不同 */
+	MAX_TOUCHMOVE_DISTANCE_FOR_CLICK = IsAndroid ? 15 : 8
+;
+
+if (ENABLE_IE_SUPPORT && IsIE) {
+	/* 防止IE6下对象的背景图在hover的时候闪动 */
+	try {
+		DOC.execCommand('BackgroundImageCache', false, true);
+	} catch(e) {}
+}
 	
 var RR = {
 

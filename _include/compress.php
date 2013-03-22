@@ -78,20 +78,23 @@ function compress_js($file_path, $return_content = false) {
 	$compilation_level = $level == 1 ? 'ADVANCED_OPTIMIZATIONS' : 'SIMPLE_OPTIMIZATIONS' ;
 
 	$parms = array(
-		'compilation_level' => $compilation_level,
-		"define" => "ENABLE_DEBUG=false",
-		'js_output_file' => $output_file,
-		'js ' => $temp_file
+		'--compilation_level ' . $compilation_level,
+		//'--define ENABLE_IE_SUPPORT=false',
+		'--define ENABLE_DEBUG=false',
+		'--js_output_file ' . $output_file,
+		'--js ' . $temp_file
 	);
 	
-	foreach($parms as $k => $v) {
-		$parm_array[] = '--'.$k.' '.$v;
+	foreach($parms as $v) {
+		$parm_array[] = $v;
 	}
 	
 	$compiler_command = 'java -jar '.INCLUDE_PATH.'cmd/closure_compiler.jar '.join(' ', $parm_array);
 		
 	$_output = array();
 	exec($compiler_command, $_output , $code);
+
+	//echo $compiler_command;
 	
 	unlink($temp_file);
 	

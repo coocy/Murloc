@@ -30,10 +30,14 @@ RR.eventCache = {
 */
 
 RR.event = function(e) {
-	/*if (e instanceof RR.event) {
+	if (e instanceof RR.event) {
 		return e;
-	}*/
-	this.originalEvent = e;
+	}
+
+	var changedTouches = e.changedTouches, 
+		ee = (changedTouches && changedTouches.length > 0) ? changedTouches[0] : e;
+
+	this.originalEvent = ee;
 	this.target = e.target || e.srcElement;
 	this.type = e.type;
 	return this;
@@ -41,13 +45,13 @@ RR.event = function(e) {
 
 RR.event.prototype = {
 
-	isDefaultPrevented: false,
+	//isDefaultPrevented: false,
 	isPropagationStopped: false,
 	
 	preventDefault: function() {
 		var e = this.originalEvent;
 
-		this.isDefaultPrevented = true;
+		//this.isDefaultPrevented = true;
 
 		if (e.preventDefault) {
 			e.preventDefault();
@@ -95,22 +99,26 @@ RR.dispatchEvent = function(e) {
 
 			if (elemData) {
 				for (var i = 0, l = elemData.length; i < l; i++) {
-					result = elemData[i].apply(elCur, [e]);
+					//e.currentTarget = elCur;
+					var re = elemData[i].apply(elCur, [e]);
+					
+					//有任一方法返回false的话标记result为false
+					if (false === re) {
+						result = re;
+					}
 				}
 			}
 			
-			//如果绑定给对象的方法返回false，停止默认事件并终止冒泡
+			//如果任一绑定给对象的方法返回false，停止默认事件并终止冒泡
 			if (false === result) {
 				e.preventDefault();
 				e.stopPropagation();
-				return false;
 			}
 			if (true === e.isPropagationStopped) {
 				break;
 			}
 			elCur = elCur.parentNode;
 		}
-		
 };
 
 RR.fn.prototype.on = function(type, fn) {
@@ -138,3 +146,51 @@ RR.fn.prototype.on = function(type, fn) {
 RR.fn.prototype.trigger = function(type, data) {
 	
 };
+
+/**
+ * 实现触屏的点击事件委托
+ */
+RR.touchEvent = {
+	init: function() {
+		var events = {
+			start: 'touchstart',
+			move: 'touchmove',
+			end: 'touchend',
+			onclick: 'click'
+		}
+
+		var uid = RR.fn.uid(DOC);
+
+		for (type in events) {
+			var eventName = events[type];
+			var eventData = RR.eventCache[eventName] || (RR.eventCache[eventName] = {}),
+				elemData = eventData[uid] || (eventData[uid] = []);
+
+			elemData.push(RR.touchEvent[type]);
+			RR.addEvent(eventName, DOC, RR.dispatchEvent, false);
+		}
+	},
+
+	start: function(e) {
+		var event = e.originalEvent;
+		/* 事件触发点相对于窗口的坐标 */
+		RR.touchEvent.startPoint = [event.screenX, event.screenY]; 
+		console.log(event);
+	},
+
+	move: function() {
+
+	},
+
+	end: function() {
+
+	},
+
+	onclick: function() {
+
+	}
+}
+
+if (IsTouch) {
+	RR.touchEvent.init();
+}

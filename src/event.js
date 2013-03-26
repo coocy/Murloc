@@ -152,6 +152,7 @@ RR.fn.prototype.trigger = function(type, data) {
 	var theEvent = DOC.createEvent('MouseEvents');
 	theEvent.initEvent(type, true, true);
 	theEvent.data = data;
+	theEvent.isSimulated = true;
 
 	return this.each(function(element) {
 		element.dispatchEvent && element.dispatchEvent(theEvent);

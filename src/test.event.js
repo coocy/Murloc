@@ -4,11 +4,16 @@ $('table td').on('click', function(e) {
 	console.log('TD: ' + $(this).html());
 	$(this).addClass('clicked');
 	e.preventDefault();
+
+});
+
+$('table td.b').on('click', function(e) {
+	$('table td.a').trigger('click');
 });
 
 
 $('table').on('click', function(e) {
-	console.log('Table: ' + $(this).html());
+	console.log('Table is clicked');
 });
 
 $('div').html('HTML By JS').on('click', function() {$(this).html('Yap!')});

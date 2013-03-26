@@ -127,7 +127,7 @@ RR.dispatchEvent = function(e) {
 };
 
 RR.fn.prototype.on = function(type, fn) {
-	this.each(function(element) {
+	return this.each(function(element) {
 		var uid = RR.fn.uid(element);
 
 		var eventData = RR.eventCache[type] || (RR.eventCache[type] = {}),
@@ -146,11 +146,16 @@ RR.fn.prototype.on = function(type, fn) {
 		}
 		elemData.push(fn);
 	});
-	return this;
 };
 
 RR.fn.prototype.trigger = function(type, data) {
-	
+	var theEvent = DOC.createEvent('MouseEvents');
+	theEvent.initEvent(type, true, true);
+	theEvent.data = data;
+
+	return this.each(function(element) {
+		element.dispatchEvent && element.dispatchEvent(theEvent);
+	});
 };
 
 /**

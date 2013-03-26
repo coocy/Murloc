@@ -25,10 +25,9 @@ RR.fn.prototype.ready = function(fn) {
 };
 
 RR.fn.prototype.remove =  function() {
-	this.each(function(element) {
+	return this.each(function(element) {
 		element.parentNode.removeChild(element);
 	});
-	return this;
 };
 
 RR.fn.uid = function(element) {

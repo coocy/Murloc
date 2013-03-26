@@ -12,7 +12,7 @@ RR.fn.prototype.hasClass =  function(value) {
 RR.fn.prototype.addClass =  function(value) {
 	var classes = (value || '').match(/\S+/g) || [],
 		len = classes.length;
-	this.each(function(element) {
+	return this.each(function(element) {
 		var className = element.className || '';
 		for  (var i = 0; i < len; i++) {
 			var curClass = classes[i];
@@ -22,13 +22,12 @@ RR.fn.prototype.addClass =  function(value) {
 		}
 		element.className = className.trim();
 	});
-	return this;
 };
 
 RR.fn.prototype.removeClass =  function(value) {
 	var classes = (value || '').match(/\S+/g) || [],
 		len = classes.length;
-	this.each(function(element) {
+	return this.each(function(element) {
 		var className = ' ' + element.className + ' ',
 			oClassName = className;
 		for  (var i = 0; i < len; i++) {

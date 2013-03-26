@@ -3,15 +3,31 @@
 <head>
 	<title>Test Page</title>
 	<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+	<meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0" />
 	<meta content="" name="description" />
 	<link rel="stylesheet" type="text/css" href="${www_root}test/styles/styles.css" />
 	<style type="text/css">
+		body{
+			-webkit-user-select:none;
+		}
 		table{
 			border:1px solid #000;
 		}
 		td{
 			border:1px solid #888;
 			padding:.5em;
+		}
+		table:hover{
+			border-color:#f00;
+		}
+		table.active{
+			background:#F2F3A0;
+		}
+		td:hover{
+			border-color:#0f0;
+		}
+		td.active{
+			background:#E5F4B7;
 		}
 		textarea{
 			border:1px solid #888;
@@ -23,14 +39,21 @@
 			padding:.5em;
 			margin:1em;
 		}
+	
+		a.active,
+		.clicked{
+			background-color:#066;
+			color:#fff;
+		}
 	</style>
 </head>
 <body>
-	<p id="box">box</p>
+	<p><a href="">Jump Link</a></p>
+	<div id="box_div"><p id="box_p">box</div>
 	<div class="div_a">div A</div>
 	<div class="div_b">div B</div>
 	
-	<a href="#link">Link</a>
+	<a class="link" href="#link">Link</a>
 
 	<table>
 		<tr>
@@ -42,6 +65,8 @@
 			<td>Cell D</td>
 		</tr>
 	</table>
+
+	<input type="tel" value="aba">
 
 	<textarea rows="5" cols="10"></textarea>
 	

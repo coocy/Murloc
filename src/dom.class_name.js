@@ -50,7 +50,7 @@ RR.fn.prototype.removeClass =  function(value) {
 	});
 };
 
-RR.fn.prototype.toggleClass =  function(value, switch) {
+RR.fn.prototype.toggleClass =  function(value, condition) {
 	var classes = (value || '').match(/\S+/g) || [],
 		len = classes.length;
 	return this.each(function(element) {
@@ -59,7 +59,7 @@ RR.fn.prototype.toggleClass =  function(value, switch) {
 			i;
 		for  (i = 0; i < len; i++) {
 			curClass = ' ' + classes[i];
-			if (switch || className.indexOf(curClass + ' ') < 0) {
+			if (condition || className.indexOf(curClass + ' ') < 0) {
 				className += curClass;
 			} else {
 				className = className.replace(curClass + ' ', ' ');

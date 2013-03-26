@@ -1,4 +1,14 @@
 
+RR.fn.prototype.hasClass =  function(value) {
+	value = ' ' + value + ' ';
+	for (var i = 0, l = this.length; i < l; i++) {
+		if ((' ' + this.context[i].className + ' ').indexOf(value) > -1) {
+			return true;
+		}
+	};
+	return false;
+};
+
 RR.fn.prototype.addClass =  function(value) {
 	var classes = (value || '').match(/\S+/g) || [],
 		len = classes.length;

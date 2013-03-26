@@ -160,7 +160,6 @@ RR.fn.prototype.trigger = function(type, data) {
  * 2. 实现被点击对象的按压效果
  */
 RR.touchEvent = {
-	targets: [], 
 	activeCls: 'active',
 	hasTouchStart: false,
 
@@ -184,6 +183,8 @@ RR.touchEvent = {
 			elCur = e.target,
 			eventData = RR.eventCache['click'] || {};
 
+		RR.touchEvent.clearHighlight();
+
 		RR.touchEvent.hasTouchStart = true;
 
 		/* 保留一个target引用，在touchend中分配点击事件给这个target */
@@ -192,6 +193,7 @@ RR.touchEvent = {
 		/* 事件触发点相对于窗口的坐标 */
 		RR.touchEvent.startPoint = [event.screenX, event.screenY]; 
 
+		RR.touchEvent.targets = [];
 		while(elCur) {
 			var uid = RR.fn.uid(elCur),
 				elemData = eventData[uid];
@@ -243,11 +245,20 @@ RR.touchEvent = {
 		RR.touchEvent.hasTouchStart = false;
 		RR.touchEvent.elTarget = null;
 
-		/* 移除高亮样式 */
-		for (var i = 0, l = RR.touchEvent.targets.length; i < l; i++) {
-			RR.touchEvent.targets[i].removeClass(RR.touchEvent.activeCls);
+		/* 取消DOM的高亮状态之前保留一个延时，使用户可以觉察到状态的改变 */
+		setTimeout(RR.touchEvent.clearHighlight, 200);
+	},
+
+	clearHighlight: function() {
+		var targets = RR.touchEvent.targets,
+			activeCls = RR.touchEvent.activeCls;
+		if (targets) {
+			/* 移除高亮样式 */
+			for (var i = 0, l = targets.length; i < l; i++) {
+				targets[i].removeClass(activeCls);
+			}
+			RR.touchEvent.targets = null;
 		}
-		RR.touchEvent.targets = [];
 	}
 }
 

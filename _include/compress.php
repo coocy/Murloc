@@ -81,6 +81,7 @@ function compress_js($file_path, $return_content = false) {
 		'--compilation_level ' . $compilation_level,
 		//'--define ENABLE_IE_SUPPORT=false',
 		'--define ENABLE_DEBUG=false',
+		'--output_wrapper "(function(){%output%})()"',
 		'--js_output_file ' . $output_file,
 		'--js ' . $temp_file
 	);
@@ -89,7 +90,7 @@ function compress_js($file_path, $return_content = false) {
 		$parm_array[] = $v;
 	}
 	
-	$compiler_command = 'java -jar '.INCLUDE_PATH.'cmd/closure_compiler.jar '.join(' ', $parm_array);
+	$compiler_command = 'java -jar '.INCLUDE_PATH.'cmd/compiler.jar '.join(' ', $parm_array);
 		
 	$_output = array();
 	exec($compiler_command, $_output , $code);

@@ -12,7 +12,7 @@ var ENABLE_DEBUG = true;
  * 库中会有一些针对IE的代码，在不需要兼容IE的项目中，设置ENABLE_IE_SUPPORT=false可以减少压缩后的代码
  * @define {boolean}
  */
- var ENABLE_IE_SUPPORT = true;
+var ENABLE_IE_SUPPORT = true;
 
 /**
  * 如果浏览器不支持String原生trim的方法，模拟一个

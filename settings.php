@@ -11,10 +11,10 @@ include_once(INCLUDE_PATH.'json.class.php');
 include_once(INCLUDE_PATH.'template.class.php');
 include_once(INCLUDE_PATH.'compress.php');
 
-define('PAGE_DIR', ROOT_PATH.'test/'); 
-define('DATA_DIR', ROOT_PATH.'_data/'); 
-define('OUTPUT_DIR', ROOT_PATH.'_output/'); 
-define('WEB_PATH', '/rr_js/'); 
+define('PAGE_DIR', ROOT_PATH.'test/');
+define('DATA_DIR', ROOT_PATH.'_data/');
+define('OUTPUT_DIR', ROOT_PATH.'_output/');
+define('WEB_PATH', '/murloc/');
 
 $template_exts = array('html', 'htm', 'jsp');
 $ignore_files = array();

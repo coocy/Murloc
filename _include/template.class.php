@@ -63,10 +63,10 @@ class mb_template {
 	
 	function output_string() {
 		$this -> contents = '';
-        ob_start();
+		ob_start();
 		$this -> compile();
-        $this -> contents .= ob_get_contents();
-        ob_end_clean();
+		$this -> contents .= ob_get_contents();
+		ob_end_clean();
 		return $this -> contents;
 	}
 	

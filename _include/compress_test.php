@@ -16,7 +16,7 @@ if ($pos !== FALSE) {
 
 $temp_array = array();
 
-if (preg_match('/^.+min[^\/]+\.(js|css)/i', $uri, $temp_array)) {
+if (preg_match('/^.+\.(js|css)/i', $uri, $temp_array)) {
 
 	$static_type = $temp_array[1]; /* scripts || styles */
 	

@@ -1,17 +1,21 @@
 <!DOCTYPE html>
 <html>
 <head>
-	<title>Test Page</title>
+	<title>Murloc</title>
 	<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 	<meta content="" name="description" />
 	<link rel="stylesheet" type="text/css" href="${www_root}test/styles/styles.css" />
 	<style type="text/css">
 		body{
-			padding:0;
+			padding:2em;
 			margin:0;
+			line-height:1.5;
 		}
 		html,body{
 			height:100%;
+		}
+		a:hover{
+			color:#f00;
 		}
 		iframe{
 			width:100%;
@@ -21,15 +25,8 @@
 	</style>
 </head>
 <body>
-	<p id="box">box</p>
-	<div class="div_a">div A</div>
-	<div class="div_b">div B</div>
-
-	
-	<iframe frameborder="0" src="${www_root}src/min.test.js.html"></iframe>
-
-	
-
-	<script type="text/javascript" src="${www_root}src/min.test.js"></script>
+	<c:forEach items="${page_list}" var="page">
+		<p><a href="${www_root}${page}">${page}</a></p>
+	</c:forEach>
 </body>
 </html>

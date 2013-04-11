@@ -1,4 +1,6 @@
-
+/**
+ * @requires ../../src/Murloc.js
+ */
 
 $('table td').on('click', function(e) {
 	console.log('TD: ' + $(this).html());

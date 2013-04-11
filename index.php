@@ -8,29 +8,35 @@ $uri = $_SERVER["REQUEST_URI"];
 
 $uri = preg_replace('/^\\'.WEB_PATH.'i', '', $uri);
 
-$uri = trim($uri, '/');
+$uri = trim($uri, '/ ');
 
-$file_path = $uri;
+if ($uri === '') {
+	$template_file = 'index.html';
+} else {
 
-$pos = strrpos($uri, '.');
-if ($pos !== false) {
-	$ext = strtolower(substr($uri, $pos + 1));
-	if (in_array($ext, $template_exts)) {
-		$file_path = substr($file_path, 0, $pos);
+	$file_path = $uri;
+
+	$pos = strrpos($uri, '.');
+	if ($pos !== false) {
+		$ext = strtolower(substr($uri, $pos + 1));
+		if (in_array($ext, $template_exts)) {
+			$file_path = substr($file_path, 0, $pos);
+		}
 	}
-}
 
-$template_file = null;
+	$template_file = null;
 
-foreach ($template_exts as $v) {
-	$_file_path = PAGE_DIR.$file_path.'.'.$v;
-	if (file_exists($_file_path)) {
-		$template_file = $file_path.'.'.$v;
-		break;
+	foreach ($template_exts as $v) {
+		$_file_path = PAGE_DIR.$file_path.'.'.$v;
+		if (file_exists($_file_path)) {
+			$template_file = $file_path.'.'.$v;
+			break;
+		}
 	}
-}
-if (!$template_file) {
-	$template_file = '404.html';
+	if (!$template_file) {
+		$template_file = '404.html';
+	}
+
 }
 
 if ($template_file) {
@@ -72,6 +78,18 @@ if ($template_file) {
 	$data['web_host'] = 'http://'.$_SERVER['HTTP_HOST'];
 	$data['www_root'] = $data['web_host'].WEB_PATH;
 	$data['time'] = time();
+
+
+	$data['page_list'] = array();
+
+	if ($fp = @opendir(PAGE_DIR)) {
+		while (false !== ($file = readdir($fp))) {
+			$file_path = PAGE_DIR.$file;
+			if (!is_dir($file_path) && preg_match('/\.html$/i', $file) && $file !== '404.html' && $file !== 'index.html') {
+				$data['page_list'][] = $file;
+			}
+		}
+	}
 	
 	$temp -> tmp_var = $data;
 

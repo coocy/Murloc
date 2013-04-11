@@ -1,4 +1,7 @@
-	
+/**
+ * @requires ../../src/Murloc.js
+ */
+
 var el = $('#box');
 el.remove();
 

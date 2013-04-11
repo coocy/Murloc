@@ -18,10 +18,15 @@ $('table').on('click', function(e) {
 	console.log('Table is clicked');
 });
 
-$('div').html('HTML By JS').on('click', function() {$(this).html('Yap!')});
 $('.link').on('click', function(e) {
 	e.preventDefault();
 	$(this).html('Clicked!');
+});
+
+$('textarea').on('focus', function() {
+	this.value = 'on focus';
+}).on('blur', function() {
+	this.value = 'on blur';
 });
 
 /*

@@ -65,13 +65,15 @@ a{
 	width: 500px;
 	margin: 0 auto;
 }
-input{
+input,textarea{
 	-webkit-appearance: none;
 }
 input[type=text],
 input[type=button],
-input[type=submit]
+input[type=submit],
+textarea
 {
+	font-size:1em;
 	border: 1px #c5c3c4 solid;
 	padding: 10px 8px;
 	-webkit-border-radius: 4px;

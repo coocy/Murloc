@@ -1,17 +1,4 @@
 
-RR.fn.prototype.html =  function() {
-	var html = arguments[0];
-		
-	if ('string' === typeof html) {
-		return this.each(function(element) {
-			element.innerHTML = html;
-		});
-	} else {
-		var element = this.context[0];
-		return element && element.innerHTML;
-	}
-};
-
 RR.fn.prototype.ready = function(fn) {
 
 	//如果页面已经加载完成，直接执行方法

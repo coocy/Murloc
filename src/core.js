@@ -108,7 +108,22 @@ var RR = {
 		
 		//字符串选择符
 		if ('string' === typeof selector) {
-			this.context = RR.selectorAll(selector, context);
+			var selectorLength = selector.length;
+
+			//HTML片段
+			if ('<' === selector.charAt(0) && selectorLength > 2 && '>' === selector.charAt(selectorLength - 1)) {
+				selector = selector.replace(/<(?!area|br|col|embed|hr|img|input|link|meta|param)(([\w:]+)[^>]*)\/>/gi, 
+					'<$1></$2>');
+				var containter = DOC.createElement('div');
+				containter.innerHTML = selector;
+				this.context = [];
+				for (var i = 0, l = containter.childNodes.length; i < l; i++) {
+					this.context.push(containter.childNodes[i]);
+				}
+			} else {
+				//CSS选择符
+				this.context = RR.selectorAll(selector, context);
+			}
 			this.length = this.context.length;
 		} else 
 

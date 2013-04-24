@@ -19,15 +19,23 @@ RR.fn.prototype.remove =  function() {
 
 RR.fn.prototype.append =  function(childElement) {
 	return this.each(function(element) {
+
+		//原生DOM对象直接添加
 		if (childElement.nodeType) {
 			element.appendChild(childElement);
 
 		} else if (childElement instanceof RR.fn) {
-			for (var i = 0, l = childElement.length, el; i < l; i++) {
+			for (var i = 0, l = childElement.length; i < l; i++) {
 				element.appendChild(childElement.context[i]);
 			}
+
 		} else if ('string' === typeof childElement) {
-			element.innerHTML += childElement;
+			//处理添加HTML片段，不使用+=innerHTML是因为这样会消除给容器内的对象绑定的事件
+			var containter = DOC.createElement('div');
+			containter.innerHTML = childElement;
+			for (var i = 0, l = containter.childNodes.length; i < l; i++) {
+				element.appendChild(containter.childNodes[0]);
+			}
 		}
 	});
 };

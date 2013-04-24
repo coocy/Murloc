@@ -17,6 +17,21 @@ RR.fn.prototype.remove =  function() {
 	});
 };
 
+RR.fn.prototype.append =  function(childElement) {
+	return this.each(function(element) {
+		if (childElement.nodeType) {
+			element.appendChild(childElement);
+
+		} else if (childElement instanceof RR.fn) {
+			for (var i = 0, l = childElement.length, el; i < l; i++) {
+				element.appendChild(childElement.context[i]);
+			}
+		} else if ('string' === typeof childElement) {
+			element.innerHTML += childElement;
+		}
+	});
+};
+
 RR.fn.uid = function(element) {
 	return element['__ruid'] || (element['__ruid'] = RR.uid++);
 };
@@ -44,9 +59,8 @@ RR.loader = {
 	init: function() {
 
 		//页面载入完成后的对$().ready()的调用直接执行
-		if (/loaded|complete/i.test(DOC.readyState)) {
+		if ('loading' !== DOC.readyState) {
 			RR.loader.loaded();
-
 		} else {
 
 			/* 在第一次调用$.ready()的时候才进行初始化 */

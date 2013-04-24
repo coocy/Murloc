@@ -4,21 +4,6 @@ function get_static_content($file_path, $get_origin_file = false) {
 
 	if (/*$_GET['t'] && */file_exists(ROOT_PATH.'debug') || (true === $get_origin_file)) {
 		$file_contents = compile_comments($file_path);
-		/*
-		if (preg_match_all('/@requires\s+([^\s]+)/is', $file_contents, $temp_array)) {
-			$required_files = $temp_array[1];
-			$static_contents = '';
-			foreach ($required_files as $required_file) {
-				$required_file_full_path = $file_dir.ltrim($required_file, '\/\\');
-				
-				if (file_exists($required_file_full_path)) {
-					$static_contents .= "\r\n".trim(file_get_contents($required_file_full_path));
-				} else {
-					return('未找到文件: '.$required_file_full_path);
-				}
-			}
-
-		}*/
 		$static_contents .= "\r\n".trim($file_contents);
 
 	} else {
@@ -75,39 +60,6 @@ function compile_requires($file_contents, $file_path) {
 	} else {
 		return $file_contents;
 	}
-}
-
-function combine_files($file_path) {
-
-	$file_path = '/'.ltrim($file_path, '\/\\');
-	$file_full_path = rtrim(ROOT_PATH, '\/\\').$file_path;
-
-	$slash_pos = strrpos($file_path, '/');
-	if (false !== $slash_pos) {
-		$file_dir = substr($file_path, 0, $slash_pos);
-	} else {
-		$file_dir = $file_path;
-	}
-	
-	$file_dir = rtrim($file_dir, '\/\\').'/'; 
-	$file_contents = '';
-
-	if (file_exists($file_full_path)) {
-		$file_contents = file_get_contents($file_full_path);
-		$file_contents = preg_replace('/@requires\s+([^\s]+)/ie', 'replace_comment(\''.$file_dir.'\\1\')', $file_contents);
-	}
-
-	return $file_contents;
-}
-
-function replace_comment($file_path) {
-	$file_contents = '';
-	$required_file_full_path = rtrim(ROOT_PATH, '\/\\').'/'.ltrim($file_path, '\/\\');
-	//echo $required_file_full_path.'<br />';
-	if (file_exists($required_file_full_path)) {
-		$file_contents .= "\r\n".trim(file_get_contents($required_file_full_path));
-	}
-	return $file_contents;
 }
 
 function compress_js($file_path, $return_content = false) {

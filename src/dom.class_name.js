@@ -16,7 +16,7 @@ RR.fn.prototype.addClass =  function(value) {
 	var classes = (value || '').match(/\S+/g) || [],
 		len = classes.length;
 	return this.each(function(element) {
-		var className = element.className || '',
+		var className = (element.className || '') + ' ',
 			curClass,
 			i;
 		for  (i = 0; i < len; i++) {

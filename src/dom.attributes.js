@@ -28,3 +28,9 @@ RR.fn.prototype.removeAttr =  function(name) {
 		element.removeAttribute && element.removeAttribute(name);
 	});
 };
+
+RR.fn.prototype.css =  function(key, value) {
+	return this.each(function(element) {
+		element.style[key] = value;
+	});
+};

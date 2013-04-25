@@ -155,7 +155,11 @@ RR.fn.prototype.trigger = function(type, data) {
 	theEvent.isSimulated = true;
 
 	return this.each(function(element) {
-		element.dispatchEvent && element.dispatchEvent(theEvent);
+		if ('function' === typeof element[type]) {
+			element[type]();
+		} else {
+			element.dispatchEvent && element.dispatchEvent(theEvent);
+		}
 	});
 };
 

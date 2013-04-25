@@ -122,6 +122,9 @@ var RR = {
 				}
 			} else {
 				//CSS选择符
+				if (context instanceof RR.fn) {
+					context = context.context[0];
+				}
 				this.context = RR.selectorAll(selector, context);
 			}
 			this.length = this.context.length;

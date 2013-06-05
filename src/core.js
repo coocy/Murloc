@@ -49,11 +49,13 @@ var DOC = document,
 	PixelRatio = WIN.devicePixelRatio || 1,
 
 	/* 如果手指在屏幕上按下后再继续移动的偏移超过这个值，则取消touchend中click事件的触发，Android和iOS下的值不同 */
-	MAX_TOUCHMOVE_DISTANCE_FOR_CLICK = IsAndroid ? 15 : 8,
+	MAX_TOUCHMOVE_DISTANCE_FOR_CLICK = IsAndroid ? 15 : 6,
 
 	START_EVENT = IsTouch ? 'touchstart' : 'mousedown',
 	MOVE_EVENT = IsTouch ? 'touchmove' : 'mousemove',
-	END_EVENT = IsTouch ? 'touchend' : 'mouseup'
+	END_EVENT = IsTouch ? 'touchend' : 'mouseup',
+
+	_hasGetElementsByClassName = DOC.getElementsByClassName;
 ;
 
 if (ENABLE_IE_SUPPORT && IsIE) {
@@ -62,6 +64,8 @@ if (ENABLE_IE_SUPPORT && IsIE) {
 		DOC.execCommand('BackgroundImageCache', false, true);
 	} catch(e) {}
 }
+
+
 	
 var RR = {
 
@@ -90,8 +94,39 @@ var RR = {
 	 */
 	selectorAll: DOC.querySelectorAll ? function(selector, context) {
 		context = context || DOC;
+
+		var _s = selector.slice(1), 
+			els,
+			singleSelector = true,
+			_a = ['+', '~', '[', '>', '#', '.', ' '],
+			l = _a.length;
+		
+		/* 判断是否是简单选择符 */
+		while (l--) {
+			if (_s.indexOf(_a[l]) != -1) {
+				singleSelector = false;
+				break;
+			}
+		}
+
+		/*	如果是简单选择符则使用更高效的DOM方法返回对象 */
+		if (singleSelector) {
+			if ('#' == selector.charAt(0)) {
+				if (els = DOC.getElementById(_s)) {
+					return [els];
+				}
+				return [];
+			} else if (_hasGetElementsByClassName && '.' == selector.charAt(0)) {
+				return context.getElementsByClassName(_s);	
+			} else {
+				return context.getElementsByTagName(selector);
+			}
+		}
+
 		return context.querySelectorAll(selector);
+
 	} : function(selector, context) {
+		/* TODO */
 		return [];
 	},
 	

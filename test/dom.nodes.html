@@ -1,0 +1,164 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>Test Page</title>
+	<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+	<meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0" />
+	<meta content="" name="description" />
+	<link rel="stylesheet" type="text/css" href="${www_root}test/styles/styles.css" />
+	<style type="text/css">
+		body{
+			-webkit-user-select:none;
+		}
+		table{
+			border:1px solid #000;
+		}
+		td{
+			border:1px solid #888;
+			padding:.5em;
+		}
+		table:hover{
+			border-color:#f00;
+		}
+		table.active{
+			background:#F2F3A0;
+		}
+		td:hover{
+			border-color:#0f0;
+		}
+		td.active{
+			background:#E5F4B7;
+		}
+		textarea{
+			border:1px solid #888;
+			width:250px;
+			height:50px;
+		}
+		a{
+			display:inline-block;
+			background:#eee;
+			padding:.5em;
+			margin:0 0 .5em;
+		}
+		.wrap{
+			margin:1em;
+		}
+		a.active,
+		.clicked{
+			background-color:#066 !important;
+			color:#fff;
+		}
+		.item{
+			border:1px solid #eee;
+			padding:3px;
+			width:250px;
+			margin:10px 0 0 10px;
+			float:left;
+		}
+		.item li{
+			list-style:none;
+			background:#ccc;
+			margin-bottom:1px;
+			padding:.2em .5em;
+		}
+		.item li.n{
+			background:#066;
+			color:#fff;
+		}
+		.item li.n1{
+			background:#099;
+			color:#fff;
+		}
+		h3{
+			margin:0;
+			padding:.5em;
+		}
+	</style>
+</head>
+<body>
+	<div class="item item_1">
+		<h3>$.before()</h3>
+		<ul>
+			<li>List1</li>
+			<li>List2</li>
+		</ul>
+	</div>
+	<div class="item item_2">
+		<h3>$.after()</h3>
+		<ul>
+			<li>List1</li>
+			<li>List2</li>
+		</ul>
+	</div>
+	<div class="item item_3">
+		<h3>$.prepend()</h3>
+		<ul>
+			<li>List1</li>
+			<li>List2</li>
+		</ul>
+	</div>
+	<div class="item item_4">
+		<h3>$.append()</h3>
+		<ul>
+			<li>List1</li>
+			<li>List2</li>
+		</ul>
+	</div>
+
+	<div class="item item_1_1">
+		<h3>$.insertBefore()</h3>
+		<ul>
+			<li>List1</li>
+			<li>List2</li>
+		</ul>
+	</div>
+	<div class="item item_2_1">
+		<h3>$.insertAfter()</h3>
+		<ul>
+			<li>List1</li>
+			<li>List2</li>
+		</ul>
+	</div>
+	<div class="item item_3_1">
+		<h3>$.prependTo()</h3>
+		<ul>
+			<li>List1</li>
+			<li>List2</li>
+		</ul>
+	</div>
+	<div class="item item_4_1">
+		<h3>$.appendTo()</h3>
+		<ul>
+			<li>List1</li>
+			<li>List2</li>
+		</ul>
+	</div>
+
+	<div class="item item_5">
+		<h3>$.children()</h3>
+		<ul>
+			<li>List1</li>
+			Text Node
+			<li>List2</li>
+		</ul>
+	</div>
+
+	<div class="item item_5">
+		<h3>$.children()</h3>
+		<ul>
+			<li>List1</li>
+			Text Node
+			<li>List2</li>
+		</ul>
+	</div>
+
+	<iframe frameborder="0" src="${www_root}test/scripts/dom.nodes.js.html"></iframe>
+
+
+	<script type="text/javascript" src="${www_root}test/scripts/dom.nodes.js"></script>
+
+		
+	</div>
+	
+</body>
+</html>

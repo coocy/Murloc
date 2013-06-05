@@ -11,73 +11,93 @@ RR.fn.prototype.ready = function(fn) {
 	return this;
 };
 
-RR.fn.prototype.remove =  function() {
+RR.fn.prototype.remove = function() {
 	return this.each(function(element) {
 		element.parentNode.removeChild(element);
 	});
 };
 
-RR.fn.prototype.prepend =  function(childElement) {
-	return this.each(function(element) {
-		var firstChild = element['firstElementChild'];
-		//原生DOM对象直接添加
-		if (childElement.nodeType) {
-			element.insertBefore(childElement, firstChild);
+RR.insertNodeBefore = function(element, parent, target) {
+	//原生DOM对象直接添加
+	if (element.nodeType) {
+		parent.insertBefore(element, target);
 
-		} else if (childElement instanceof RR.fn) {
-			for (var i = 0, l = childElement.length; i < l; i++) {
-				element.insertBefore(childElement.context[i], firstChild);
-			}
-
-		} else if ('string' === typeof childElement) {
-			//处理添加HTML片段，不使用+=innerHTML是因为这样会消除给容器内的对象绑定的事件
-			var containter = DOC.createElement('div');
-			containter.innerHTML = childElement;
-			for (var i = 0, l = containter.childNodes.length; i < l; i++) {
-				element.insertBefore(containter.childNodes[0], firstChild);
-			}
+	} else if (element instanceof RR.fn) {
+		for (var i = 0, l = element.length; i < l; i++) {
+			parent.insertBefore(element.context[i], target);
 		}
+
+	} else if ('string' === typeof element) {
+		//处理添加HTML片段，不使用+=innerHTML是因为这样会消除给容器内的对象绑定的事件
+		var containter = DOC.createElement('div');
+		containter.innerHTML = element;
+		for (var i = 0, l = containter.childNodes.length; i < l; i++) {
+			parent.insertBefore(containter.childNodes[0], target);
+		}
+	}
+};
+
+RR.fn.prototype.before = function(preElement) {
+	return this.each(function(element) {
+		RR.insertNodeBefore(preElement, element.parentNode, element);
 	});
 };
 
-RR.fn.prototype.append =  function(childElement) {
+RR.fn.prototype.after = function(nextElement) {
 	return this.each(function(element) {
-
-		//原生DOM对象直接添加
-		if (childElement.nodeType) {
-			element.appendChild(childElement);
-
-		} else if (childElement instanceof RR.fn) {
-			for (var i = 0, l = childElement.length; i < l; i++) {
-				element.appendChild(childElement.context[i]);
-			}
-
-		} else if ('string' === typeof childElement) {
-			//处理添加HTML片段，不使用+=innerHTML是因为这样会消除给容器内的对象绑定的事件
-			var containter = DOC.createElement('div');
-			containter.innerHTML = childElement;
-			for (var i = 0, l = containter.childNodes.length; i < l; i++) {
-				element.appendChild(containter.childNodes[0]);
-			}
-		}
+		RR.insertNodeBefore(nextElement, element.parentNode, element.nextSibling);
 	});
 };
 
-RR.fn.prototype.width =  function() {
+RR.fn.prototype.prepend = function(childElement) {
+	return this.each(function(element) {
+		RR.insertNodeBefore(childElement, element, element.firstChild);
+	});
+};
+
+RR.fn.prototype.append = function(childElement) {
+	return this.each(function(element) {
+		RR.insertNodeBefore(childElement, element);
+	});
+};
+
+
+RR.fn.prototype.insertBefore = function(targetElement) {
+	$(targetElement).before(this);
+	return this;
+};
+
+RR.fn.prototype.insertAfter = function(targetElement) {
+	$(targetElement).after(this);
+	return this;
+};
+
+RR.fn.prototype.prependTo = function(targetElement) {
+	$(targetElement).prepend(this);
+	return this;
+};
+
+RR.fn.prototype.appendTo = function(targetElement) {
+	$(targetElement).append(this);
+	return this;
+};
+
+
+RR.fn.prototype.width = function() {
 	var element = this.context[0];
 	return element && element.offsetWidth;
 };
 
-RR.fn.prototype.height =  function() {
+RR.fn.prototype.height = function() {
 	var element = this.context[0];
 	return element && element.offsetHeight;
 };
 
-RR.fn.prototype.first =  function() {
+RR.fn.prototype.first = function() {
 	return this.eq(0);
 };
 
-RR.fn.prototype.last =  function() {
+RR.fn.prototype.last = function() {
 	return this.eq(-1);
 };
 
@@ -90,14 +110,14 @@ RR.fn.prototype.eq =  function(index) {
 	return this;
 };
 
-RR.fn.prototype.get =  function(index) {
+RR.fn.prototype.get = function(index) {
 	var length = this.length,
 		idx = index + (index < 0 ? length : 0);
 
 	return (idx > length - 1) ? null : this.context[idx];
 };
 
-RR.fn.prototype.parent =  function() {
+RR.fn.prototype.parent = function() {
 	var result = new RR.fn(),
 		elements = [];
 	this.each(function(element) {
@@ -108,7 +128,30 @@ RR.fn.prototype.parent =  function() {
 	return result;
 };
 
-RR.fn.prototype.clone =  function(cloneChildren) {
+RR.fn.prototype.children = function() {
+	var result = new RR.fn(),
+		elements = [];
+	this.each(function(element) {
+		if (ENABLE_IE_SUPPORT) {
+			if ('children' in element) {
+				elements = [].concat.apply(elements, element['children']);
+			} else {
+				for (var i = 0, l = element.childNodes.length; i < l; i++) {
+					var child = element.childNodes[i];
+					(1 == child.nodeType) && elements.push(child);
+				}
+			}
+		} else {
+			elements = [].concat.apply(elements, element['children']);
+		}
+	});
+
+	result.context = elements;
+	result.length = elements.length;
+	return result;
+};
+
+RR.fn.prototype.clone = function(cloneChildren) {
 	var result = new RR.fn(),
 		elements = [];
 	this.each(function(element) {

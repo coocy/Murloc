@@ -4,7 +4,7 @@ RR.fn.prototype.html =  function() {
 		
 	if ('undefined' !== typeof html) {
 		return this.each(function(element) {
-			element.innerHTML = html;
+			element && ('innerHTML' in element) && (element.innerHTML = html);
 		});
 	} else {
 		var element = this.context[0];

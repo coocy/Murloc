@@ -16,12 +16,12 @@ RR.fn.prototype.addClass =  function(value) {
 	var classes = (value || '').match(/\S+/g) || [],
 		len = classes.length;
 	return this.each(function(element) {
-		var className = (element.className || '') + ' ',
+		var className = ' ' + (element.className || '') + ' ',
 			curClass,
 			i;
 		for  (i = 0; i < len; i++) {
-			curClass = ' ' + classes[i];
-			if (className.indexOf(curClass + ' ') < 0) {
+			curClass = classes[i];
+			if (className.indexOf(' ' + curClass + ' ') < 0) {
 				className += curClass;
 			}
 		}
@@ -56,13 +56,23 @@ RR.fn.prototype.toggleClass =  function(value, condition) {
 	return this.each(function(element) {
 		var className = ' ' + element.className + ' ',
 			curClass,
+			isAdd,
 			i;
 		for  (i = 0; i < len; i++) {
-			curClass = ' ' + classes[i];
-			if (condition || className.indexOf(curClass + ' ') < 0) {
-				className += curClass;
+			curClass = classes[i];
+
+			var isAdd = className.indexOf(' ' + curClass + ' ') < 0;
+
+			if ('undefined' === typeof condition) {
+				condition = isAdd;
+			}
+
+			if (condition) {
+				if (isAdd) {
+					className += curClass;
+				}
 			} else {
-				className = className.replace(curClass + ' ', ' ');
+				className = className.replace(' ' + curClass + ' ', ' ');
 			}
 		}
 		element.className = className.trim();

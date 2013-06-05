@@ -17,6 +17,29 @@ RR.fn.prototype.remove =  function() {
 	});
 };
 
+RR.fn.prototype.prepend =  function(childElement) {
+	return this.each(function(element) {
+		var firstChild = element['firstElementChild'];
+		//原生DOM对象直接添加
+		if (childElement.nodeType) {
+			element.insertBefore(childElement, firstChild);
+
+		} else if (childElement instanceof RR.fn) {
+			for (var i = 0, l = childElement.length; i < l; i++) {
+				element.insertBefore(childElement.context[i], firstChild);
+			}
+
+		} else if ('string' === typeof childElement) {
+			//处理添加HTML片段，不使用+=innerHTML是因为这样会消除给容器内的对象绑定的事件
+			var containter = DOC.createElement('div');
+			containter.innerHTML = childElement;
+			for (var i = 0, l = containter.childNodes.length; i < l; i++) {
+				element.insertBefore(containter.childNodes[0], firstChild);
+			}
+		}
+	});
+};
+
 RR.fn.prototype.append =  function(childElement) {
 	return this.each(function(element) {
 
@@ -38,6 +61,62 @@ RR.fn.prototype.append =  function(childElement) {
 			}
 		}
 	});
+};
+
+RR.fn.prototype.width =  function() {
+	var element = this.context[0];
+	return element && element.offsetWidth;
+};
+
+RR.fn.prototype.height =  function() {
+	var element = this.context[0];
+	return element && element.offsetHeight;
+};
+
+RR.fn.prototype.first =  function() {
+	return this.eq(0);
+};
+
+RR.fn.prototype.last =  function() {
+	return this.eq(-1);
+};
+
+RR.fn.prototype.eq =  function(index) {
+	var length = this.length,
+		idx = index + (index < 0 ? length : 0);
+
+	this.context = (idx >= 0 && idx < length) ? [this.context[idx]] : [];
+	this.length = this.context.length;
+	return this;
+};
+
+RR.fn.prototype.get =  function(index) {
+	var length = this.length,
+		idx = index + (index < 0 ? length : 0);
+
+	return (idx > length - 1) ? null : this.context[idx];
+};
+
+RR.fn.prototype.parent =  function() {
+	var result = new RR.fn(),
+		elements = [];
+	this.each(function(element) {
+		elements.push(element.parentNode);
+	});
+	result.context = elements;
+	result.length = elements.length;
+	return result;
+};
+
+RR.fn.prototype.clone =  function(cloneChildren) {
+	var result = new RR.fn(),
+		elements = [];
+	this.each(function(element) {
+		elements.push(element.cloneNode(!!cloneChildren));
+	});
+	result.context = elements;
+	result.length = elements.length;
+	return result;
 };
 
 RR.fn.uid = function(element) {

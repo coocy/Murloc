@@ -39,15 +39,21 @@ var DOC = document,
 	UA = WIN.navigator.userAgent,
 
 	IsAndroid = /Android|HTC/i.test(UA), /* HTC Flyer平板的UA字符串中不包含Android关键词 */
-	IsIOS =  !IsAndroid && /iPod|iPad|iPhone/i.test(UA),
 	IsIPad = !IsAndroid && /iPad/i.test(UA),
+	IsIPhone = !IsAndroid && /iPod|iPhone/i.test(UA),
+	IsIOS =  IsIPad || IsIPhone,
+	IsIEMobile =  /IEMobile/i.test(UA),
 	IsIE = !!DOC.all,
 
 	/* 设备屏幕象素密度 */
 	PixelRatio = WIN.devicePixelRatio || 1,
 
 	/* 如果手指在屏幕上按下后再继续移动的偏移超过这个值，则取消touchend中click事件的触发，Android和iOS下的值不同 */
-	MAX_TOUCHMOVE_DISTANCE_FOR_CLICK = IsAndroid ? 15 : 8
+	MAX_TOUCHMOVE_DISTANCE_FOR_CLICK = IsAndroid ? 15 : 8,
+
+	START_EVENT = IsTouch ? 'touchstart' : 'mousedown',
+	MOVE_EVENT = IsTouch ? 'touchmove' : 'mousemove',
+	END_EVENT = IsTouch ? 'touchend' : 'mouseup'
 ;
 
 if (ENABLE_IE_SUPPORT && IsIE) {
@@ -96,12 +102,13 @@ var RR = {
 	 * @return {RR.fn} RR.fn对象
 	*/
 	fn: function(selector, context) {
+		this.context = [];
 		if (!selector) {
 			this.length = 0;
 		} else 
 		
 		//单个DOM对象
-		if (selector.nodeType) {
+		if (selector.nodeType || selector === WIN) {
 			this.context = [selector];
 			this.length = 1;
 		} else 
@@ -116,7 +123,6 @@ var RR = {
 					'<$1></$2>');
 				var containter = DOC.createElement('div');
 				containter.innerHTML = selector;
-				this.context = [];
 				for (var i = 0, l = containter.childNodes.length; i < l; i++) {
 					this.context.push(containter.childNodes[i]);
 				}

@@ -37,7 +37,9 @@ RR.event = function(e) {
 	var changedTouches = e.changedTouches, 
 		ee = (changedTouches && changedTouches.length > 0) ? changedTouches[0] : e;
 
+	this.event = e;
 	this.originalEvent = ee;
+
 	this.target = e.target || e.srcElement;
 	this.type = e.type;
 	return this;
@@ -48,7 +50,7 @@ RR.event.prototype = {
 	isPropagationStopped: false,
 	
 	preventDefault: function() {
-		var e = this.originalEvent;
+		var e = this.event;
 
 		if (e.preventDefault) {
 			e.preventDefault();
@@ -59,7 +61,7 @@ RR.event.prototype = {
 	},
 	
 	stopPropagation: function() {
-		var e = this.originalEvent;
+		var e = this.event;
 
 		this.isPropagationStopped = true;
 
@@ -72,7 +74,7 @@ RR.event.prototype = {
 RR.eventCache = {};
 
 RR.eventType = {
-	delegated: '|click|mouseover|mouseout|mousemove|focus|blur|touchstart|touchmove|touchend|',
+	delegated: '|click|mouseover|mouseout|mousemove|focus|blur|touchstart|touchmove|touchend|touchcancel',
 	captured: '|focus|blur|'
 };
 
@@ -92,7 +94,7 @@ RR.dispatchEvent = function(e) {
 	/* 在触屏浏览器中，只执行在touchend中合成的click事件
 	 * 在触屏浏览（合成的时候给event对象添加了自定义的isSimulated属性） 
 	 */
-	if ('click' === type && IsTouch && !e.originalEvent.isSimulated) {
+	if ('click' === type/* && IsTouch*/ && !e.originalEvent.isSimulated) {
 		e.preventDefault();
 		return;
 	}
@@ -127,6 +129,12 @@ RR.dispatchEvent = function(e) {
 };
 
 RR.fn.prototype.on = function(type, fn) {
+	if ('object' === typeof type) {
+		for (var key in type) {
+			this.on(key, type[key]);
+		}
+		return this;
+	}
 	return this.each(function(element) {
 		var uid = RR.fn.uid(element);
 
@@ -175,16 +183,16 @@ RR.touchEvent = {
 
 	init: function() {
 		var events = {
-			onTouchStart: 'touchstart',
-			onTouchMove: 'touchmove',
-			onTouchEnd: 'touchend',
-			onTouchCancel: 'touchcancel'
+			onTouchStart: START_EVENT,
+			onTouchMove: MOVE_EVENT,
+			onTouchEnd: END_EVENT
 		},
 		type;
 		
 		for (type in events) {
 			RR.addEvent(events[type], DOC, RR.touchEvent[type], false);
 		}
+		RR.addEvent('touchcancel', DOC, RR.onTouchCancel, false);
 	},
 
 	onTouchStart: function(e) {
@@ -272,6 +280,4 @@ RR.touchEvent = {
 	}
 }
 
-if (IsTouch) {
-	RR.touchEvent.init();
-}
+RR.touchEvent.init();

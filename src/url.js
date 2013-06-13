@@ -57,5 +57,16 @@ var URL = {
 			}
 		}
 		return searchString;
+	},
+
+	/**
+	 * 参数对象转为查询字符串片段
+	 */
+	objToQueryString: function(obj) {
+		var result = [], key;
+		for (key in obj) {
+			result.push(key + '=' + encodeURIComponent(obj[key]));
+		}
+		return result.join('&');
 	}
 };

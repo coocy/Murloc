@@ -9,12 +9,18 @@ RR.eventCache = {
 			fn1: 1,
 			fn2: 1,
 			...
-		[,
+		],
 		'uid_2': [
 			fn1: 1,
 			fn2: 1,
 			...
-		[,
+		],
+
+		'tA': [
+			fn1: 1,
+			fn2: 1,
+			...
+		]
 		
 	},
 	'event_2': {
@@ -22,12 +28,20 @@ RR.eventCache = {
 			fn1: 1,
 			fn2: 1,
 			...
-		[,
+		],
 		...
 	},
 	...
 };
 */
+
+/* 标记是否使用Touch事件模拟点击 */
+var UseTouchClick = false;
+
+/* Android下使用模拟点击会导致不稳定（比如跨页面点击、视频退出全屏后跨页面后退） */
+if (!IsAndroid) {
+	UseTouchClick = true;
+}
 
 RR.event = function(e) {
 	if (e instanceof RR.event) {
@@ -84,6 +98,30 @@ RR.addEvent = DOC.addEventListener ? function(type, element, fn, capture) {
 	element.attachEvent('on' + type, fn);
 };
 
+RR._addEventData = function(type, uid, element, fn) {
+	var eventData = RR.eventCache[type] || (RR.eventCache[type] = {}),
+		elemData = eventData[uid] || (eventData[uid] = []),
+		capture = (-1 !== RR.eventType.captured.indexOf(type));
+
+			
+	/* 在第一次给某个DOM对象添加事件的时候绑定RR.dispatchEvent()方法，
+	 * 后续添加的方法推入elemData数组在RR.dispatchEvent()中调用 */
+	if (elemData.length < 1) {
+
+		/* 把需要委托的事件绑定在document上面 */
+		if (-1 !== RR.eventType.delegated.indexOf(type)) {
+			element = DOC;
+		}
+		RR.addEvent(type, element, RR.dispatchEvent, capture);
+	}
+	elemData.push(fn);
+};
+
+RR.addTagEvent = function(type, tagName, fn) {
+	var uid = 't' + tagName.toUpperCase();
+	RR._addEventData(type, uid, DOC, fn);
+};
+
 RR.dispatchEvent = function(e) {
 	var element = this,
 		e = new RR.event(e),
@@ -94,25 +132,29 @@ RR.dispatchEvent = function(e) {
 	/* 在触屏浏览器中，只执行在touchend中合成的click事件
 	 * 在触屏浏览（合成的时候给event对象添加了自定义的isSimulated属性） 
 	 */
-	if ('click' === type/* && IsTouch*/ && !e.originalEvent.isSimulated) {
+
+	if ('click' === type && UseTouchClick && !e.originalEvent.isSimulated) {
 		e.preventDefault();
 		return;
 	}
 
 	while(elCur) {
 		var uid = RR.fn.uid(elCur),
-		elemData = eventData[uid],
-		result = true;
+		elemData = eventData[uid] || [],
+		result = true,
+		tagEvents = eventData['t' + elCur.nodeName];
 
-		if (elemData) {
-			for (var i = 0, l = elemData.length; i < l; i++) {
-				//e.currentTarget = elCur;
-				var re = elemData[i].apply(elCur, [e]);
-				
-				//有任一方法返回false的话标记result为false
-				if (false === re) {
-					result = re;
-				}
+		if (tagEvents) {
+			elemData = elemData.concat(tagEvents);
+		}
+
+		for (var i = 0, l = elemData.length; i < l; i++) {
+			//e.currentTarget = elCur;
+			var re = elemData[i].apply(elCur, [e]);
+			
+			//有任一方法返回false的话标记result为false
+			if (false === re) {
+				result = re;
 			}
 		}
 		
@@ -137,22 +179,7 @@ RR.fn.prototype.on = function(type, fn) {
 	}
 	return this.each(function(element) {
 		var uid = RR.fn.uid(element);
-
-		var eventData = RR.eventCache[type] || (RR.eventCache[type] = {}),
-			elemData = eventData[uid] || (eventData[uid] = []),
-			capture = (-1 !== RR.eventType.captured.indexOf(type));
-			
-		/* 在第一次给某个DOM对象添加事件的时候绑定RR.dispatchEvent()方法，
-		 * 后续添加的方法推入elemData数组在RR.dispatchEvent()中调用 */
-		if (elemData.length < 1) {
-
-			/* 把需要委托的事件绑定在document上面 */
-			if (-1 !== RR.eventType.delegated.indexOf(type)) {
-				element = DOC;
-			}
-			RR.addEvent(type, element, RR.dispatchEvent, capture);
-		}
-		elemData.push(fn);
+		RR._addEventData(type, uid, element, fn);
 	});
 };
 
@@ -193,6 +220,10 @@ RR.touchEvent = {
 			RR.addEvent(events[type], DOC, RR.touchEvent[type], false);
 		}
 		RR.addEvent('touchcancel', DOC, RR.onTouchCancel, false);
+
+		if (UseTouchClick) {
+			RR.addEvent('click', DOC, RR.dispatchEvent, false);
+		}
 	},
 
 	onTouchStart: function(e) {
@@ -209,7 +240,8 @@ RR.touchEvent = {
 		RR.touchEvent.elTarget = elCur;
 
 		/* 事件触发点相对于窗口的坐标 */
-		RR.touchEvent.startPoint = [event.screenX, event.screenY]; 
+		RR.touchEvent.startPoint = [event.screenX * ScreenSizeCorrect, event.screenY * ScreenSizeCorrect];
+
 
 		RR.touchEvent.targets = [];
 		while(elCur) {
@@ -226,11 +258,13 @@ RR.touchEvent = {
 
 	onTouchMove: function(e) {
 		var touch = RR.touchEvent;
+
 		if (touch.hasTouchStart) {
 			var e = new RR.event(e),
 				event = e.originalEvent,
-				movedDistance = Math.pow(Math.pow(event.screenX - touch.startPoint[0], 2) 
-				                         + Math.pow(event.screenY - touch.startPoint[1], 2), .5);
+				movedDistance = Math.pow(Math.pow(event.screenX * ScreenSizeCorrect - touch.startPoint[0], 2) 
+				                         + Math.pow(event.screenY * ScreenSizeCorrect - touch.startPoint[1], 2), .5);
+
 
 			if (movedDistance > MAX_TOUCHMOVE_DISTANCE_FOR_CLICK) {
 				touch.onTouchCancel();
@@ -246,16 +280,18 @@ RR.touchEvent = {
 			/* 先做清除工作，再触发合成事件 */
 			RR.touchEvent.onTouchCancel();
 
-			/* 初始化冒泡的事件 */
-			theEvent.initEvent('click', true, true);
+			if (UseTouchClick) {
+				/* 初始化冒泡的事件 */
+				theEvent.initEvent('click', true, true);
 
-			/* 标记事件为合成的模拟事件，在RR.dispatchEvent()方法中会检测这个属性来判断是否需要触发click事件 */
-			theEvent.isSimulated = true;
+				/* 标记事件为合成的模拟事件，在RR.dispatchEvent()方法中会检测这个属性来判断是否需要触发click事件 */
+				theEvent.isSimulated = true;
 
-			/* 给目标DOM对象触发合成事件
-			 * （目标DOM对象是touchstart事件的target对象，touchstart和touchend的target可能不一样，所以在touchstart里面保留了一个引用） 
-			 */
-			target.dispatchEvent(theEvent);
+				/* 给目标DOM对象触发合成事件
+				 * （目标DOM对象是touchstart事件的target对象，touchstart和touchend的target可能不一样，所以在touchstart里面保留了一个引用） 
+				 */
+				target.dispatchEvent(theEvent);
+			}
 		}
 	},
 

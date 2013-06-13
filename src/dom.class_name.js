@@ -22,7 +22,7 @@ RR.fn.prototype.addClass =  function(value) {
 		for  (i = 0; i < len; i++) {
 			curClass = classes[i];
 			if (className.indexOf(' ' + curClass + ' ') < 0) {
-				className += curClass;
+				className += curClass + ' ';
 			}
 		}
 		element.className = className.trim();
@@ -69,7 +69,7 @@ RR.fn.prototype.toggleClass =  function(value, condition) {
 
 			if (condition) {
 				if (isAdd) {
-					className += curClass;
+					className += curClass + ' ';
 				}
 			} else {
 				className = className.replace(' ' + curClass + ' ', ' ');

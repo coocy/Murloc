@@ -46,16 +46,18 @@ var DOC = document,
 	IsIE = !!DOC.all,
 
 	/* 设备屏幕象素密度 */
-	PixelRatio = WIN.devicePixelRatio || 1,
+	PixelRatio = parseFloat(WIN.devicePixelRatio) || 1,
 
 	/* 如果手指在屏幕上按下后再继续移动的偏移超过这个值，则取消touchend中click事件的触发，Android和iOS下的值不同 */
-	MAX_TOUCHMOVE_DISTANCE_FOR_CLICK = IsAndroid ? 15 : 6,
+	MAX_TOUCHMOVE_DISTANCE_FOR_CLICK = IsAndroid ? 10 : 6,
 
 	START_EVENT = IsTouch ? 'touchstart' : 'mousedown',
 	MOVE_EVENT = IsTouch ? 'touchmove' : 'mousemove',
 	END_EVENT = IsTouch ? 'touchend' : 'mouseup',
 
-	_hasGetElementsByClassName = DOC.getElementsByClassName;
+	_hasGetElementsByClassName = DOC.getElementsByClassName,
+
+	ScreenSizeCorrect = 1;
 ;
 
 if (ENABLE_IE_SUPPORT && IsIE) {
@@ -65,7 +67,12 @@ if (ENABLE_IE_SUPPORT && IsIE) {
 	} catch(e) {}
 }
 
-
+/* Android下window.screen的尺寸可能是物理尺寸，和窗口尺寸不同，用ScreenSizeCorrect转化一下 */
+if (IsAndroid) {
+	if ((WIN['screen']['width'] / WIN['innerWidth']).toFixed(2) == PixelRatio.toFixed(2)) {
+		ScreenSizeCorrect = 1 / PixelRatio;
+	}
+}
 	
 var RR = {
 

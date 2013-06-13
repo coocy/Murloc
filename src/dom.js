@@ -102,12 +102,7 @@ RR.fn.prototype.last = function() {
 };
 
 RR.fn.prototype.eq =  function(index) {
-	var length = this.length,
-		idx = index + (index < 0 ? length : 0);
-
-	this.context = (idx >= 0 && idx < length) ? [this.context[idx]] : [];
-	this.length = this.context.length;
-	return this;
+	return $(this.get(index));
 };
 
 RR.fn.prototype.get = function(index) {

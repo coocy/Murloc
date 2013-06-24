@@ -1,5 +1,5 @@
 
-RR.fn.prototype.html =  function() {
+RR.dom.prototype.html =  function() {
 	var html = arguments[0];
 		
 	if ('undefined' !== typeof html) {
@@ -12,7 +12,7 @@ RR.fn.prototype.html =  function() {
 	}
 };
 
-RR.fn.prototype.val =  function() {
+RR.dom.prototype.val =  function() {
 	var val = arguments[0];
 		
 	if ('undefined' !== typeof val) {
@@ -25,7 +25,7 @@ RR.fn.prototype.val =  function() {
 	}
 };
 
-RR.fn.prototype.attr =  function(name, value) {
+RR.dom.prototype.attr =  function(name, value) {
 	if ('undefined' !== typeof value) {
 		return this.each(function(element) {
 			element.setAttribute(name, value);
@@ -36,13 +36,13 @@ RR.fn.prototype.attr =  function(name, value) {
 	}
 };
 
-RR.fn.prototype.removeAttr =  function(name) {
+RR.dom.prototype.removeAttr =  function(name) {
 	return this.each(function(element) {
 		element.removeAttribute && element.removeAttribute(name);
 	});
 };
 
-RR.fn.prototype.css =  function(key, value) {
+RR.dom.prototype.css =  function(key, value) {
 	return this.each(function(element) {
 		if ('object' !== typeof key) {
 			var _key = {};

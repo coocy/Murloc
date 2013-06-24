@@ -1,5 +1,5 @@
 
-RR.fn.prototype.hasClass =  function(value) {
+RR.dom.prototype.hasClass =  function(value) {
 	var classes = (value || '').match(/\S+/g) || [],
 		len = classes.length;
 	for (var i = 0, j, l = this.length; i < l; i++) {
@@ -12,7 +12,7 @@ RR.fn.prototype.hasClass =  function(value) {
 	return false;
 };
 
-RR.fn.prototype.addClass =  function(value) {
+RR.dom.prototype.addClass =  function(value) {
 	var classes = (value || '').match(/\S+/g) || [],
 		len = classes.length;
 	return this.each(function(element) {
@@ -29,7 +29,7 @@ RR.fn.prototype.addClass =  function(value) {
 	});
 };
 
-RR.fn.prototype.removeClass =  function(value) {
+RR.dom.prototype.removeClass =  function(value) {
 	var classes = (value || '').match(/\S+/g) || [],
 		len = classes.length;
 	return this.each(function(element) {
@@ -50,7 +50,7 @@ RR.fn.prototype.removeClass =  function(value) {
 	});
 };
 
-RR.fn.prototype.toggleClass =  function(value, condition) {
+RR.dom.prototype.toggleClass =  function(value, condition) {
 	var classes = (value || '').match(/\S+/g) || [],
 		len = classes.length;
 	return this.each(function(element) {

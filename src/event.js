@@ -139,7 +139,7 @@ RR.dispatchEvent = function(e) {
 	}
 
 	while(elCur) {
-		var uid = RR.fn.uid(elCur),
+		var uid = RR.dom.uid(elCur),
 		elemData = eventData[uid] || [],
 		result = true,
 		tagEvents = eventData['t' + elCur.nodeName];
@@ -170,7 +170,7 @@ RR.dispatchEvent = function(e) {
 	}
 };
 
-RR.fn.prototype.on = function(type, fn) {
+RR.dom.prototype.on = function(type, fn) {
 	if ('object' === typeof type) {
 		for (var key in type) {
 			this.on(key, type[key]);
@@ -178,12 +178,12 @@ RR.fn.prototype.on = function(type, fn) {
 		return this;
 	}
 	return this.each(function(element) {
-		var uid = RR.fn.uid(element);
+		var uid = RR.dom.uid(element);
 		RR._addEventData(type, uid, element, fn);
 	});
 };
 
-RR.fn.prototype.trigger = function(type, data) {
+RR.dom.prototype.trigger = function(type, data) {
 	var theEvent = DOC.createEvent('MouseEvents');
 	theEvent.initEvent(type, true, true);
 	theEvent.data = data;
@@ -245,7 +245,7 @@ RR.touchEvent = {
 
 		RR.touchEvent.targets = [];
 		while(elCur) {
-			var uid = RR.fn.uid(elCur),
+			var uid = RR.dom.uid(elCur),
 				elemData = eventData[uid];
 
 			/* 为绑定了事件或者特定DOM对象添加高亮样式 */

@@ -3,7 +3,7 @@
  * @return {Object} 包含left和top值
  */
 
-RR.fn.prototype.offset =  function() {
+RR.dom.prototype.offset =  function() {
 	var element = this.context[0],
 		offset = {
 			left:0,

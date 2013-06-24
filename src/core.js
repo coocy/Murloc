@@ -86,11 +86,21 @@ var RR = {
 	 * @function
 	 * @param {*} selector
 	 * @param {Object=} context (可选)
-	 * @return {RR.fn} RR.fn对象
+	 * @return {(RR.fn|RR.dom)} RR.fn对象或者RR.dom对象，RR.fn对象使用$.method()调用，RR.dom对象使用$(selector).method()调用
 	 */
 	$: function(selector, context) {
-		return new RR.fn(selector, context);
+		if (arguments.length < 1) {
+			return RR.fnCache || new RR.fn();
+		}
+		return new RR.dom(selector, context);
 	},
+
+	fn: function() {
+		RR.fnCache = this;
+		return this;
+	},
+
+	fnCache: null,
 
 	/**
 	 * 返回指定选择符的DOM集合
@@ -141,9 +151,9 @@ var RR = {
 	 * @constructor
 	 * @param {*} selector
 	 * @param {Object=} context (可选)
-	 * @return {RR.fn} RR.fn对象
+	 * @return {RR.dom} RR.dom对象
 	*/
-	fn: function(selector, context) {
+	dom: function(selector, context) {
 		this.context = [];
 		if (!selector) {
 			this.length = 0;
@@ -170,7 +180,7 @@ var RR = {
 				}
 			} else {
 				//CSS选择符
-				if (context instanceof RR.fn) {
+				if (context instanceof RR.dom) {
 					context = context.context[0];
 				}
 				this.context = RR.selectorAll(selector, context);
@@ -179,17 +189,15 @@ var RR = {
 		} else 
 
 		//初始化过的对象直接返回，例如$($('div'))
-		if (selector instanceof RR.fn) {
+		if (selector instanceof RR.dom) {
 			return selector;
 		}
 
 		return this;
 	}
-
 };
 
-RR.fn.prototype = {
-
+RR.dom.prototype = {
 	each: function(fn) {
 		for (var i = 0, l = this.length, element; i < l; i++) {
 			element = this.context[i];
@@ -197,7 +205,6 @@ RR.fn.prototype = {
 		}
 		return this;
 	}
-	
 };
 
 //$对象

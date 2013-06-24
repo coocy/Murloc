@@ -48,7 +48,8 @@ var URL = {
 	 */
 	getElSearchString: function(el) {
 		/* 在某些Android下获取不到el.search的值，要使用自定义方法从url中截取 */
-		var searchString = el.search || '';
+		var el = $(el).get(0),
+			searchString = el.search || '';
 		if (!searchString) {
 			var hrefString = ('FORM' == el.nodeName ? el.getAttribute('action') : el.getAttribute('href')),
 				pos = hrefString.indexOf('?');	
@@ -60,12 +61,90 @@ var URL = {
 	},
 
 	/**
+	 * 设置指定DOM对象或者页面的URL中的指定的GET参数的值
+	 * @param {DOM} el 设置这个DOM对象的url
+	 * @param {Object} data 要设置的GET参数，以键值对的方式提供
+	 */
+	setQueryString: function(el, data) {
+		var el = $(el),
+			elTag = el.get(0),
+			elSearch = elTag.search,
+			_searchString = elSearch || '',
+			_key,
+			_value;
+		/* 非<A>对象没有search属性 */
+		if (!elSearch) {
+			var hrefString,
+				nodeName = elTag.nodeName;
+			if ('FORM' == nodeName) {
+				if ('post' == elTag['method'].toLowerCase()) {
+					hrefString = el.attr('action') || (location + ''); /* 如果action为空则取当前页面的url */
+				} else {
+					/* 如果使用GET方式提交的表单，要把GET参数以HIDDEN表单字段的方式附加到表单中去 */
+					for (_key in data) {
+						_value = decodeURIComponent(data[_key]);
+						var inputEl = $('input[name="' + _key + '"]', el);
+						if  (inputEl) {
+							inputEl.val(_value);
+						} else {
+							el.append($('<input type="hidden" name="' +  _key + '" value="' +  _value + '" />'));
+						}
+					}
+					return;
+				}
+			} else {
+				hrefString = el.attr('href') || (location + ''); /* 如果href为空则取当前页面的url */
+			}
+			var startPos = hrefString.indexOf('?'),
+			endPos = hrefString.indexOf('#');
+			if (-1 == endPos) endPos = hrefString.length;
+			if (startPos < 0 || startPos > endPos) {
+				_searchString = '';
+				startPos = endPos; /* 用于下面设置searchString */
+			} else {
+				_searchString = hrefString.slice(startPos + 1, endPos);
+			}
+		}
+		
+		var URLParms = URL.getQueryData(_searchString), /* 获取对象原有的GET参数 */
+			_result = [];
+
+		/* 把新参数和对象原有的GET参数合并 */
+		for (_key in data) {
+			URLParms[_key] = data[_key];
+		}
+		
+		for (_key in URLParms) {
+			_value = URLParms[_key];
+			_result.push(_key + (_value ? ('=' + _value) : ''));
+		}
+		if (_result.length < 1) return;
+		
+		var newSearchString = '?' + _result.join('&');
+	
+		if (elSearch) {
+			elTag.search = newSearchString;
+		} else {
+			var attri = ('FORM' == nodeName) ? 'action' : 'href';
+			el.attr(attri, hrefString.slice(0, startPos) + newSearchString + hrefString.slice(endPos));
+		}
+	},
+
+	/**
 	 * 参数对象转为查询字符串片段
 	 */
 	objToQueryString: function(obj) {
-		var result = [], key;
+		var result = [], key, value, i, temp;
 		for (key in obj) {
-			result.push(key + '=' + encodeURIComponent(obj[key]));
+			value = obj[key];
+			if (value instanceof Array) {
+				temp = [];
+				for (i = value.length; i--;) {
+					temp.push(k + '=' + encodeURIComponent(value[i]));
+				}
+			} else {
+				result.push(key + ('' === value ? '' : ('=' + encodeURIComponent(value))));
+			}
 		}
 		return result.join('&');
 	}

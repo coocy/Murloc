@@ -1,4 +1,23 @@
 
+/**
+ * Ajax类
+ * @author qianghu
+ *
+ * 使用样例:
+ * <code lang="javascript">
+ * $().ajax(url, {
+ * 	data: {
+		"user_name": "Alex",
+		"email": "alex@abc.com"
+ 	},
+ 	done: function() {
+
+ 	}
+ * 	...
+ * }).post(postUrl); //写入数据并发送POST请求，如果是GET请求则使用x.get(getUrl)方法
+ * </code>
+ */
+
 
 var blankFn = function() {};
 
@@ -29,7 +48,7 @@ ajaxObj.prototype = {
 		//Settings
 		options.cache = !!settings.cache;
 		options.dataType = (settings.dataType || 'json').toLowerCase(); // 'json' | 'html' | 'script' | 'jsonp'
-		options.data = settings.data || {};
+		options.data = settings.data || {}; //可以为queryString形式的字符串，或者键值对的object对象
 		options.timeout = settings.timeout || 0;
 		options.type = (settings.type || 'GET').toUpperCase();
 
@@ -94,15 +113,16 @@ ajaxObj.prototype = {
 
 		if (false !== options.beforeSend(this, options)) {
 
-			var queryString = URL.objToQueryString(options.data),
+			var data = options.data,
+				queryString = ('string' == typeof data) ? data : $().param(data),
 				url = options.url;
 
 			if ('GET' == options.type) {
-				/* 如果原url后包含queryString的话则将新数据使用&附加到末尾 */
 
+				/* 如果原url后包含queryString的话则将新数据使用&附加到末尾 */
 				var c = '';
 				if (queryString.length > 0) {
-					(-1 !== url.indexOf('?')) ? '&' : '?';
+					c = (-1 < url.indexOf('?')) ? '&' : '?';
 				}
 				xmlhttp.open('get', url + c + queryString, true);
 			} else {
@@ -131,7 +151,9 @@ ajaxObj.prototype = {
 				}
 				try {
 					return eval('(' + responseText + ')');
-				} catch(e) {}
+				} catch(e) {
+					console.log('JSON.parse(eval) failed!');
+				}
 			};
 		}
 		return null;
@@ -149,18 +171,18 @@ ajaxObj.prototype = {
 		}
 		var self = this;
 		this.timer = setTimeout(function() {
-			options.fail(this, 'timeout');
+			options.fail.apply(self, [self, 'timeout']);
 		}, options.timeout * 1000); 
 	},
 
 	_onLoad: function(data, statusCode) {
-		this.options.done(data, statusCode, this);
-		this.options.always(this, 'success');
+		this.options.done.apply(this, [data, statusCode, this]);
+		this.options.always.apply(this, [this, 'success']);
 	},
 
 	_onFail: function(statusText) {
-		this.options.fail(this, statusText);
-		this.options.always(this, statusText);
+		this.options.fail.apply(this, [this, statusText]);
+		this.options.always.apply(this, [this, statusText]);
 	}
 };
 
@@ -175,5 +197,3 @@ RR.fn.prototype.get = function(url, settings) {
 RR.fn.prototype.post = function(url, settings) {
 	return new ajaxObj(url, settings).post();
 };
-
-

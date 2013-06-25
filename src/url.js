@@ -19,7 +19,7 @@ var URL = {
 			_URLParms = {};
 		
 		while (i--) {
-			item = querys[i].split('=');
+			item = decodeURIComponent(querys[i]).split('=');
 			if (item[0]) {
 				_URLParms[item[0]] =  item[1] || '';
 			}
@@ -134,13 +134,12 @@ var URL = {
 	 * 参数对象转为查询字符串片段
 	 */
 	objToQueryString: function(obj) {
-		var result = [], key, value, i, temp;
+		var result = [], key, value, i;
 		for (key in obj) {
 			value = obj[key];
 			if (value instanceof Array) {
-				temp = [];
 				for (i = value.length; i--;) {
-					temp.push(k + '=' + encodeURIComponent(value[i]));
+					result.push(key + '[]=' + encodeURIComponent(value[i]));
 				}
 			} else {
 				result.push(key + ('' === value ? '' : ('=' + encodeURIComponent(value))));
@@ -149,3 +148,7 @@ var URL = {
 		return result.join('&');
 	}
 };
+
+RR.fn.prototype.param = function(obj) {
+	return URL.objToQueryString(obj);
+}

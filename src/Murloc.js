@@ -9,6 +9,7 @@
  * @requires dom.styles.js
  * @requires dom.attributes.js
  * @requires dom.class_name.js
+ * @requires dom.form.js
  * @requires event.js
  * @requires ajax.js
  */

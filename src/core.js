@@ -191,6 +191,11 @@ var RR = {
 		//初始化过的对象直接返回，例如$($('div'))
 		if (selector instanceof RR.dom) {
 			return selector;
+		} else
+
+		if (selector.length) { //数组或者类数组
+			this.context = [].concat.apply([], selector);
+			this.length = this.context.length;
 		}
 
 		return this;
@@ -204,6 +209,23 @@ RR.dom.prototype = {
 			fn.call(this, element, i);
 		}
 		return this;
+	}
+};
+
+/**
+ * 扩展一个Object对象，也可以用来复制一个对象
+ * @function
+ */
+RR.fn.prototype = {
+	extend: function(dest, source) {
+		var property, item;
+		for (var property in source) {
+			item = source[property];
+			if (item !== null) {
+				dest[property] = (typeof(item) == 'object' && !(item.nodeType) && !(item instanceof Array)) ? RR.fn.prototype.extend({}, item) : item;
+			}
+		}
+		return dest;
 	}
 };
 

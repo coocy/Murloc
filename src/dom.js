@@ -81,7 +81,6 @@ RR.dom.prototype.appendTo = function(targetElement) {
 	return this;
 };
 
-
 RR.dom.prototype.width = function() {
 	var element = this.context[0];
 	return element && element.offsetWidth;

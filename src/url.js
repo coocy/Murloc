@@ -19,9 +19,9 @@ var URL = {
 			_URLParms = {};
 		
 		while (i--) {
-			item = decodeURIComponent(querys[i]).split('=');
+			item = querys[i].split('=');
 			if (item[0]) {
-				_URLParms[item[0]] =  item[1] || '';
+				_URLParms[decodeURIComponent(item[0])] =  decodeURIComponent(item[1] || '');
 			}
 		}
 		return _URLParms;
@@ -82,7 +82,7 @@ var URL = {
 				} else {
 					/* 如果使用GET方式提交的表单，要把GET参数以HIDDEN表单字段的方式附加到表单中去 */
 					for (_key in data) {
-						_value = decodeURIComponent(data[_key]);
+						_value = data[_key];
 						var inputEl = $('input[name="' + _key + '"]', el);
 						if  (inputEl) {
 							inputEl.val(_value);
@@ -116,7 +116,7 @@ var URL = {
 		
 		for (_key in URLParms) {
 			_value = URLParms[_key];
-			_result.push(_key + (_value ? ('=' + _value) : ''));
+			_result.push(_key + (_value ? ('=' + encodeURIComponent(_value)) : ''));
 		}
 		if (_result.length < 1) return;
 		

@@ -38,10 +38,11 @@ var DOC = document,
 
 	UA = WIN.navigator.userAgent,
 
-	IsAndroid = /Android|HTC/i.test(UA), /* HTC Flyer平板的UA字符串中不包含Android关键词 */
+	IsAndroid = (/Android|HTC/i.test(UA) || (WIN.navigator['platform'] + '').match(/Linux/i)), /* HTC Flyer平板的UA字符串中不包含Android关键词 */
 	IsIPad = !IsAndroid && /iPad/i.test(UA),
 	IsIPhone = !IsAndroid && /iPod|iPhone/i.test(UA),
 	IsIOS =  IsIPad || IsIPhone,
+	IsWindowsPhone =  /Windows Phone/i.test(UA),
 	IsIEMobile =  /IEMobile/i.test(UA),
 	IsIE = !!DOC.all,
 

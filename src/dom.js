@@ -19,12 +19,13 @@ RR.dom.prototype.remove = function() {
 
 RR.insertNodeBefore = function(element, parent, target) {
 	//原生DOM对象直接添加
+	var method = target ? 'insertBefore' : 'appendChild';
 	if (element.nodeType) {
-		parent.insertBefore(element, target);
+		parent[method](element, target);
 
 	} else if (element instanceof RR.dom) {
 		for (var i = 0, l = element.length; i < l; i++) {
-			parent.insertBefore(element.context[i], target);
+			parent[method](element.context[i], target);
 		}
 
 	} else if ('string' === typeof element) {
@@ -32,7 +33,7 @@ RR.insertNodeBefore = function(element, parent, target) {
 		var containter = DOC.createElement('div');
 		containter.innerHTML = element;
 		for (var i = 0, l = containter.childNodes.length; i < l; i++) {
-			parent.insertBefore(containter.childNodes[0], target);
+			parent[method](containter.childNodes[0], target);
 		}
 	}
 };
@@ -131,20 +132,11 @@ RR.dom.prototype.children = function() {
 	var result = new RR.dom(),
 		elements = [];
 	this.each(function(element) {
-		if (ENABLE_IE_SUPPORT) {
-			if ('children' in element) {
-				elements = [].concat.apply(elements, element['children']);
-			} else {
-				for (var i = 0, l = element.childNodes.length; i < l; i++) {
-					var child = element.childNodes[i];
-					(1 == child.nodeType) && elements.push(child);
-				}
-			}
-		} else {
-			elements = [].concat.apply(elements, element['children']);
+		for (var i = 0, l = element.childNodes.length; i < l; i++) {
+			var child = element.childNodes[i];
+			(1 == child.nodeType) && elements.push(child);
 		}
 	});
-
 	result.context = elements;
 	result.length = elements.length;
 	return result;
@@ -188,7 +180,7 @@ RR.loader = {
 	init: function() {
 
 		//页面载入完成后的对$().ready()的调用直接执行
-		if ('loading' !== DOC.readyState) {
+		if (!IsIE && ('loading' != DOC.readyState)) {
 			RR.loader.loaded();
 		} else {
 

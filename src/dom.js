@@ -191,13 +191,13 @@ RR.loader = {
 					DOC.addEventListener('DOMContentLoaded', RR.loader.loaded);
 				} else {
 					//IE
-					var getElementById = DOC.getElementById, 
+					var _getElementById = DOC.getElementById, 
 						id = '_ir_';
-					var script = getElementById(id);
+					var script = _getElementById(id);
 					if (!script) {
 						DOC.write('<script id="' + id + '" defer="true" src="://"></script>');
 					}
-					script = getElementById(id);
+					script = _getElementById(id);
 					script.onreadystatechange = function() {
 						if (this.readyState == 'complete') {
 							RR.loader.loaded();

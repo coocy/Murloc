@@ -3,8 +3,21 @@ RR.dom.prototype.html =  function() {
 	var html = arguments[0];
 		
 	if ('undefined' !== typeof html) {
+		
+		/* 把html转换为字符串 */
+		html += '';
+		/* 简单检测是否是纯文本的内容 */
+		var isText = true;
+		if (html.indexOf('<') > -1 && html.indexOf('>') > -1) {
+			isText = false;
+		}
 		return this.each(function(element) {
-			element && ('innerHTML' in element) && (element.innerHTML = html);
+			if (element && ('innerHTML' in element)) {
+				element.innerHTML = html;
+				if (!isText) {
+					Notification.fire('DOM.html', element);
+				}
+			}
 		});
 	} else {
 		var element = this.context[0];

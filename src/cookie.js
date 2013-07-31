@@ -18,11 +18,12 @@ var Cookie = {
 	 * @param {String} name 要设置的Cookie名称
 	 * @param {String} value 要设置的Cookie值
 	 * @param {Int} expire 过期时间，单位是小时
+	 * @param {String} domain 域，默认为本域
 	 */
-	set: function(name, value, expire) {
+	set: function(name, value, expire, domain) {
 		var t = new Date();
 		t.setTime(t.getTime() + (expire || 24) * 3600000);
-		var s = escape(name) + '=' + escape(value) + ';expires=' + t.toGMTString() + ';path=/';
+		var s = escape(name) + '=' + escape(value) + ';expires=' + t.toGMTString() + ';path=/' + (domain ? (';domain=' + domain) : '');
 		DOC.cookie = s;
 	},
 	

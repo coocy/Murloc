@@ -38,7 +38,7 @@ var DOC = document,
 
 	UA = WIN.navigator.userAgent,
 
-	IsAndroid = (/Android|HTC/i.test(UA) || (WIN.navigator['platform'] + '').match(/Linux/i)), /* HTC Flyer平板的UA字符串中不包含Android关键词 */
+	IsAndroid = (/Android|HTC/i.test(UA) || !!(WIN.navigator['platform'] + '').match(/Linux/i)), /* HTC Flyer平板的UA字符串中不包含Android关键词 */
 	IsIPad = !IsAndroid && /iPad/i.test(UA),
 	IsIPhone = !IsAndroid && /iPod|iPhone/i.test(UA),
 	IsIOS =  IsIPad || IsIPhone,
@@ -195,7 +195,13 @@ var RR = {
 		} else
 
 		if (selector.length) { //数组或者类数组
-			this.context = [].concat.apply([], selector);
+			//this.context = [].concat.apply([], selector);
+			this.context = function(selector) {
+				for (var elements = [], i = 0, l = selector.length; i < l; i++) {
+					elements.push(selector[i]);
+				}
+				return elements;
+			}(selector);
 			this.length = this.context.length;
 		}
 

@@ -10,11 +10,17 @@
 		"user_name": "Alex",
 		"email": "alex@abc.com"
  	},
- 	done: function() {
+ 	done: function(data, statusCode, ajaxObj) {
 
- 	}
+ 	},
+ 	fail: function(ajaxObj, statusText) {
+
+ 	},
+ 	always: function(ajaxObj, statusText) {
+	
+ 	},
  * 	...
- * }).post(postUrl); //写入数据并发送POST请求，如果是GET请求则使用x.get(getUrl)方法
+ * }).post(postUrl); //写入数据并发送POST请求，如果是GET请求则使用$().get(getUrl)方法
  * </code>
  */
 
@@ -144,7 +150,7 @@ ajaxObj.prototype = {
 		if (responseText !== '') {
 			try {
 				/* 原生的JSON.parse更高效(但是有可能一些非标准的格式会造成JSON无法解析) */
-				return JSON.parse(this.response);
+				return JSON.parse(responseText);
 			} catch(e) {
 				if (ENABLE_DEBUG) {
 					console.log('JSON.parse failed!');

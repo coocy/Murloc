@@ -32,6 +32,9 @@ var ajaxObj = function(url, options) {
 };
 
 ajaxObj.prototype = {
+
+	isLoading: false,
+
 	ajax: function(url, settings) {
 		var  options = {};
 
@@ -59,21 +62,32 @@ ajaxObj.prototype = {
 		options.type = (settings.type || 'GET').toUpperCase();
 
 		this.options = options;
+		return this;
 	},
 
 	get: function() {
 		this.options.type = 'GET';
-		this.send();
+		return this.send();
 	},
 
 	post: function() {
 		this.options.type = 'POST';
-		this.send();
+		return this.send();
+	},
+
+	abort: function() {
+		if (this.isLoading) {
+			this.xmlhttp && this.xmlhttp.abort();
+			this.isLoading = false;
+		}
+		return this;
 	},
 
 	send: function() {
 		xmlhttp = this.xmlhttp || (window.XMLHttpRequest ? new XMLHttpRequest() : false);
 		if (xmlhttp) {
+
+			this.abort();
 
 			this.xmlhttp = xmlhttp;
 			var self = this,
@@ -81,6 +95,7 @@ ajaxObj.prototype = {
 
 			/* 没有网络连接 */
 			xmlhttp.onerror = function() {
+				self.isLoading = false;
 				self._onFail('offline');
 			}
 
@@ -92,7 +107,7 @@ ajaxObj.prototype = {
 					var responseText = this.responseText;
 					self.responseText = responseText;
 					xmlhttp.onreadystatechange = blankFn;
-					xmlhttp = null;
+					self.isLoading = false;
 					if (responseText) {
 						/* 默认请求的都是json数据，在这里验证返回的内容的有效性 */
 						if ('json' == options.dataType) {
@@ -137,6 +152,7 @@ ajaxObj.prototype = {
 			}
 			
 			xmlhttp.send(queryString);
+			this.isLoading =  true;
 		}
 
 		return this;

@@ -21,7 +21,13 @@ var URL = {
 		while (i--) {
 			item = querys[i].split('=');
 			if (item[0]) {
-				_URLParms[decodeURIComponent(item[0])] =  decodeURIComponent(item[1] || '');
+				var value = item[1] || '';
+				try {
+					value = decodeURIComponent(value);
+				} catch(e) {
+					value = unescape(value);
+				}
+				_URLParms[decodeURIComponent(item[0])] =  value;
 			}
 		}
 		return _URLParms;
@@ -31,14 +37,14 @@ var URL = {
 	 * 获取当前页面或者指定DOM对象的URL中的指定的GET参数的值
 	 * @param {String} key 要获取的GET参数的键
 	 * @param {DOM} el 如此传递此参数，则获取这个DOM对象的url，如果不传则获取当前页面的url
-	 * @return {String}
+	 * @return {String|null}
 	 */
 	getQueryString: function(key, el) {
 		var parms,
 			queryString = el ? URL.getElSearchString(el) : WIN.location.search.substring(1);
 
 		parms = URL.getQueryData(queryString);
-		return parms[key] || '';
+		return (key in parms) ? parms[key] : null;
 	},
 
 	/**
@@ -151,4 +157,8 @@ var URL = {
 
 RR.fn.prototype.param = function(obj) {
 	return URL.objToQueryString(obj);
+}
+
+RR.fn.prototype.getUrlParam = function(key, el) {
+	return URL.getQueryString(key, el);
 }

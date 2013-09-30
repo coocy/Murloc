@@ -91,20 +91,13 @@ ajaxObj.prototype = {
 
 			this.xmlhttp = xmlhttp;
 			var self = this,
-				options = this.options;
-
-			/* 没有网络连接 */
-			xmlhttp.onerror = function() {
-				self.isLoading = false;
-				self._onFail('offline');
-			}
-
-			xmlhttp.onreadystatechange = function() {
-				/* 每次网络状态变化的时候重置超时计时 */
-				self._resetTimeout();
-				if (4 === this.readyState && 0 !== this.status) {
-					//if(!self.timer) return;
-					var responseText = this.responseText;
+				options = this.options,
+				isLoaded = false,
+				onload = function() {
+					if (true === isLoaded) {
+						return;
+					}
+					var responseText = xmlhttp.responseText;
 					self.responseText = responseText;
 					xmlhttp.onreadystatechange = blankFn;
 					self.isLoading = false;
@@ -113,17 +106,33 @@ ajaxObj.prototype = {
 						if ('json' == options.dataType) {
 							if (responseText && (responseData = self._getJSON(responseText))) {
 								self.responseData = responseData;
-								self._onLoad(responseData, this.status);
+								self._onLoad(responseData, xmlhttp.status);
 							} else {
 								self._onFail('parsererror');
 							}
 						} else {
-							self._onLoad(responseText, this.status);
+							self._onLoad(responseText, xmlhttp.status);
 						}
 					} else {
 						self._onFail('parsererror');
 					}
 					self = null;
+					isLoaded = true;
+				};
+
+			/* 没有网络连接 */
+			xmlhttp.onerror = function() {
+				self.isLoading = false;
+				self._onFail('offline');
+			}
+
+			xmlhttp.onload = onload;
+
+			xmlhttp.onreadystatechange = function() {
+				/* 每次网络状态变化的时候重置超时计时 */
+				self._resetTimeout();
+				if (4 === this.readyState && 0 !== this.status) {
+					onload();
 				}
 			};
 
@@ -150,6 +159,9 @@ ajaxObj.prototype = {
 				xmlhttp.open('post', url, true);
 				xmlhttp.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
 			}
+
+			/* ZTE中兴手机自带浏览器发送的Accept头导致某些服务端解析出错，强制覆盖一下 */
+			xmlhttp.setRequestHeader('Accept', '*/*');
 			
 			xmlhttp.send(queryString);
 			this.isLoading =  true;

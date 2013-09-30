@@ -92,6 +92,24 @@ RR.dom.prototype.height = function() {
 	return element && element.offsetHeight;
 };
 
+RR.dom.prototype.offset = function() {
+	var element = this.context[0];
+	if (element) {
+		var fn = element['getBoundingClientRect'],
+			offset = fn && fn();
+		if (offset) {
+			return {
+				left: offset['left'] + (WIN.pageXOffset || DOC.body.scrollTop || 0),
+				top: offset['top'] + (WIN.pageYOffset  || DOC.body.scrollLeft || 0)
+			}
+		}
+	}
+	return {
+		left: 0,
+		top: 0
+	};
+};
+
 RR.dom.prototype.first = function() {
 	return this.eq(0);
 };

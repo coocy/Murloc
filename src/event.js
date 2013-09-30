@@ -207,22 +207,26 @@ RR.dom.prototype.trigger = function(type, data) {
 RR.touchEvent = {
 	activeCls: 'active',
 	hasTouchStart: false,
+	initedId: '__RR_EVENT_INITED__',
 
 	init: function() {
-		var events = {
-			onTouchStart: START_EVENT,
-			onTouchMove: MOVE_EVENT,
-			onTouchEnd: END_EVENT
-		},
-		type;
-		
-		for (type in events) {
-			RR.addEvent(events[type], DOC, RR.touchEvent[type], false);
-		}
-		RR.addEvent('touchcancel', DOC, RR.onTouchCancel, false);
+		if (!WIN[RR.touchEvent.initedId]) {
+			var events = {
+				onTouchStart: START_EVENT,
+				onTouchMove: MOVE_EVENT,
+				onTouchEnd: END_EVENT
+			},
+			type;
+			
+			for (type in events) {
+				RR.addEvent(events[type], DOC, RR.touchEvent[type], false);
+			}
+			RR.addEvent('touchcancel', DOC, RR.onTouchCancel, false);
 
-		if (UseTouchClick) {
-			RR.addEvent('click', DOC, RR.dispatchEvent, false);
+			if (UseTouchClick) {
+				RR.addEvent('click', DOC, RR.dispatchEvent, false);
+			}
+			WIN[RR.touchEvent.initedId] = true;
 		}
 	},
 

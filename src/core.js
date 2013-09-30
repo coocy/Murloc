@@ -183,6 +183,11 @@ var RR = {
 				//CSS选择符
 				if (context instanceof RR.dom) {
 					context = context.context[0];
+					if (!context) {
+						this.context = [];
+						this.length = 0;
+						return this;
+					}
 				}
 				this.context = RR.selectorAll(selector, context);
 			}

@@ -84,7 +84,7 @@ ajaxObj.prototype = {
 	},
 
 	send: function() {
-		xmlhttp = this.xmlhttp || (window.XMLHttpRequest ? new XMLHttpRequest() : false);
+		var xmlhttp = this.xmlhttp || (window.XMLHttpRequest ? new XMLHttpRequest() : false);
 		if (xmlhttp) {
 
 			this.abort();

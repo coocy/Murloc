@@ -1,11 +1,10 @@
-
 /**
  * Ajax类
  * @author qianghu
  *
  * 使用样例:
  * <code lang="javascript">
- * $().ajax(url, {
+ * $().post(url, {
  * 	data: {
 		"user_name": "Alex",
 		"email": "alex@abc.com"
@@ -20,7 +19,7 @@
 	
  	},
  * 	...
- * }).post(postUrl); //写入数据并发送POST请求，如果是GET请求则使用$().get(getUrl)方法
+ * }); //写入数据并发送POST请求，如果是GET请求则使用$().get(getUrl)方法
  * </code>
  */
 

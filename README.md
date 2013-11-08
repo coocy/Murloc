@@ -37,3 +37,9 @@ Murloc不使用其它类库中的手动或者自动的模块按需加载方式�
 </body>
 </html>
 ```
+
+## 使用Murloc的项目
+* 搜狐视频移动版 http://m.tv.sohu.com
+* 金山影视移动版 http://v.m.liebao.cn
+* 金山毒霸网址大全移动版 http://m.duba.com
+* 手机搜狐新闻页面视频播放器

@@ -21,9 +21,13 @@ var Cookie = {
 	 * @param {String} domain 域，默认为本域
 	 */
 	set: function(name, value, expire, domain) {
-		var t = new Date();
-		t.setTime(t.getTime() + (expire || 24) * 3600000);
-		var s = escape(name) + '=' + escape(value) + ';expires=' + t.toGMTString() + ';path=/' + (domain ? (';domain=' + domain) : '');
+		var expires = '';
+		if (0 !== expire) {
+			var t = new Date();
+			t.setTime(t.getTime() + (expire || 24) * 3600000);
+			expires = ';expires=' + t.toGMTString();
+		}
+		var s = escape(name) + '=' + escape(value) + expires + ';path=/' + (domain ? (';domain=' + domain) : '');
 		DOC.cookie = s;
 	},
 	

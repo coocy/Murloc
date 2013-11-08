@@ -56,6 +56,12 @@ RR.dom.prototype.removeAttr =  function(name) {
 };
 
 RR.dom.prototype.css =  function(key, value) {
+
+	if ('string' === (typeof key).toLowerCase() && 'undefined' === typeof value) {
+		var element = this.context[0];
+    	return element && (element.currentStyle? element.currentStyle : window.getComputedStyle(element, null))[key];
+    }
+
 	return this.each(function(element) {
 		if ('object' !== typeof key) {
 			var _key = {};

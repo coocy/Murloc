@@ -144,7 +144,8 @@ ajaxObj.prototype = {
 
 			var data = options.data,
 				queryString = ('string' == typeof data) ? data : $().param(data),
-				url = options.url;
+				url = options.url,
+				isJsonp = options.dataType === 'jsonp';
 
 			if ('GET' == options.type) {
 
@@ -153,7 +154,12 @@ ajaxObj.prototype = {
 				if (queryString.length > 0) {
 					c = (-1 < url.indexOf('?')) ? '&' : '?';
 				}
-				xmlhttp.open('get', url + c + queryString, true);
+				if (isJsonp) {
+					this._getJSONP(url + c + queryString);
+				} else {
+					xmlhttp.open('get', url + c + queryString, true);
+				}
+				
 			} else {
 				xmlhttp.open('post', url, true);
 				xmlhttp.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
@@ -162,7 +168,7 @@ ajaxObj.prototype = {
 			/* ZTE中兴手机自带浏览器发送的Accept头导致某些服务端解析出错，强制覆盖一下 */
 			xmlhttp.setRequestHeader('Accept', '*/*');
 			
-			xmlhttp.send(queryString);
+			isJsonp || xmlhttp.send(queryString);
 			this.isLoading =  true;
 		}
 
@@ -190,6 +196,27 @@ ajaxObj.prototype = {
 			};
 		}
 		return null;
+	},
+
+	/**
+	 * 以JSONP方式获取数据，确保接口支持JSONP
+	 * @private
+	 */
+	_getJSONP: function(url) {
+		var timestamp = +new Date(),
+			fnName = '__RR' + timestamp + (Math.random() + '').replace('.', ''),
+			self = this;
+
+		WIN[fnName] = function(responseData) {
+			if (responseData) {
+				self.responseData = responseData;
+				self._onLoad(responseData, this.status);
+			}
+
+			delete WIN[fnName];
+		};
+
+		getScript(url + '&callback=' + fnName);
 	},
 
 	/**

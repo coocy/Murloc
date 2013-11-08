@@ -1,6 +1,7 @@
 /**
  * @requires core.js
  * @requires json.js
+ * @requires util.js
  * @requires localstorge.js
  * @requires notification.js
  * @requires url.js

@@ -104,8 +104,10 @@ RR._addEventData = function(type, uid, element, fn) {
 		capture = (-1 !== RR.eventType.captured.indexOf(type));
 
 			
-	/* 在第一次给某个DOM对象添加事件的时候绑定RR.dispatchEvent()方法，
-	 * 后续添加的方法推入elemData数组在RR.dispatchEvent()中调用 */
+	/* 
+	 * 在第一次给某个DOM对象添加事件的时候绑定RR.dispatchEvent()方法，
+	 * 后续添加的方法推入elemData数组在RR.dispatchEvent()中调用 
+	 */
 	if (elemData.length < 1) {
 
 		/* 把需要委托的事件绑定在document上面 */
@@ -129,7 +131,8 @@ RR.dispatchEvent = function(e) {
 		elCur = e.target,
 		eventData = RR.eventCache[type] || {};
 
-	/* 在触屏浏览器中，只执行在touchend中合成的click事件
+	/* 
+	 * 在触屏浏览器中，只执行在touchend中合成的click事件
 	 * 在触屏浏览（合成的时候给event对象添加了自定义的isSimulated属性） 
 	 */
 
@@ -149,16 +152,24 @@ RR.dispatchEvent = function(e) {
 		}
 
 		for (var i = 0, l = elemData.length; i < l; i++) {
-			//e.currentTarget = elCur;
+
+			/* 把冒泡过程中当前的DOM对象保存在Event的currentTarget属性中 */
+			e.currentTarget = elCur;
+
+			/* 
+			 * 执行事件方法
+			 * 在方法中的this指针默认指向冒泡过程中当前的DOM对象（和currentTarget属性一样）
+			 * 可以使用Function的bind方法改变this指针指向的对象
+			 */
 			var re = elemData[i].apply(elCur, [e]);
 			
-			//有任一方法返回false的话标记result为false
+			/* 有任一方法返回false的话标记result为false */
 			if (false === re) {
 				result = re;
 			}
 		}
 		
-		//如果任一绑定给对象的方法返回false，停止默认事件并终止冒泡
+		/* 如果任一绑定给对象的方法返回false，停止默认事件并终止冒泡 */
 		if (false === result) {
 			e.preventDefault();
 			e.stopPropagation();

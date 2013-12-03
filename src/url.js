@@ -16,7 +16,8 @@ var URL = {
 		queryString = queryString.replace(/^\?+/, '').replace(/&amp;/, '&');
 		var querys = queryString.split('&'),
 			i = querys.length,
-			_URLParms = {};
+			_URLParms = {},
+			item;
 		
 		while (i--) {
 			item = querys[i].split('=');
@@ -148,7 +149,7 @@ var URL = {
 					result.push(key + '[]=' + encodeURIComponent(value[i]));
 				}
 			} else {
-				result.push(key + ('' === value ? '' : ('=' + encodeURIComponent(value))));
+				result.push(key + '=' + encodeURIComponent('undefined' === typeof value ? '' : value));
 			}
 		}
 		return result.join('&');

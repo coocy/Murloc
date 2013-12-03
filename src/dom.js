@@ -96,11 +96,12 @@ RR.dom.prototype.offset = function() {
 	var element = this.context[0];
 	if (element) {
 		var fn = element['getBoundingClientRect'],
-			offset = fn && fn();
+			offset = fn && fn(),
+			Body = DOC.body;
 		if (offset) {
 			return {
-				left: offset['left'] + (WIN.pageXOffset || DOC.body.scrollTop || 0),
-				top: offset['top'] + (WIN.pageYOffset  || DOC.body.scrollLeft || 0)
+				left: offset['left'] + (WIN.pageXOffset || Body.scrollTop || 0),
+				top: offset['top'] + (WIN.pageYOffset  || Body.scrollLeft || 0)
 			}
 		}
 	}
@@ -188,6 +189,20 @@ RR.loader = {
      * {Boolean}  是否已经加载完成
      */
 	isLoaded: false,
+
+	timer: null,
+
+	ieTimer: function() {
+		if (IsIE && 'interactive' == DOC.readyState) {
+			if (RR.loader.timer) {
+				clearTimeout(RR.loader.timer);
+			}
+			RR.loader.timer = setTimeout(RR.loader.ieTimer, 10);
+		} else {
+			RR.loader.init();
+			RR.loader.isInited = true;
+		}
+	},
 	
 	/**
 	 * 初始化函数
@@ -197,26 +212,37 @@ RR.loader = {
 	 */
 	init: function() {
 
-		//页面载入完成后的对$().ready()的调用直接执行
-		if (!IsIE && ('loading' != DOC.readyState)) {
-			RR.loader.loaded();
-		} else {
+		if (false === RR.loader.isInited) {
 
-			/* 在第一次调用$.ready()的时候才进行初始化 */
-			if (false === RR.loader.isInited) {
+			var readyState = DOC.readyState;
+
+			//页面载入完成后的对$().ready()的调用直接执行
+			if (readyState.indexOf('loading|uninitialized') < 0) {
+
+				/* 在JS异步模式下，
+				 * IE浏览器在document.readyState等于interactive的时候文档尚未解析完成（其它浏览器没有问题），
+				 * 加个定时器检查document.readyState
+				 */
+				if (IsIE && ('interactive' == readyState)) {
+					RR.loader.ieTimer();
+					return;
+				} else {
+					RR.loader.loaded();
+				}
+			} else {
+				/* 在第一次调用$.ready()的时候才进行初始化 */
 				RR.loader.isInited = true;
 				if (DOC.addEventListener) {
 					DOC.addEventListener('DOMContentLoaded', RR.loader.loaded);
 				} else {
 					//IE
-					var _getElementById = DOC.getElementById, 
-						id = '_ir_';
-					var script = _getElementById(id);
+					var id = '_ir_';
+					var script = DOC.getElementById(id);
 					if (!script) {
 						DOC.write('<script id="' + id + '" defer="true" src="://"></script>');
+						script = DOC.getElementById(id);
 					}
-					script = _getElementById(id);
-					script.onreadystatechange = function() {
+					script.onreadystatechange = script.onload = function() {
 						if (this.readyState == 'complete') {
 							RR.loader.loaded();
 						}
@@ -227,8 +253,10 @@ RR.loader = {
 	},
 
 	loaded: function() {
-		RR.loader.isLoaded = true;
-		RR.loader.fire();
+		if (false === RR.loader.isLoaded) {
+			RR.loader.isLoaded = true;
+			RR.loader.fire();
+		}
 	},
 
 	/**

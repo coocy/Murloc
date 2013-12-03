@@ -26,6 +26,22 @@ if (!String.prototype.hasOwnProperty('trim')) {
 	}
 }
 
+/**
+ * 如果浏览器不支持Function原生bind的方法，模拟一个
+ */
+if (!Function.prototype.hasOwnProperty('bind')) {
+	/**
+	 * @return {Function}
+	 */
+	Function.prototype.bind = function(context) {
+		var fn = this,
+			args = arguments.length > 1 ? Array.slice(arguments, 1) : null;
+		return function() {
+			return fn.apply(context || this, args);
+		};
+	}
+}
+
 /* 保存常用DOM的全局变量（变量名可以被压缩） */
 var DOC = document,
 	WIN = window,
@@ -43,6 +59,7 @@ var DOC = document,
 	IsIPhone = !IsAndroid && /iPod|iPhone/i.test(UA),
 	IsIOS =  IsIPad || IsIPhone,
 	IsWindowsPhone =  /Windows Phone/i.test(UA),
+	IsBlackBerry =  /BB10|BlackBerry/i.test(UA),
 	IsIEMobile =  /IEMobile/i.test(UA),
 	IsIE = !!DOC.all,
 
@@ -224,11 +241,12 @@ RR.dom.prototype = {
 	}
 };
 
-/**
- * 扩展一个Object对象，也可以用来复制一个对象
- * @function
- */
 RR.fn.prototype = {
+
+	/**
+	 * 扩展一个Object对象，也可以用来复制一个对象
+	 * @function
+	 */
 	extend: function(dest, source) {
 		var property, item;
 		for (var property in source) {
@@ -236,6 +254,24 @@ RR.fn.prototype = {
 			if (item !== null) {
 				dest[property] = (typeof(item) == 'object' && !(item.nodeType) && !(item instanceof Array)) ? RR.fn.prototype.extend({}, item) : item;
 			}
+		}
+		return dest;
+	},
+
+
+	/**
+	 * 深复制一个数组或者对象
+	 * @function
+	 */
+	copy: function(dest) {
+		if (dest instanceof Array) {
+			var result = [];
+			for (var i = 0, l = dest.length; i < l; i++) {
+				result[i] = RR.fn.prototype.copy(dest[i]);
+			}
+			return result;
+		} else if (typeof(dest) == 'object') {
+			return RR.fn.prototype.extend({}, dest);
 		}
 		return dest;
 	}

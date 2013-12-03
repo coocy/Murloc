@@ -38,8 +38,10 @@ RR.eventCache = {
 /* 标记是否使用Touch事件模拟点击 */
 var UseTouchClick = false;
 
-/* Android下使用模拟点击会导致不稳定（比如跨页面点击、视频退出全屏后跨页面后退） */
-if (!IsAndroid) {
+
+if (!IsAndroid /* Android下使用模拟点击会导致不稳定（比如跨页面点击、视频退出全屏后跨页面后退） */ && 
+	UA.indexOf('PlayStation') < 0 /* PlayStation手持设备使用模拟点击会造成在滑动页面的时候触发点击 */
+) {
 	UseTouchClick = true;
 }
 
@@ -102,7 +104,6 @@ RR._addEventData = function(type, uid, element, fn) {
 	var eventData = RR.eventCache[type] || (RR.eventCache[type] = {}),
 		elemData = eventData[uid] || (eventData[uid] = []),
 		capture = (-1 !== RR.eventType.captured.indexOf(type));
-
 			
 	/* 
 	 * 在第一次给某个DOM对象添加事件的时候绑定RR.dispatchEvent()方法，
@@ -232,7 +233,7 @@ RR.touchEvent = {
 			for (type in events) {
 				RR.addEvent(events[type], DOC, RR.touchEvent[type], false);
 			}
-			RR.addEvent('touchcancel', DOC, RR.onTouchCancel, false);
+			RR.addEvent('touchcancel', DOC, RR.touchEvent.onTouchCancel, false);
 
 			if (UseTouchClick) {
 				RR.addEvent('click', DOC, RR.dispatchEvent, false);

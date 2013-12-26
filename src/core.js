@@ -62,6 +62,7 @@ var DOC = document,
 	IsBlackBerry =  /BB10|BlackBerry/i.test(UA),
 	IsIEMobile =  /IEMobile/i.test(UA),
 	IsIE = !!DOC.all,
+	IsWeixin = !!(WIN['WeixinJSBridge'] || /MicroMessenger/i.test(UA)),
 
 	/* 设备屏幕象素密度 */
 	PixelRatio = parseFloat(WIN.devicePixelRatio) || 1,

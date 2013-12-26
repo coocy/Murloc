@@ -70,9 +70,10 @@ RR.dom.prototype.css =  function(key, value) {
 		}
 		for (var k in key) {
 			var _value =  key[k];
-			if (_value !== '' && !isNaN(_value) && _value != 0) {
+			if (k !== 'opacity' && _value !== '' && !isNaN(_value) && _value != 0) {
 				_value += 'px';
 			}
+
 			element.style[k] = _value;
 		}
 	});

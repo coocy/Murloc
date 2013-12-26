@@ -217,7 +217,7 @@ RR.loader = {
 			var readyState = DOC.readyState;
 
 			//页面载入完成后的对$().ready()的调用直接执行
-			if (readyState.indexOf('loading|uninitialized') < 0) {
+			if ('loading|uninitialized'.indexOf(readyState) < 0) {
 
 				/* 在JS异步模式下，
 				 * IE浏览器在document.readyState等于interactive的时候文档尚未解析完成（其它浏览器没有问题），
@@ -226,7 +226,7 @@ RR.loader = {
 				if (IsIE && ('interactive' == readyState)) {
 					RR.loader.ieTimer();
 					return;
-				} else {
+				} else { 
 					RR.loader.loaded();
 				}
 			} else {

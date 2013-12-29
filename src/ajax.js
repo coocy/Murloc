@@ -95,11 +95,11 @@ ajaxObj.prototype = {
 			this.abort();
 
 			this.xmlhttp = xmlhttp;
+			this.isLoaded = false;
 			var self = this,
 				options = this.options,
-				isLoaded = false,
 				onload = function() {
-					if (true === isLoaded) {
+					if (!self || true === self.isLoaded || true == self.timoutFired) {
 						return;
 					}
 					var responseText = xmlhttp.responseText;
@@ -121,8 +121,8 @@ ajaxObj.prototype = {
 					} else {
 						self._onFail('parsererror');
 					}
+					self.isLoaded = true;
 					self = null;
-					isLoaded = true;
 				};
 
 			/* 没有网络连接 */
@@ -168,6 +168,7 @@ ajaxObj.prototype = {
 			/* ZTE中兴手机自带浏览器发送的Accept头导致某些服务端解析出错，强制覆盖一下 */
 			xmlhttp.setRequestHeader('Accept', '*/*');
 			
+			this.timoutFired = false;
 			xmlhttp.send(queryString);
 			this.isLoading =  true;
 		}
@@ -207,11 +208,19 @@ ajaxObj.prototype = {
 		if (!options.timeout) return;
 		if (this.timer) {
 			clearTimeout(this.timer);
+			this.timer = null;
 		}
+
 		var self = this;
 		this.timer = setTimeout(function() {
-			options.fail.apply(self, [self, 'timeout']);
-		}, options.timeout * 1000); 
+			if (true === self.timoutFired || true === self.isLoaded) {
+				return;
+			}
+			self.abort();
+			self.timoutFired = true;
+			self._onFail('timeout');
+		}.bind({timer: this.timer}), options.timeout * 1000); 
+
 	},
 
 	_onLoad: function(data, statusCode) {

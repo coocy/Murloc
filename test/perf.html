@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>jQuery Test Page</title>
+	<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+	<meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0" />
+	<meta content="" name="description" />
+	<script type="text/javascript">
+	
+		var codes = [
+			['$(\'body\')', ''],
+			['$(document.body)', ''],
+			['$(\'div\')', ''],
+			['$(\'body div\')', ''],
+			['$(\'div p\')', ''],
+			['$(\'div > p\')', ''],
+			['$(\'.title\')', ''],
+			['$(\'#title\')', ''],
+			['$(\'body #title\')', ''],
+			['$(\'#title span\')', ''],
+			['$(\'div\').hasClass(\'foo\')', ''],
+			['$(\'div\').addClass(\'foo\')', ''],
+			['$(\'div\').removeClass(\'foo\')', ''],
+			['$(\'div\').toggleClass(\'foo\')', ''],
+			['$(\'div\').eq(10)', ''],
+			['$(\'div\').get(10)', ''],
+			['$(\'div\').on(\'click\', function(){})', ''],
+			/*['$(\'div\').append(\'<span>\')', ''],
+			'$[(\'div\').append(\'<span><b></b></span>\') '']'*/
+		];
+	</script>
+	<link rel="stylesheet" type="text/css" href="${www_root}test/styles/styles.css" />
+	<style type="text/css">
+		body{
+			padding:1em;
+			font-size:.75em;
+			-webkit-user-select: none;
+			user-select:none;
+		}
+		table{
+			border:2px solid #000;
+			border-collapse:collapse;
+		}
+		td,
+		th{
+			border:1px solid #333;
+			padding:.5em;
+		}
+		.c1{
+			background:#eaf7ff;
+		}
+		th{
+			background:#c4e9ff;
+		}
+		.red{
+			color:#B33F3F;
+			background:#EE9A9A;
+		}
+		.green{
+			color:#657528;
+			background:#CFE773;
+		}
+		.gray{
+			color:#636A75;
+			background:#ddd;
+		}
+		@media only screen and (max-width: 320px){
+			body{
+				padding:0;
+			}
+			table{
+				border:0;
+				width:100%;
+			}
+		}
+		
+	</style>
+</head>
+<body>
+	<div class="wrap">
+
+		<table id="code_table">
+		
+		</table>
+	
+	</div>
+
+
+	<script type="text/javascript" src="${www_root}test/scripts/perf.js"></script>
+
+		
+	</div>
+	
+</body>
+</html>

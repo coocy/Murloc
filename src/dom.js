@@ -136,11 +136,57 @@ RR.dom.prototype.get = function(index) {
 	return (idx > length - 1) ? null : this.context[idx];
 };
 
-RR.dom.prototype.parent = function() {
+RR.matches = function(element, selector) {
+	if (!selector) return false;
+	var matchesSelector = element.webkitMatchesSelector || 
+		element.mozMatchesSelector || 
+		element.oMatchesSelector || 
+		element.matchesSelector;
+
+	if (matchesSelector) {
+		return  matchesSelector.call(element, selector);
+	}
+};
+
+RR.dom.prototype.filter = function(selector) {
+	var result = new RR.dom(),
+		elements = [];
+
+	if (selector) {
+		this.each(function(element) {
+			if (RR.matches(element, selector)) {
+				elements.push(element);
+			}
+		});
+	}
+
+	result.context = elements;
+	result.length = elements.length;
+	return result;
+}
+
+RR.dom.prototype.parent = function(selector) {
 	var result = new RR.dom(),
 		elements = [];
 	this.each(function(element) {
-		elements.push(element.parentNode);
+		if (!selector || (selector && RR.matches(element, selector))) {
+			elements.push(element.parentNode);
+		}
+	});
+	result.context = elements;
+	result.length = elements.length;
+	return result;
+};
+
+RR.dom.prototype.parents = function(selector) {
+	var result = new RR.dom(),
+		elements = [];
+	this.each(function(element) {
+		while((element = element.parentNode) && element !== DOC &&  elements.indexOf(element) < 0) {
+			if (!selector || (selector && RR.matches(element, selector))) {
+				elements.push(element);
+			}
+		}
 	});
 	result.context = elements;
 	result.length = elements.length;

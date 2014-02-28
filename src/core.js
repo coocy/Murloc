@@ -74,10 +74,12 @@ var DOC = document,
 	MOVE_EVENT = IsTouch ? 'touchmove' : 'mousemove',
 	END_EVENT = IsTouch ? 'touchend' : 'mouseup',
 
+	ScreenSizeCorrect = 1,
+	
 	_hasGetElementsByClassName = DOC.getElementsByClassName,
-
-	ScreenSizeCorrect = 1;
-;
+	_fnConcat = [].concat,
+	_kSelectorTest = [',', '+', '~', '[', '>', '#', '.', ' '],
+	_kSelectorTestLength = _kSelectorTest.length;
 
 if (ENABLE_IE_SUPPORT && IsIE) {
 	/* 防止IE6下对象的背景图在hover的时候闪动 */
@@ -134,12 +136,11 @@ var RR = {
 		var _s = selector.slice(1), 
 			els,
 			singleSelector = true,
-			_a = ['+', '~', '[', '>', '#', '.', ' '],
-			l = _a.length;
+			l = _kSelectorTestLength;
 		
 		/* 判断是否是简单选择符 */
 		while (l--) {
-			if (_s.indexOf(_a[l]) != -1) {
+			if (_s.indexOf(_kSelectorTest[l]) != -1) {
 				singleSelector = false;
 				break;
 			}
@@ -218,13 +219,13 @@ var RR = {
 		} else
 
 		if (selector.length) { //数组或者类数组
-			//this.context = [].concat.apply([], selector);
-			this.context = function(selector) {
+			this.context = _fnConcat.apply([], selector);
+			/*this.context = function(selector) {
 				for (var elements = [], i = 0, l = selector.length; i < l; i++) {
 					elements.push(selector[i]);
 				}
 				return elements;
-			}(selector);
+			}(selector);*/
 			this.length = this.context.length;
 		}
 

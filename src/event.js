@@ -36,10 +36,9 @@ RR.eventCache = {
 */
 
 /* 标记是否使用Touch事件模拟点击 */
-var UseTouchClick = false;
+var UseTouchClick = IsTouch;
 
-
-if (!IsAndroid /* Android下使用模拟点击会导致不稳定（比如跨页面点击、视频退出全屏后跨页面后退） */ && 
+if (UseTouchClick &&!IsAndroid /* Android下使用模拟点击会导致不稳定（比如跨页面点击、视频退出全屏后跨页面后退） */ && 
 	UA.indexOf('PlayStation') < 0 /* PlayStation手持设备使用模拟点击会造成在滑动页面的时候触发点击 */
 ) {
 	UseTouchClick = true;
@@ -64,9 +63,13 @@ RR.event = function(e) {
 RR.event.prototype = {
 
 	isPropagationStopped: false,
+
+	isDefaultPrevented: false,
 	
 	preventDefault: function() {
 		var e = this.event;
+
+		this.isDefaultPrevented = true;
 
 		if (e.preventDefault) {
 			e.preventDefault();
@@ -112,7 +115,7 @@ RR._addEventData = function(type, uid, element, fn) {
 	if (elemData.length < 1) {
 
 		/* 把需要委托的事件绑定在document上面 */
-		if (-1 !== RR.eventType.delegated.indexOf(type)) {
+		if (-1 < RR.eventType.delegated.indexOf(type)) {
 			element = DOC;
 		}
 		RR.addEvent(type, element, RR.dispatchEvent, capture);
@@ -143,7 +146,7 @@ RR.dispatchEvent = function(e) {
 	}
 
 	while(elCur) {
-		var uid = RR.dom.uid(elCur),
+		var uid = elCur['__ruid'] || '0',
 		elemData = eventData[uid] || [],
 		result = true,
 		tagEvents = eventData['t' + elCur.nodeName];
@@ -202,10 +205,9 @@ RR.dom.prototype.trigger = function(type, data) {
 	theEvent.isSimulated = true;
 
 	return this.each(function(element) {
-		if ('function' === typeof element[type]) {
+		element.dispatchEvent && element.dispatchEvent(theEvent);
+		if (!theEvent.defaultPrevented && (-1 < 'submit|focus|blur'.indexOf(type))) {
 			element[type]();
-		} else {
-			element.dispatchEvent && element.dispatchEvent(theEvent);
 		}
 	});
 };
@@ -280,7 +282,6 @@ RR.touchEvent = {
 				event = e.originalEvent,
 				movedDistance = Math.pow(Math.pow(event.screenX * ScreenSizeCorrect - touch.startPoint[0], 2) 
 				                         + Math.pow(event.screenY * ScreenSizeCorrect - touch.startPoint[1], 2), .5);
-
 
 			if (movedDistance > MAX_TOUCHMOVE_DISTANCE_FOR_CLICK) {
 				touch.onTouchCancel();

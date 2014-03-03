@@ -14,6 +14,12 @@ if ($uri === '') {
 	$template_file = 'index.html';
 } else {
 
+
+	$pos = strrpos($uri, '?');
+	if ($pos !== false) {
+		$uri = substr($uri, 0, $pos);
+	}
+
 	$file_path = $uri;
 
 	$pos = strrpos($uri, '.');

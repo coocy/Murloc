@@ -12,9 +12,13 @@ RR.fn.prototype.ready = RR.dom.prototype.ready = function(fn) {
 };
 
 RR.dom.prototype.remove = function() {
-	return this.each(function(element) {
-		element.parentNode.removeChild(element);
-	});
+	var i = this.length;
+	while (i--) {
+		var element = this.context[i];
+		element.parentNode.removeChild(element)
+	}
+	this.length = 0;
+	return this;
 };
 
 RR.insertNodeBefore = function(element, parent, target) {
@@ -324,3 +328,7 @@ RR.loader = {
 	}
 	
 };
+
+DOC.addEventListener('DOMSubtreeModified', function(e) {
+	console.log(e);
+});

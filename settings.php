@@ -4,6 +4,8 @@ ini_set('default_charset', 'utf-8');
 error_reporting(E_ALL & ~E_NOTICE);
 define('ROOT_PATH', dirname(__FILE__).'/');
 
+date_default_timezone_set('Asia/Shanghai');
+
 define('INCLUDE_PATH', ROOT_PATH.'_include/'); 
 
 include_once(INCLUDE_PATH.'functions.php');

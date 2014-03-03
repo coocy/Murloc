@@ -48,6 +48,11 @@
 			background-color:#066 !important;
 			color:#fff;
 		}
+		form{
+			background: #eee;
+			margin:.5em;
+			padding:.5em;
+		}
 	</style>
 </head>
 <body>
@@ -75,6 +80,11 @@
 		<textarea rows="5" cols="10"></textarea>
 	
 	</div>
+
+	<form action="event.html">
+		Form
+		<input type="hidden" name="form" value="1" />
+	</form>
 
 	<iframe frameborder="0" src="${www_root}test/scripts/event.js.html"></iframe>
 

@@ -29,6 +29,11 @@ $('textarea').on('focus', function() {
 	this.value = 'on blur';
 });
 
+$('form').on('submit', function(e) {
+	e.preventDefault();
+	//return false;
+});
+
 /*
 DOC.addEventListener('focus', function(e) {
 	console.log('focus');

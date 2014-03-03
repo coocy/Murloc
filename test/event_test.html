@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>Test Page</title>
+	<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+	<meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0" />
+	<meta content="" name="description" />
+	<style type="text/css">
+	body{
+		padding:15em 5em;
+	}
+		section{
+			-webkit-transform-style:preserve-3d;
+			--webkit-transform: rotateX(70deg)   rotateZ(30deg)   perspective(10000px);
+			background: #dde;
+		}
+		div,p,span,a,b{
+			background: rgba(0,0,0,.3);
+			display: inline-block;
+			padding:1em;
+			position: relative;
+
+			-webkit-transform:translateZ(3em);
+			-webkit-transform-style:preserve-3d;
+		}
+		div:before,
+		p:before,
+		span:before,
+		a:before,
+		b:before
+		{
+			content:"";
+			display: block;
+			width:4em;
+			height: 2px;
+			background: #f00;
+			position: absolute;
+			right:-4em;
+			top:0;
+		}
+		div:after,
+		p:after,
+		span:after,
+		a:after,
+		b:after
+		{
+			font-weight: bold;
+			font-size:5em;
+			content:"<A>";
+			position: absolute;
+			right:-2.5em;
+			margin-top:-.5em;
+			top:0;
+		}
+		div:after{
+			content: "<DIV>";
+			right:-3.5em;
+		}
+		p:after{
+			content: "<P>";
+		}
+		span:after{
+			content: "<SPAN>";
+			right:-4.1em;
+		}
+		b:after{
+			content: "<B>";
+		}
+		.box_1{
+			width:10em;
+			height: 10em;
+		}
+	</style>
+</head>
+<body>
+	<section>
+		
+		<div class="box_4">
+			<div class="box_3">
+				<div class="box_2">
+					<div class="box_1"></div>
+				</div>
+			</div>
+		</div>
+
+	</section>
+	<script type="text/javascript">
+
+		var log = function(e) {
+			console.log('bubble event. element:', this.className || this.nodeName, ' target: ', e.target.className || e.target.nodeName);
+		};
+		var elDiv = document.getElementsByTagName('div');
+		document.addEventListener('click', log);
+		for (var i = 0, l = elDiv.length; i < l;i++) {
+			elDiv[i].addEventListener('click', log);
+		}
+	</script>
+
+</body>
+</html>

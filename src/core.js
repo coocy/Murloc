@@ -31,7 +31,7 @@ if (!String.prototype.hasOwnProperty('trim')) {
  */
 if (!Function.prototype.hasOwnProperty('bind')) {
 	/**
-	 * @return {Function}
+	 * @return {function}
 	 */
 	Function.prototype.bind = function(context) {
 		var fn = this,
@@ -43,15 +43,21 @@ if (!Function.prototype.hasOwnProperty('bind')) {
 }
 
 /* 保存常用DOM的全局变量（变量名可以被压缩） */
-var DOC = document,
+var 
+	 /**  @type {Document} */ 
+	DOC = document,
+
+	/**  @type {Window} */
 	WIN = window,
 
 	/* 
 	 * 设备是否支持触摸事件
 	 * 这里使用WIN.hasOwnProperty('ontouchstart')在Android上会得到错误的结果
+	 * @type {boolean}
 	 */
 	IsTouch = 'ontouchstart' in WIN,
 
+	/**  @type {string} */
 	UA = WIN.navigator.userAgent,
 
 	IsAndroid = (/Android|HTC/i.test(UA) || !!(WIN.navigator['platform'] + '').match(/Linux/i)), /* HTC Flyer平板的UA字符串中不包含Android关键词 */
@@ -62,9 +68,12 @@ var DOC = document,
 	IsBlackBerry =  /BB10|BlackBerry/i.test(UA),
 	IsIEMobile =  /IEMobile/i.test(UA),
 	IsIE = !!DOC.all,
-	IsWeixin = !!(WIN['WeixinJSBridge'] || /MicroMessenger/i.test(UA)),
+	IsWeixin = /MicroMessenger/i.test(UA),
 
-	/* 设备屏幕象素密度 */
+	/*
+	 * 设备屏幕象素密度
+	 * @type {number}
+	 */
 	PixelRatio = parseFloat(WIN.devicePixelRatio) || 1,
 
 	/* 如果手指在屏幕上按下后再继续移动的偏移超过这个值，则取消touchend中click事件的触发，Android和iOS下的值不同 */
@@ -99,35 +108,45 @@ var RR = {
 
 	/* 
 	 * 唯一ID，用作缓存对象的Key
+	 * @type {number}
 	 */
 	uid: 1,
 
 	/**
 	 * 返回RR对象($对象)
 	 * @function
-	 * @param {*} selector
-	 * @param {Object=} context (可选)
-	 * @return {(RR.fn|RR.dom)} RR.fn对象或者RR.dom对象，RR.fn对象使用$.method()调用，RR.dom对象使用$(selector).method()调用
+	 * @param {(Element|RR.dom|string)=} selector
+	 * @param {(Element|RR.dom)=} context (可选)
+	 * @return {(RR.dom|RR.fn)} RR.fn对象或者RR.dom对象，RR.fn对象使用$.method()调用，RR.dom对象使用$(selector).method()调用
 	 */
 	$: function(selector, context) {
 		if (arguments.length < 1) {
-			return RR.fnCache || new RR.fn();
+			return RR._fnCache || new RR.fn();
 		}
 		return new RR.dom(selector, context);
 	},
 
+	/**
+	 * @constructor
+	 * @return {RR.fn}
+	*/
 	fn: function() {
-		RR.fnCache = this;
+		RR._fnCache = this;
 		return this;
 	},
 
-	fnCache: null,
+	/**
+	 * (new RR.fn())的缓存
+	 * @type {?RR.fn}
+	 * @private
+	 */
+	_fnCache: null,
 
 	/**
 	 * 返回指定选择符的DOM集合
 	 * @function
 	 * @param {string} selector CSS选择符
-	 * @param {Object=} context (可选)
+	 * @param {Element=} context (可选)
 	 * @return {{length: number}} 类似Array的DOM集合(只有length属性)
 	 */
 	selectorAll: DOC.querySelectorAll ? function(selector, context) {
@@ -169,9 +188,9 @@ var RR = {
 	
 	/**
 	 * @constructor
-	 * @param {*} selector
-	 * @param {Object=} context (可选)
-	 * @return {RR.dom} RR.dom对象
+	 * @param {(Element|RR.dom|string)=} selector
+	 * @param {(Element|RR.dom)=} context (可选)
+	 * @return {RR.dom}
 	*/
 	dom: function(selector, context) {
 		this.context = [];
@@ -234,6 +253,11 @@ var RR = {
 };
 
 RR.dom.prototype = {
+
+	/**
+	 * @function
+	 * @param {function(Element=, number=)} fn
+	 */
 	each: function(fn) {
 		for (var i = 0, l = this.length, element; i < l; i++) {
 			element = this.context[i];
@@ -248,6 +272,8 @@ RR.fn.prototype = {
 	/**
 	 * 扩展一个Object对象，也可以用来复制一个对象
 	 * @function
+	 * @param {Object} dest
+	 * @param {Object} source
 	 */
 	extend: function(dest, source) {
 		var property, item;
@@ -264,6 +290,7 @@ RR.fn.prototype = {
 	/**
 	 * 深复制一个数组或者对象
 	 * @function
+	 * @param {(Array|Object)} dest
 	 */
 	copy: function(dest) {
 		if (dest instanceof Array) {

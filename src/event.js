@@ -44,6 +44,10 @@ if (UseTouchClick &&!IsAndroid /* Android下使用模拟点击会导致不稳定
 	UseTouchClick = true;
 }
 
+/**
+ * @constructor
+ * @param {(Event|RR.event)} e
+ */
 RR.event = function(e) {
 	if (e instanceof RR.event) {
 		return e;
@@ -52,20 +56,54 @@ RR.event = function(e) {
 	var changedTouches = e.changedTouches, 
 		ee = (changedTouches && changedTouches.length > 0) ? changedTouches[0] : e;
 
-	this.event = e;
-	this.originalEvent = ee;
+	this.event = /** @type {Event} */ e;
+	this.originalEvent = /** @type {Event} */ ee;
 
-	this.target = e.target || e.srcElement;
-	this.type = e.type;
+	this.target = /** @type {Element} */ e.target || e.srcElement;
+	this.type = /** @type {string} */ e.type;
 	return this;
 };
 
 RR.event.prototype = {
 
+	/*
+	 * @type {?Event} 
+	 */
+	event: null,
+
+	/*
+	 * @type {?Event} 
+	 */
+	originalEvent: null,
+
+	/*
+	 * @type {?Element} 
+	 */
+	target: null,
+
+	/*
+	 * @type {?string}
+	 */
+	type: null,
+
+	/*
+	 * @type {boolean} 
+	 */
 	isPropagationStopped: false,
 
+	/*
+	 * @type {boolean} 
+	 */
 	isDefaultPrevented: false,
-	
+
+	/*
+	 * @type {?Element}
+	 */
+	currentTarget: null,
+
+	/*
+	 * @type {function} 
+	 */
 	preventDefault: function() {
 		var e = this.event;
 
@@ -78,7 +116,10 @@ RR.event.prototype = {
 			e.returnValue = false;
 		}
 	},
-	
+
+	/*
+	 * @type {function} 
+	 */
 	stopPropagation: function() {
 		var e = this.event;
 
@@ -93,7 +134,17 @@ RR.event.prototype = {
 RR.eventCache = {};
 
 RR.eventType = {
+
+	/**
+	 * @const
+	 * @type {string}
+	 */
 	delegated: '|click|mouseover|mouseout|mousemove|focus|blur|touchstart|touchmove|touchend|touchcancel',
+
+	/**
+	 * @const
+	 * @type {string}
+	 */
 	captured: '|focus|blur|'
 };
 
@@ -185,6 +236,13 @@ RR.dispatchEvent = function(e) {
 	}
 };
 
+/**
+ * 给DOM对象绑定事件
+ * @function
+ * @param {String} type 事件类型
+ * @param {Function} fn 绑定的事件
+ * @return {RR.dom}
+ */
 RR.dom.prototype.on = function(type, fn) {
 	if ('object' === typeof type) {
 		for (var key in type) {

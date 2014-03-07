@@ -15,10 +15,10 @@ var Cookie = {
 	/**
 	 * 设置Cookie
 	 * @static
-	 * @param {String} name 要设置的Cookie名称
-	 * @param {String} value 要设置的Cookie值
-	 * @param {Int} expire 过期时间，单位是小时
-	 * @param {String} domain 域，默认为本域
+	 * @param {string} name 要设置的Cookie名称
+	 * @param {string} value 要设置的Cookie值
+	 * @param {number} expire 过期时间，单位是小时
+	 * @param {string} domain 域，默认为本域
 	 */
 	set: function(name, value, expire, domain) {
 		var expires = '';
@@ -34,8 +34,8 @@ var Cookie = {
 	/**
 	 * 读取指定的Cookie
 	 * @static
-	 * @param {String} name 要获取的Cookie名称
-	 * @return {String} 对应的Cookie值，如果不存在，返回{null}
+	 * @param {string} name 要获取的Cookie名称
+	 * @return {?string} 对应的Cookie值，如果不存在，返回null
 	 */
 	get: function(name) {
 		var arrCookie = DOC.cookie.split(';'), arrS;
@@ -51,7 +51,7 @@ var Cookie = {
 	/**
 	 * 删除指定的Cookie
 	 * @static
-	 * @param {String} name 要删除的Cookie名称
+	 * @param {string} name 要删除的Cookie名称
 	 */
 	remove: function(name) {
 		Cookie.set(name, '', -1000);

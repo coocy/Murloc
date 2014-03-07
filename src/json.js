@@ -16,8 +16,8 @@ var JSON = WIN.JSON || {
 	/**
 	 * 把一个标准JSON对象序列化成一个字符串
 	 * @static
-	 * @param {Object} obj JSON对象
-	 * @return {String} 序列化成后的字符串
+	 * @param {JSONType} obj JSON对象
+	 * @return {string} 序列化成后的字符串
 	 */
 	stringify: function(obj) {
 		if (obj instanceof Array) {
@@ -50,9 +50,8 @@ var JSON = WIN.JSON || {
 	
 	/**
 	 * 把一个JSON字符串转换为标准JSON对象
-	 * @static
-	 * @param {String} string JSON字符串
-	 * @return {String} 标准JSON对象
+	 * @param {string} string JSON字符串
+	 * @return {JSONType} 标准JSON对象
 	 */
 	parse: function(string){
 		return eval('(' + string + ')');

@@ -96,6 +96,11 @@ RR.dom.prototype.height = function() {
 	return element && element.offsetHeight;
 };
 
+/**
+ * 返回DOM对象相对于文档左上角的偏移
+ * @function
+ * @return {{left:number, top:number}}
+ */
 RR.dom.prototype.offset = function() {
 	var element = this.context[0];
 	if (element) {
@@ -115,10 +120,20 @@ RR.dom.prototype.offset = function() {
 	};
 };
 
+/**
+ * 返回DOM集合中的第一个对象
+ * @function
+ * @return {RR.dom}
+ */
 RR.dom.prototype.first = function() {
 	return this.eq(0);
 };
 
+/**
+ * 返回DOM集合中的最后一个对象
+ * @function
+ * @return {RR.dom}
+ */
 RR.dom.prototype.last = function() {
 	return this.eq(-1);
 };

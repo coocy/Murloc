@@ -26,6 +26,10 @@
 
 var blankFn = function() {};
 
+/**
+ * Ajax object
+ * @constructor
+ */
 var ajaxObj = function(url, options) {
 	return this.ajax(url, options);
 };
@@ -88,6 +92,10 @@ ajaxObj.prototype = {
 		return this;
 	},
 
+	/**
+	 * 发送一个请求
+	 * @type {Fucntion}
+	 */
 	send: function() {
 		var xmlhttp = this.xmlhttp || (WIN['XMLHttpRequest'] ? new XMLHttpRequest() : false);
 		if (xmlhttp) {
@@ -234,14 +242,23 @@ ajaxObj.prototype = {
 	}
 };
 
+/**
+ * @return {ajaxObj}
+ */
 RR.fn.prototype.ajax = function(url, settings) {
 	return new ajaxObj(url, settings).send();
 };
 
+/**
+ * @return {ajaxObj}
+ */
 RR.fn.prototype.get = function(url, settings) {
 	return new ajaxObj(url, settings).get();
 };
 
+/**
+ * @return {ajaxObj}
+ */
 RR.fn.prototype.post = function(url, settings) {
 	return new ajaxObj(url, settings).post();
 };

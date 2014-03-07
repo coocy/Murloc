@@ -2,7 +2,7 @@
 /**
  * 序列化一个表单对象
  * @param {boolean} returnObject 是否返回object对象，如果不传，返回一个queryString形式的字符串
- * @return {(string|object)} 返回一个queryString形式的字符串或者object对象
+ * @return {(string|Object)} 返回一个queryString形式的字符串或者object对象
  */
 RR.dom.prototype.serialize = function(returnObject) {
 

@@ -2,10 +2,13 @@
  * @requires ../../src/Murloc.js
  */
 
-var el = $('#box');
-el.remove();
+/*
+$('button').on('click', function() {
+	console.log(this.className);
+});
 
-$('div').remove();
+$('button').insertBefore(document.body);
+
+*/
+
 //试试提交
-
-

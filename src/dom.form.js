@@ -4,7 +4,7 @@
  * @param {boolean} returnObject 是否返回object对象，如果不传，返回一个queryString形式的字符串
  * @return {(string|Object)} 返回一个queryString形式的字符串或者object对象
  */
-RR.dom.prototype.serialize = function(returnObject) {
+$.prototype.serialize = function(returnObject) {
 
 	var result = {},
 		addValue = function(key, value) {
@@ -21,7 +21,7 @@ RR.dom.prototype.serialize = function(returnObject) {
 			}
 		};
 
-	this.each(function(element) {
+	this.each(function(index, element) {
 		var elementNodeName = element.nodeName;
 		if ('FORM' == elementNodeName) {
 			$().extend(result, $(element.elements).serialize(true));
@@ -61,10 +61,10 @@ RR.dom.prototype.serialize = function(returnObject) {
  *      <input type="password" name="password" format="password" required length="5,20" />
  * @return {boolean} 表单是否通过验证，如果有多个表单，只要有一个表单验证失败即返回false
  */
-RR.dom.prototype.check = function() {
+$.prototype.check = function() {
 	var result = true;
 
-	this.each(function(element) {
+	this.each(function(index, element) {
 
 		if ('FORM' == element.nodeName) {
 			var elements = element.elements,
@@ -116,8 +116,8 @@ RR.dom.prototype.check = function() {
 /**
  * 在表单中显示一条提示
  */
-RR.dom.prototype.showFormTip = function(message, className) {
-	return this.each(function(element) {
+$.prototype.showFormTip = function(message, className) {
+	return this.each(function(index, element) {
 		var msgEl = $('.form_tip', element);
 		if (msgEl.length < 1) {
 			msgEl = $('<div class="form_tip"></p>').prependTo(element);

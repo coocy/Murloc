@@ -1,17 +1,20 @@
-
-RR.fn.prototype.ready = RR.dom.prototype.ready = function(fn) {
-
-	//如果页面已经加载完成，直接执行方法
-	if (true === RR.loader.isLoaded) {
-		fn();
-	} else {	
-		RR.loader.callbacks.push(fn);
-		RR.loader.init();
+/**
+ * 迭代一个{$}对象，对其中的每个子元素执行一个方法
+ * @function
+ * @param {function(number=, Element=)} fn
+ */
+$.prototype.each = function(fn) {
+	for (var i = 0, l = this.length, element; i < l; i++) {
+		element = this.context[i];
+		var result = fn.call(element, i, element);
+		if (false === result) {
+			break;
+		}
 	}
 	return this;
 };
 
-RR.dom.prototype.remove = function() {
+$.prototype.remove = function() {
 	var i = this.length;
 	while (i--) {
 		var element = this.context[i];
@@ -21,13 +24,13 @@ RR.dom.prototype.remove = function() {
 	return this;
 };
 
-RR.insertNodeBefore = function(element, parent, target) {
+$._insertNodeBefore = function(element, parent, target) {
 	//原生DOM对象直接添加
 	var method = target ? 'insertBefore' : 'appendChild';
 	if (element.nodeType) {
 		parent[method](element, target);
 
-	} else if (element instanceof RR.dom) {
+	} else if (element instanceof $) {
 		for (var i = 0, l = element.length; i < l; i++) {
 			parent[method](element.context[i], target);
 		}
@@ -42,120 +45,109 @@ RR.insertNodeBefore = function(element, parent, target) {
 	}
 };
 
-RR.dom.prototype.before = function(preElement) {
-	return this.each(function(element) {
-		RR.insertNodeBefore(preElement, element.parentNode, element);
+$.prototype.before = function(preElement) {
+	return this.each(function(index, element) {
+		$._insertNodeBefore(preElement, element.parentNode, element);
 	});
 };
 
-RR.dom.prototype.after = function(nextElement) {
-	return this.each(function(element) {
-		RR.insertNodeBefore(nextElement, element.parentNode, element.nextSibling);
+$.prototype.after = function(nextElement) {
+	return this.each(function(index, element) {
+		$._insertNodeBefore(nextElement, element.parentNode, element.nextSibling);
 	});
 };
 
-RR.dom.prototype.prepend = function(childElement) {
-	return this.each(function(element) {
-		RR.insertNodeBefore(childElement, element, element.firstChild);
+$.prototype.prepend = function(childElement) {
+	return this.each(function(index, element) {
+		$._insertNodeBefore(childElement, element, element.firstChild);
 	});
 };
 
-RR.dom.prototype.append = function(childElement) {
-	return this.each(function(element) {
-		RR.insertNodeBefore(childElement, element);
+$.prototype.append = function(childElement) {
+	return this.each(function(index, element) {
+		$._insertNodeBefore(childElement, element);
 	});
 };
 
-RR.dom.prototype.insertBefore = function(targetElement) {
+$.prototype.insertBefore = function(targetElement) {
 	$(targetElement).before(this);
 	return this;
 };
 
-RR.dom.prototype.insertAfter = function(targetElement) {
+$.prototype.insertAfter = function(targetElement) {
 	$(targetElement).after(this);
 	return this;
 };
 
-RR.dom.prototype.prependTo = function(targetElement) {
+$.prototype.prependTo = function(targetElement) {
 	$(targetElement).prepend(this);
 	return this;
 };
 
-RR.dom.prototype.appendTo = function(targetElement) {
+$.prototype.appendTo = function(targetElement) {
 	$(targetElement).append(this);
 	return this;
 };
 
-RR.dom.prototype.width = function() {
-	var element = this.context[0];
-	return element && element.offsetWidth;
-};
-
-RR.dom.prototype.height = function() {
-	var element = this.context[0];
-	return element && element.offsetHeight;
-};
-
 /**
- * 返回DOM对象相对于文档左上角的偏移
+ * 使用指定的开始和结束位置创建一个新的DOM集合
  * @function
- * @return {{left:number, top:number}}
+ * @param {number} start 指定开始的位置，如果为负值，则从尾部开始计算偏移
+ * @param {number=} end 指定开始的位置，如果为负值，则从尾部开始计算偏移，如果不指定，则默认到末尾的位置
+ * @return {$}
  */
-RR.dom.prototype.offset = function() {
-	var element = this.context[0];
-	if (element) {
-		var fn = element['getBoundingClientRect'],
-			offset = fn && fn(),
-			Body = DOC.body;
-		if (offset) {
-			return {
-				left: offset['left'] + (WIN.pageXOffset || Body.scrollTop || 0),
-				top: offset['top'] + (WIN.pageYOffset  || Body.scrollLeft || 0)
-			}
-		}
-	}
-	return {
-		left: 0,
-		top: 0
-	};
+$.prototype.slice = function(start, end) {
+
+	var length = this.length,
+		start = start + (start < 0 ? length : 0),
+		end = undefined == end ? length : end,
+		end = end + (end < 0 ? length : 0),
+		result = new $();
+
+	result.context = [].slice.call(this.context, start, end);
+	result.length = result.context.length;
+
+	return result;
 };
 
 /**
  * 返回DOM集合中的第一个对象
  * @function
- * @return {RR.dom}
+ * @return {$}
  */
-RR.dom.prototype.first = function() {
+$.prototype.first = function() {
 	return this.eq(0);
 };
 
 /**
  * 返回DOM集合中的最后一个对象
  * @function
- * @return {RR.dom}
+ * @return {$}
  */
-RR.dom.prototype.last = function() {
+$.prototype.last = function() {
 	return this.eq(-1);
 };
 
-RR.dom.prototype.eq = function(index) {
+$.prototype.eq = function(index) {
 	return $(this.get(index));
 };
 
-RR.dom.prototype.indexOf = [].indexOf;
-
-RR.dom.prototype.index = function(){
+$.prototype.index = function(){
     return this.parent().children().context.indexOf(this.get(0));
 };
 
-RR.dom.prototype.get = function(index) {
-	var length = this.length,
+$.prototype.get = function(index) {
+	if (undefined === index) {
+		return this.context;
+	}
+	var index = parseInt(index, 10),
+		length = this.length,
 		idx = index + (index < 0 ? length : 0);
 
-	return (idx > length - 1) ? null : this.context[idx];
+	return idx < 0 ? undefined : this.context[idx];
 };
 
-RR.matches = function(element, selector) {
+$.is = function(element, selector) {
 	if (!selector) return false;
 	var matchesSelector = element.webkitMatchesSelector || 
 		element.mozMatchesSelector || 
@@ -167,12 +159,12 @@ RR.matches = function(element, selector) {
 	}
 };
 
-RR.dom.prototype.filter = function(selector) {
-	var result = new RR.dom(),
+$.prototype.filter = function(selector) {
+	var result = new $(),
 		elements = [];
 
 	if (selector) {
-		this.each(function(element) {
+		this.each(function(index, element) {
 			if (RR.matches(element, selector)) {
 				elements.push(element);
 			}
@@ -184,10 +176,10 @@ RR.dom.prototype.filter = function(selector) {
 	return result;
 }
 
-RR.dom.prototype.parent = function(selector) {
-	var result = new RR.dom(),
+$.prototype.parent = function(selector) {
+	var result = new $(),
 		elements = [];
-	this.each(function(element) {
+	this.each(function(index, element) {
 		if (!selector || (selector && RR.matches(element, selector))) {
 			elements.push(element.parentNode);
 		}
@@ -197,10 +189,10 @@ RR.dom.prototype.parent = function(selector) {
 	return result;
 };
 
-RR.dom.prototype.parents = function(selector) {
-	var result = new RR.dom(),
+$.prototype.parents = function(selector) {
+	var result = new $(),
 		elements = [];
-	this.each(function(element) {
+	this.each(function(index, element) {
 		while((element = element.parentNode) && element !== DOC &&  elements.indexOf(element) < 0) {
 			if (!selector || (selector && RR.matches(element, selector))) {
 				elements.push(element);
@@ -212,10 +204,10 @@ RR.dom.prototype.parents = function(selector) {
 	return result;
 };
 
-RR.dom.prototype.children = function() {
-	var result = new RR.dom(),
+$.prototype.children = function() {
+	var result = new $(),
 		elements = [];
-	this.each(function(element) {
+	this.each(function(index, element) {
 		for (var i = 0, l = element.childNodes.length; i < l; i++) {
 			var child = element.childNodes[i];
 			(1 == child.nodeType) && elements.push(child);
@@ -226,10 +218,10 @@ RR.dom.prototype.children = function() {
 	return result;
 };
 
-RR.dom.prototype.clone = function(cloneChildren) {
-	var result = new RR.dom(),
+$.prototype.clone = function(cloneChildren) {
+	var result = new $(),
 		elements = [];
-	this.each(function(element) {
+	this.each(function(index, element) {
 		elements.push(element.cloneNode(!!cloneChildren));
 	});
 	result.context = elements;
@@ -237,113 +229,11 @@ RR.dom.prototype.clone = function(cloneChildren) {
 	return result;
 };
 
-RR.dom.uid = function(element) {
-	return element['__ruid'] || (element['__ruid'] = RR.uid++);
+$.guid = function(element) {
+	return element['__ruid'] || (element['__ruid'] = $.uid++);
 };
 
-RR.loader = {
-
-	callbacks: [],
-
-    /**
-     * {Boolean}  是否已经初始化
-     */
-	isInited: false,
-
-    /**
-     * {Boolean}  是否已经加载完成
-     */
-	isLoaded: false,
-
-	timer: null,
-
-	ieTimer: function() {
-		if (IsIE && 'interactive' == DOC.readyState) {
-			if (RR.loader.timer) {
-				clearTimeout(RR.loader.timer);
-			}
-			RR.loader.timer = setTimeout(RR.loader.ieTimer, 10);
-		} else {
-			RR.loader.init();
-			RR.loader.isInited = true;
-		}
-	},
-	
-	/**
-	 * 初始化函数
-	 * 因为页面中引用的Javascript文件是异步加载的，因此加载完Javascript文件后需要判断HTML页面是否加载完全:
-	 * 1. 如果document.readyState的值不为"loading", 则马上执行初始化函数
-	 * 2. 如果document.readyState的值为"loading", 则把初始化函数放入DOMContentLoaded中执行
-	 */
-	init: function() {
-
-		if (false === RR.loader.isInited) {
-
-			var readyState = DOC.readyState;
-
-			//页面载入完成后的对$().ready()的调用直接执行
-			if ('loading|uninitialized'.indexOf(readyState) < 0) {
-
-				/* 在JS异步模式下，
-				 * IE浏览器在document.readyState等于interactive的时候文档尚未解析完成（其它浏览器没有问题），
-				 * 加个定时器检查document.readyState
-				 */
-				if (IsIE && ('interactive' == readyState)) {
-					RR.loader.ieTimer();
-					return;
-				} else { 
-					RR.loader.loaded();
-				}
-			} else {
-				/* 在第一次调用$.ready()的时候才进行初始化 */
-				RR.loader.isInited = true;
-				if (DOC.addEventListener) {
-					DOC.addEventListener('DOMContentLoaded', RR.loader.loaded);
-				} else {
-					//IE
-					var id = '_ir_';
-					var script = DOC.getElementById(id);
-					if (!script) {
-						DOC.write('<script id="' + id + '" defer="true" src="://"></script>');
-						script = DOC.getElementById(id);
-					}
-					script.onreadystatechange = script.onload = function() {
-						if (this.readyState == 'complete') {
-							RR.loader.loaded();
-						}
-					};
-				}
-			}
-		}
-	},
-
-	loaded: function() {
-		if (false === RR.loader.isLoaded) {
-			RR.loader.isLoaded = true;
-			RR.loader.fire();
-		}
-	},
-
-	/**
-	 * 触发初始化函数
-	 */
-	fire: function() {
-
-		/* 遍历执行初始化函数数组 */
-		for (var callbacks = RR.loader.callbacks, i = 0, l = callbacks.length; i < l; i++) {
-			if (ENABLE_DEBUG) {
-				callbacks[i]();
-			} else {
-				try {
-					callbacks[i]();
-				} catch(e) {}
-			}
-		}
-		RR.loader.callbacks = [];
-	}
-	
-};
-
+/*
 DOC.addEventListener('DOMSubtreeModified', function(e) {
 	console.log(e);
-});
+});*/

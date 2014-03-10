@@ -1,5 +1,5 @@
 
-RR.dom.prototype.hasClass =  function(value) {
+$.prototype.hasClass =  function(value) {
 	var classes = (value || '').match(/\S+/g) || [],
 		len = classes.length;
 	for (var i = 0, j, l = this.length; i < l; i++) {
@@ -12,10 +12,10 @@ RR.dom.prototype.hasClass =  function(value) {
 	return false;
 };
 
-RR.dom.prototype.addClass =  function(value) {
+$.prototype.addClass =  function(value) {
 	var classes = (value || '').match(/\S+/g) || [],
 		len = classes.length;
-	return this.each(function(element) {
+	return this.each(function(index, element) {
 		var className = ' ' + (element.className || '') + ' ',
 			curClass,
 			i;
@@ -29,10 +29,10 @@ RR.dom.prototype.addClass =  function(value) {
 	});
 };
 
-RR.dom.prototype.removeClass =  function(value) {
+$.prototype.removeClass =  function(value) {
 	var classes = (value || '').match(/\S+/g) || [],
 		len = classes.length;
-	return this.each(function(element) {
+	return this.each(function(index, element) {
 		var className = ' ' + element.className + ' ',
 			oClassName = className,
 			curClass,
@@ -50,10 +50,10 @@ RR.dom.prototype.removeClass =  function(value) {
 	});
 };
 
-RR.dom.prototype.toggleClass =  function(value, condition) {
+$.prototype.toggleClass =  function(value, condition) {
 	var classes = (value || '').match(/\S+/g) || [],
 		len = classes.length;
-	return this.each(function(element) {
+	return this.each(function(index, element) {
 		var className = ' ' + element.className + ' ',
 			curClass,
 			isAdd,

@@ -1,4 +1,5 @@
 /**
+ * @requires sizzle.js
  * @requires core.js
  * @requires json.js
  * @requires util.js
@@ -7,6 +8,7 @@
  * @requires url.js
  * @requires cookie.js
  * @requires dom.js
+ * @requires dom.ready.js
  * @requires dom.styles.js
  * @requires dom.attributes.js
  * @requires dom.class_name.js

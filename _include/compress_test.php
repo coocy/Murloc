@@ -21,12 +21,13 @@ if (preg_match('/^.+\.(js|css)/i', $uri, $temp_array)) {
 	$static_type = $temp_array[1]; /* scripts || styles */
 	
 	$file_path = $temp_array[0];
+
+	$file_path = preg_replace('/\.min/', '', $file_path);
 	
 	$static_contents = get_static_content($file_path);
 	
 	$compressed_contents = trim(compress_js($file_path, true));
 
-	
 	$origin_size = strlen($static_contents);
 	$compressed_size = strlen($compressed_contents);
 	
@@ -35,6 +36,11 @@ if (preg_match('/^.+\.(js|css)/i', $uri, $temp_array)) {
 	
 	$compress_saving = 100 - ((int)($compressed_size / $origin_size * 10000) / 100);
 	
+}
+
+if (preg_match('/^.+\.min\.js(\?.*)?$/i', $uri, $temp_array)) {
+	@header( 'Content-Type: application/x-javascript');
+	die($compressed_contents);
 }
 
 ?><html><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8">

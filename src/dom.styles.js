@@ -1,9 +1,9 @@
 /**
- * 获取DOM对象的绝对偏移
- * @return {Object} 包含left和top值
+ * 返回DOM对象相对于文档左上角的偏移
+ * @function
+ * @return {{left:number, top:number}}
  */
-
-RR.dom.prototype.offset =  function() {
+$.prototype.offset =  function() {
 	var element = this.context[0],
 		offset = {
 			left:0,
@@ -18,4 +18,14 @@ RR.dom.prototype.offset =  function() {
 		} while (element);
 	}
 	return offset;
+};
+
+$.prototype.width = function() {
+	var element = this.context[0];
+	return element && element.offsetWidth;
+};
+
+$.prototype.height = function() {
+	var element = this.context[0];
+	return element && element.offsetHeight;
 };

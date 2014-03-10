@@ -1,8 +1,8 @@
 
-RR.dom.prototype.html =  function() {
+$.prototype.html =  function() {
 	var html = arguments[0];
 		
-	if ('undefined' !== typeof html) {
+	if (undefined !== html) {
 		
 		/* 把html转换为字符串 */
 		html += '';
@@ -11,7 +11,7 @@ RR.dom.prototype.html =  function() {
 		if (html.indexOf('<') > -1 && html.indexOf('>') > -1) {
 			isText = false;
 		}
-		return this.each(function(element) {
+		return this.each(function(index, element) {
 			if (element && ('innerHTML' in element)) {
 				element.innerHTML = html;
 				if (!isText) {
@@ -25,11 +25,11 @@ RR.dom.prototype.html =  function() {
 	}
 };
 
-RR.dom.prototype.val =  function() {
+$.prototype.val =  function() {
 	var val = arguments[0];
 		
-	if ('undefined' !== typeof val) {
-		return this.each(function(element) {
+	if (undefined !== val) {
+		return this.each(function(index, element) {
 			element.value = val;
 		});
 	} else {
@@ -38,31 +38,64 @@ RR.dom.prototype.val =  function() {
 	}
 };
 
-RR.dom.prototype.attr =  function(name, value) {
-	if ('undefined' !== typeof value) {
-		return this.each(function(element) {
-			element.setAttribute(name, value);
+$.prototype.prop =  function(name, value) {
+	if (undefined !== value) {
+		return this.each(function(index, element) {
+			element[name] = value;
 		});
 	} else {
 		var element = this.context[0];
-		return element && element.getAttribute && element.getAttribute(name);
+		return element && element[name];
 	}
 };
 
-RR.dom.prototype.removeAttr =  function(name) {
-	return this.each(function(element) {
+$.prototype.attr =  function(name, value) {
+
+	if (undefined !== value) {
+		return this.each(function(index, element) {
+			element.setAttribute(name, value);
+		});
+	} else {
+		if ('object' === typeof name) {
+			for (var key in name) {
+				this.attr(key, name[key]);
+			}
+			return this;
+		}
+		var element = this.context[0],
+			attrNode = element && element.getAttributeNode(name),
+			result = attrNode && attrNode.nodeValue;
+
+		/*if (ENABLE_IE_SUPPORT) {
+			if (null === result) {
+				var nameFix = {
+					'for': 'htmlFor',
+					'class': 'className'
+				};
+				//name = nameFix[name] || name;
+				result = element.getAttributeNode && element.getAttributeNode(name).nodeValue;
+				//result = element && element.getAttribute && element.getAttribute(name);
+			}
+		}*/
+
+		return (null === result) ? undefined : result;
+	}
+};
+
+$.prototype.removeAttr =  function(name) {
+	return this.each(function(index, element) {
 		element.removeAttribute && element.removeAttribute(name);
 	});
 };
 
-RR.dom.prototype.css =  function(key, value) {
+$.prototype.css =  function(key, value) {
 
-	if ('string' === (typeof key).toLowerCase() && 'undefined' === typeof value) {
+	if (('string' === typeof key) && (undefined === value)) {
 		var element = this.context[0];
-    	return element && (element.currentStyle? element.currentStyle : window.getComputedStyle(element, null))[key];
-    }
+		return element && (element.currentStyle || window.getComputedStyle(element, null))[key];
+	}
 
-	return this.each(function(element) {
+	return this.each(function(index, element) {
 		if ('object' !== typeof key) {
 			var _key = {};
 			_key[key] = value;

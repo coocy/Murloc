@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>Test Page</title>
+	<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+	<meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0" />
+	<meta content="" name="description" />
+	<script type="text/javascript" src="test/scripts/lib/jquery-1.10.2.js"></script>
+	<style type="text/css">
+		
+	</style>
+</head>
+<body>
+	<section>
+		
+		<p><a href=""><span>Link</span></a></p>
+
+	</section>
+	<script type="text/javascript">
+		/*$( document ).on( "click", "a", function() {
+			alert( "Goodbye!" );  
+			return false;
+		});*/
+		$('a').on( "click", function(e) {
+			console.log( "Goodbye!" );  
+			e.preventDefault();
+		}).on( "click", function(e) {
+			console.log( "Goodbye Again!" );  
+			e.preventDefault();
+		});
+
+		$('section').on( "click", 'a', function(e) {
+			console.log( "section!" );  
+			e.preventDefault();
+
+		}).on( "click", function(e) {
+			console.log( "section Again!" );  
+			e.preventDefault();
+
+		});
+
+		$(document.body).append('<a href="">Link1<a>');
+	</script>
+
+</body>
+</html>

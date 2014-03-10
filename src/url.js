@@ -156,10 +156,10 @@ var URL = {
 	}
 };
 
-RR.fn.prototype.param = function(obj) {
+$.param = function(obj) {
 	return URL.objToQueryString(obj);
 }
 
-RR.fn.prototype.getUrlParam = function(key, el) {
+$.getUrlParam = function(key, el) {
 	return URL.getQueryString(key, el);
 }

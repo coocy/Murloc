@@ -23,7 +23,6 @@
  * </code>
  */
 
-
 var blankFn = function() {};
 
 /**
@@ -245,20 +244,20 @@ ajaxObj.prototype = {
 /**
  * @return {ajaxObj}
  */
-RR.fn.prototype.ajax = function(url, settings) {
+$.ajax = function(url, settings) {
 	return new ajaxObj(url, settings).send();
 };
 
 /**
  * @return {ajaxObj}
  */
-RR.fn.prototype.get = function(url, settings) {
+$.get = function(url, settings) {
 	return new ajaxObj(url, settings).get();
 };
 
 /**
  * @return {ajaxObj}
  */
-RR.fn.prototype.post = function(url, settings) {
+$.post = function(url, settings) {
 	return new ajaxObj(url, settings).post();
 };

@@ -47,13 +47,8 @@ if ($uri === '') {
 
 if ($template_file) {
 
-	if (file_exists(ROOT_PATH.'debug')) {
-		$temp_dir = PAGE_DIR;
-		$compressHTML = true;
-	} else {
-		$temp_dir = OUTPUT_DIR.'views/';
-		$compressHTML = false;
-	}
+	$temp_dir = PAGE_DIR;
+	$compressHTML = true;
 
 	$temp = new mb_template($template_file, array(
 		'temp_dir' => $temp_dir,

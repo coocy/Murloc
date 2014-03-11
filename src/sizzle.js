@@ -10,6 +10,10 @@
  */
 (function( window ) {
 
+if (!ENABLE_IE_SUPPORT) {
+	return;
+}
+
 var i,
 	support,
 	Expr,

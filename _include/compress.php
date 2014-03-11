@@ -88,7 +88,7 @@ function compress_js($file_path, $return_content = false) {
 
 	$parms = array(
 		'--compilation_level ' . $compilation_level,
-		//'--define ENABLE_IE_SUPPORT=false',
+		'--define ENABLE_IE_SUPPORT=false',
 		'--define ENABLE_DEBUG=false',
 		'--use_types_for_optimization',
 		'--output_wrapper "(function(){%output%})()"',

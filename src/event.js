@@ -3,7 +3,7 @@
  */
 
  /* 
-$.eventCache = {
+$._eventCache = {
 	'event_1': {
 		'uid_1': [
 			fn1: 1,
@@ -132,9 +132,15 @@ $.event.prototype = {
 	}
 };
 
-$.eventCache = {};
+/**
+ * @private
+ */
+$._eventCache = {};
 
-$.eventType = {
+/**
+ * @private
+ */
+$._eventType = {
 
 	/**
 	 * @const
@@ -149,6 +155,13 @@ $.eventType = {
 	captured: '|focus|blur|'
 };
 
+/**
+ * 给DOM对象绑定事件
+ * @param {string} type
+ * @param {Element} element
+ * @param {function(Event=)} fn
+ * @param {boolean} capture
+ */
 $.addEvent = DOC.addEventListener ? function(type, element, fn, capture) {
 	element.addEventListener(type, fn, capture);
 } : function(type, element, fn, capture) {
@@ -156,9 +169,9 @@ $.addEvent = DOC.addEventListener ? function(type, element, fn, capture) {
 };
 
 $._addEventData = function(type, uid, element, fn) {
-	var eventData = $.eventCache[type] || ($.eventCache[type] = {}),
+	var eventData = $._eventCache[type] || ($._eventCache[type] = {}),
 		elemData = eventData[uid] || (eventData[uid] = []),
-		capture = (-1 !== $.eventType.captured.indexOf(type));
+		capture = (-1 !== $._eventType.captured.indexOf(type));
 			
 	/* 
 	 * 在第一次给某个DOM对象添加事件的时候绑定$.dispatchEvent()方法，
@@ -167,7 +180,7 @@ $._addEventData = function(type, uid, element, fn) {
 	if (elemData.length < 1) {
 
 		/* 把需要委托的事件绑定在document上面 */
-		if (-1 < $.eventType.delegated.indexOf(type)) {
+		if (-1 < $._eventType.delegated.indexOf(type)) {
 			element = DOC;
 		}
 		$.addEvent(type, element, $.dispatchEvent, capture);
@@ -187,7 +200,7 @@ $.dispatchEvent = function(e) {
 		e = new $.event(e),
 		type = e.type,
 		elCur = e.target,
-		eventData = $.eventCache[type] || {};
+		eventData = $._eventCache[type] || {};
 
 	/* 
 	 * 在触屏浏览器中，只执行在touchend中合成的click事件
@@ -240,7 +253,7 @@ $.dispatchEvent = function(e) {
 };
 
 /**
- * 给DOM对象绑定事件
+ * 给DOM集合绑定事件
  * @function
  * @param {String} type 事件类型
  * @param {Function} fn 绑定的事件
@@ -280,8 +293,22 @@ $.prototype.trigger = function(type, data) {
  * 2. 实现被点击对象的按压效果
  */
 $.touchEvent = {
+
+	/**
+	 * @const
+	 * @type {string}
+	 */
 	activeCls: 'active',
+
+	/**
+	 * @type {boolean}
+	 */
 	hasTouchStart: false,
+
+	/**
+	 * @const
+	 * @type {string}
+	 */
 	initedId: '__RR_EVENT_INITED__',
 
 	init: function() {
@@ -309,7 +336,7 @@ $.touchEvent = {
 		var e = new $.event(e),
 			event = e.originalEvent,
 			elCur = e.target,
-			eventData = $.eventCache['click'] || {};
+			eventData = $._eventCache['click'] || {};
 
 		$.touchEvent.clearHighlight();
 

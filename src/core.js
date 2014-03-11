@@ -106,7 +106,8 @@ var
 	_hasGetElementsByClassName = DOC.getElementsByClassName,
 	_fnConcat = [].concat,
 	_kSelectorTest = [',', '+', '~', '[', '>', '#', '.', ' '],
-	_kSelectorTestLength = _kSelectorTest.length;
+	_kSelectorTestLength = _kSelectorTest.length,
+	_toString = {}.toString;
 
 if (ENABLE_IE_SUPPORT && IsIE) {
 	/* 防止IE6下对象的背景图在hover的时候闪动 */
@@ -252,7 +253,7 @@ $._contextId = 1;
  * @return {{length: number}} 返回一个类数组的DOM集合，包含length属性
  * @private
  */
-$.find = DOC.querySelectorAll ? 
+$.find = (DOC.querySelectorAll || !ENABLE_IE_SUPPORT) ? 
 
 	function(selector, context) {
 		if (DOC !== context) {
@@ -299,9 +300,9 @@ $.extend = function(dest, source) {
 	var property, item;
 	for (var property in source) {
 		item = source[property];
-		if (item !== null) {
-			dest[property] = (typeof(item) == 'object' && !(item.nodeType) && !(item instanceof Array)) ? $.extend({}, item) : item;
-		}
+
+		var type = _toString.call(item);
+		dest[property] = ('[object Object]' === type) ? $.extend({}, item) : item;
 	}
 	return dest;
 };

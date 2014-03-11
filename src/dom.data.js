@@ -1,19 +1,68 @@
 
-
-$.dataCache = {
+/*
+$._dataCache = {
 	'uid_1': {...},
 	'uid_2': {...},
 	...
 };
+*/
 
+/**
+ * @private
+ */
+$._dataCache = {};
 
+/**
+ * @param {(string|Object)=} key
+ * @param {*=} value
+ */
 $.prototype.data = function(key, value) {
-	var uid = $.guid(element),
-		eventData = $.dataCache[type] || ($.dataCache[type] = {});
 
+	// $(selector).data(string) || $(selector).data() || $(selector).data(undefined) || $().data()
+	if (arguments.length < 2) {
+		if (('string' === typeof key) || (undefined === key)) {
+			var element = this.context[0] || {},
+				uid = element['__ruid'] || '0',
+				data = $._dataCache[uid];
 
+			return key ? (data && data[key]) : data;
+		}
+	}
+
+	// $(selector).data(obj[, undefined])
+	if ('object' !== typeof key) {
+		var _key = {};
+		if (undefined !== value) {
+			_key[key + ''] = value;
+		}
+		key = _key;
+	}
+
+	return this.each(function(index, element) {
+		var uid = $.guid(element),
+			elementData = $._dataCache[uid] || ($._dataCache[uid] = {});
+
+		for (var _key in key) {
+			elementData[_key] = key[_key];
+		}
+		//$.extend(elementData, key);
+	});
 };
 
+/**
+ * @param {?string=} key
+ */
 $.prototype.removeData = function(key) {
+	return this.each(function(index, element) {
+		var uid = element['__ruid'] || '0';
 
+		if (uid in $._dataCache) {
+			var data = $._dataCache[uid];
+			if (undefined !== key) {
+				delete data[key];
+			} else {
+				delete data;
+			}
+		}
+	});
 };

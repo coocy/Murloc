@@ -1,6 +1,6 @@
 /**
- * @requires sizzle.js
  * @requires core.js
+ * @requires sizzle.js
  * @requires json.js
  * @requires util.js
  * @requires localstorge.js

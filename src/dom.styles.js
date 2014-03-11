@@ -1,6 +1,5 @@
 /**
  * 返回DOM对象相对于文档左上角的偏移
- * @function
  * @return {{left:number, top:number}}
  */
 $.prototype.offset =  function() {

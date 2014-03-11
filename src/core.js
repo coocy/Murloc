@@ -31,6 +31,7 @@ if (!String.prototype.hasOwnProperty('trim')) {
  */
 if (!Function.prototype.hasOwnProperty('bind')) {
 	/**
+	 * @param {*} context
 	 * @return {function}
 	 */
 	Function.prototype.bind = function(context) {
@@ -200,7 +201,6 @@ $.uid = 1;
 
 /**
  * 返回指定选择符的DOM集合
- * @function
  * @param {string} selector CSS选择符
  * @param {Element=} context (可选)
  * @return {{length: number}} 类似Array的DOM集合(只有length属性)
@@ -235,17 +235,28 @@ $.selectorAll = function(selector, context) {
 		}
 	}
 
-	return ENABLE_IE_SUPPORT ? 
-				$._querySelectorAll(selector, context) : 
-				context.querySelectorAll(selector);
+	return $.find(selector, context);
 };
 
+/**
+ * 选择符的唯一ID
+ * @type {number}
+ * @private
+ */
 $._contextId = 1;
 
-$._querySelectorAll = DOC.querySelectorAll ?  
+/**
+ * 使用CSS3选择符查找对应的DOM集合，在旧浏览器下使用Sizzle引擎
+ * @param {string} selector CSS选择符
+ * @param {Element=} context (可选)
+ * @return {{length: number}} 返回一个类数组的DOM集合，包含length属性
+ * @private
+ */
+$.find = DOC.querySelectorAll ? 
 
 	function(selector, context) {
 		if (DOC !== context) {
+			// context.querySelectorAll(selector)在用选择符查找对象的时候范围不是context，而是整个document，所以给context加个唯一的id来限定范围
 			var id = context.id || (context.id = '__rid' + $._contextId++),
 				selectors = selector.split(','),
 				i = selectors.length;
@@ -265,7 +276,6 @@ $._querySelectorAll = DOC.querySelectorAll ?
 
 /**
  * 迭代一个数组或者Object对象，对其中的每个子元素执行一个方法
- * @function
  * @param {(Array|Object)} collection
  * @param {function(number=, Element=)} fn
  */
@@ -281,7 +291,9 @@ $.each = function(collection, fn) {
 
 /**
  * 扩展一个Object对象，也可以用来复制一个对象
- * @function
+ * @param {Object} dest
+ * @param {Object} source
+ * @return {Object}
  */
 $.extend = function(dest, source) {
 	var property, item;
@@ -297,8 +309,8 @@ $.prototype.extend = $.extend;
 
 /**
  * 深复制一个数组或者对象
- * @function
  * @param {(Array|Object)} dest
+ * @return {(Array|Object)}
  */
 $.copy = function(dest) {
 	if (dest instanceof Array) {
@@ -310,6 +322,6 @@ $.copy = function(dest) {
 	} else if (typeof(dest) == 'object') {
 		return $.extend({}, dest);
 	}
-	return dest + 'abc';
+	return dest;
 };
 $.prototype.copy = $.copy;

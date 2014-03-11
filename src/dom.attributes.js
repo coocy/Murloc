@@ -25,6 +25,24 @@ $.prototype.html =  function() {
 	}
 };
 
+$.prototype.text =  function() {
+	var text = arguments[0];
+		
+	if (undefined !== text) {
+		
+		text += '';
+
+		return this.each(function(index, element) {
+			if (element && ('innerText' in element)) {
+				element.innerText = text;
+			}
+		});
+	} else {
+		var element = this.context[0];
+		return element && element.innerText;
+	}
+};
+
 $.prototype.val =  function() {
 	var val = arguments[0];
 		

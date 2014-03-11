@@ -1,6 +1,5 @@
 /**
  * 迭代一个{$}对象，对其中的每个子元素执行一个方法
- * @function
  * @param {function(number=, Element=)} fn
  */
 $.prototype.each = function(fn) {
@@ -14,84 +13,8 @@ $.prototype.each = function(fn) {
 	return this;
 };
 
-$.prototype.remove = function() {
-	var i = this.length;
-	while (i--) {
-		var element = this.context[i];
-		element.parentNode.removeChild(element)
-	}
-	this.length = 0;
-	return this;
-};
-
-$._insertNodeBefore = function(element, parent, target) {
-	//原生DOM对象直接添加
-	var method = target ? 'insertBefore' : 'appendChild';
-	if (element.nodeType) {
-		parent[method](element, target);
-
-	} else if (element instanceof $) {
-		for (var i = 0, l = element.length; i < l; i++) {
-			parent[method](element.context[i], target);
-		}
-
-	} else if ('string' === typeof element) {
-		//处理添加HTML片段，不使用+=innerHTML是因为这样会消除给容器内的对象绑定的事件
-		var containter = DOC.createElement('div');
-		containter.innerHTML = element;
-		for (var i = 0, l = containter.childNodes.length; i < l; i++) {
-			parent[method](containter.childNodes[0], target);
-		}
-	}
-};
-
-$.prototype.before = function(preElement) {
-	return this.each(function(index, element) {
-		$._insertNodeBefore(preElement, element.parentNode, element);
-	});
-};
-
-$.prototype.after = function(nextElement) {
-	return this.each(function(index, element) {
-		$._insertNodeBefore(nextElement, element.parentNode, element.nextSibling);
-	});
-};
-
-$.prototype.prepend = function(childElement) {
-	return this.each(function(index, element) {
-		$._insertNodeBefore(childElement, element, element.firstChild);
-	});
-};
-
-$.prototype.append = function(childElement) {
-	return this.each(function(index, element) {
-		$._insertNodeBefore(childElement, element);
-	});
-};
-
-$.prototype.insertBefore = function(targetElement) {
-	$(targetElement).before(this);
-	return this;
-};
-
-$.prototype.insertAfter = function(targetElement) {
-	$(targetElement).after(this);
-	return this;
-};
-
-$.prototype.prependTo = function(targetElement) {
-	$(targetElement).prepend(this);
-	return this;
-};
-
-$.prototype.appendTo = function(targetElement) {
-	$(targetElement).append(this);
-	return this;
-};
-
 /**
  * 使用指定的开始和结束位置创建一个新的DOM集合
- * @function
  * @param {number} start 指定开始的位置，如果为负值，则从尾部开始计算偏移
  * @param {number=} end 指定开始的位置，如果为负值，则从尾部开始计算偏移，如果不指定，则默认到末尾的位置
  * @return {$}
@@ -112,7 +35,6 @@ $.prototype.slice = function(start, end) {
 
 /**
  * 返回DOM集合中的第一个对象
- * @function
  * @return {$}
  */
 $.prototype.first = function() {
@@ -121,13 +43,17 @@ $.prototype.first = function() {
 
 /**
  * 返回DOM集合中的最后一个对象
- * @function
  * @return {$}
  */
 $.prototype.last = function() {
 	return this.eq(-1);
 };
 
+/**
+ * 返回DOM集合中的最后一个对象
+ * @param {number} index 从0开始的索引数字
+ * @return {$}
+ */
 $.prototype.eq = function(index) {
 	return $(this.get(index));
 };
@@ -136,6 +62,11 @@ $.prototype.index = function(){
     return this.parent().children().context.indexOf(this.get(0));
 };
 
+/**
+ * 返回一个或者多个$对象中的原生DOM对象
+ * @param {number=} index 从0开始的索引数字
+ * @return {(Element|Array|{length: number})}
+ */
 $.prototype.get = function(index) {
 	if (undefined === index) {
 		return this.context;
@@ -165,7 +96,7 @@ $.prototype.filter = function(selector) {
 
 	if (selector) {
 		this.each(function(index, element) {
-			if (RR.matches(element, selector)) {
+			if ($.is(element, selector)) {
 				elements.push(element);
 			}
 		});
@@ -180,7 +111,7 @@ $.prototype.parent = function(selector) {
 	var result = new $(),
 		elements = [];
 	this.each(function(index, element) {
-		if (!selector || (selector && RR.matches(element, selector))) {
+		if (!selector || (selector && $.is(element, selector))) {
 			elements.push(element.parentNode);
 		}
 	});
@@ -194,7 +125,7 @@ $.prototype.parents = function(selector) {
 		elements = [];
 	this.each(function(index, element) {
 		while((element = element.parentNode) && element !== DOC &&  elements.indexOf(element) < 0) {
-			if (!selector || (selector && RR.matches(element, selector))) {
+			if (!selector || (selector && $.is(element, selector))) {
 				elements.push(element);
 			}
 		}
@@ -218,11 +149,32 @@ $.prototype.children = function() {
 	return result;
 };
 
-$.prototype.clone = function(cloneChildren) {
+$.prototype.contents = function() {
 	var result = new $(),
 		elements = [];
 	this.each(function(index, element) {
-		elements.push(element.cloneNode(!!cloneChildren));
+		for (var i = 0, l = element.childNodes.length; i < l; i++) {
+			var child = element.childNodes[i];
+			(1 == child.nodeType) && elements.push(child);
+		}
+	});
+	result.context = elements;
+	result.length = elements.length;
+	return result;
+};
+
+$.prototype.data = function() {
+	return this;
+};
+
+
+$.prototype.find = function(selector) {
+	var result = new $(),
+		elements = [];
+	this.each(function(index, element) {
+		if (selector && $.is(element, selector)) {
+			elements.push(element);
+		}
 	});
 	result.context = elements;
 	result.length = elements.length;
@@ -232,8 +184,3 @@ $.prototype.clone = function(cloneChildren) {
 $.guid = function(element) {
 	return element['__ruid'] || (element['__ruid'] = $.uid++);
 };
-
-/*
-DOC.addEventListener('DOMSubtreeModified', function(e) {
-	console.log(e);
-});*/

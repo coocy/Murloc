@@ -8,6 +8,8 @@
  * @requires url.js
  * @requires cookie.js
  * @requires dom.js
+ * @requires dom.nodes.js
+ * @requires dom.data.js
  * @requires dom.ready.js
  * @requires dom.styles.js
  * @requires dom.attributes.js

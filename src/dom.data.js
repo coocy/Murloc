@@ -13,6 +13,7 @@ $._dataCache = {};
  * 给DOM对象添加数据
  * @param {(string|Object)=} key
  * @param {*=} value
+ * @return {*}
  */
 $.prototype.data = function(key, value) {
 
@@ -49,6 +50,7 @@ $.prototype.data = function(key, value) {
 /**
  * 移除DOM对象上的数据
  * @param {?string=} key
+ * @return {$}
  */
 $.prototype.removeData = function(key) {
 	return this.each(function(index, element) {

@@ -1,14 +1,13 @@
 /**
  * 包含URL相关的方法
- * @class URL
  */
 
 var URL = {
 
 	/**
 	 * 根据传入的query字符串返回键值对形式的对象
-	 * @param {String} queryString query字符串
-	 * @return {KeyValueObject}
+	 * @param {string} queryString query字符串
+	 * @return {Object}
 	 */
 	getQueryData: function(queryString) {
 		
@@ -36,9 +35,9 @@ var URL = {
 
 	/**
 	 * 获取当前页面或者指定DOM对象的URL中的指定的GET参数的值
-	 * @param {String} key 要获取的GET参数的键
-	 * @param {DOM} el 如此传递此参数，则获取这个DOM对象的url，如果不传则获取当前页面的url
-	 * @return {String|null}
+	 * @param {string} key 要获取的GET参数的键
+	 * @param {Element} el 如此传递此参数，则获取这个DOM对象的url，如果不传则获取当前页面的url
+	 * @return {?string}
 	 */
 	getQueryString: function(key, el) {
 		var parms,
@@ -50,8 +49,8 @@ var URL = {
 
 	/**
 	 * 获取指定DOM对象的链接地址的queryString
-	 * @param {DOM} el 要获取参数的DOM对象
-	 * @return {String}
+	 * @param {Element} el 要获取参数的DOM对象
+	 * @return {string}
 	 */
 	getElSearchString: function(el) {
 		/* 在某些Android下获取不到el.search的值，要使用自定义方法从url中截取 */
@@ -69,7 +68,7 @@ var URL = {
 
 	/**
 	 * 设置指定DOM对象或者页面的URL中的指定的GET参数的值
-	 * @param {DOM} el 设置这个DOM对象的url
+	 * @param {Element} el 设置这个DOM对象的url
 	 * @param {Object} data 要设置的GET参数，以键值对的方式提供
 	 */
 	setQueryString: function(el, data) {
@@ -78,11 +77,13 @@ var URL = {
 			elSearch = elTag.search,
 			_searchString = elSearch || '',
 			_key,
-			_value;
+			_value,
+			hrefString = '';
+			
 		/* 非<A>对象没有search属性 */
 		if (!elSearch) {
-			var hrefString,
-				nodeName = elTag.nodeName;
+			/** @type {string} */
+			var nodeName = elTag.nodeName;
 			if ('FORM' == nodeName) {
 				if ('post' == elTag['method'].toLowerCase()) {
 					hrefString = el.attr('action') || (location + ''); /* 如果action为空则取当前页面的url */
@@ -102,6 +103,9 @@ var URL = {
 			} else {
 				hrefString = el.attr('href') || (location + ''); /* 如果href为空则取当前页面的url */
 			}
+
+			hrefString += '';
+
 			var startPos = hrefString.indexOf('?'),
 			endPos = hrefString.indexOf('#');
 			if (-1 == endPos) endPos = hrefString.length;

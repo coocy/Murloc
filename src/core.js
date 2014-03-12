@@ -14,35 +14,6 @@ var ENABLE_DEBUG = true;
  */
 var ENABLE_IE_SUPPORT = true;
 
-/**
- * 如果浏览器不支持String原生trim的方法，模拟一个
- */
-if (!String.prototype.hasOwnProperty('trim')) {
-	/**
-	 * @return {string}
-	 */
-	String.prototype.trim = function() {
-		return this.replace(/^[\s\uFEFF\xA0]+|[\s\uFEFF\xA0]+$/g, '');
-	}
-}
-
-/**
- * 如果浏览器不支持Function原生bind的方法，模拟一个
- */
-if (!Function.prototype.hasOwnProperty('bind')) {
-	/**
-	 * @param {*} context
-	 * @return {function}
-	 */
-	Function.prototype.bind = function(context) {
-		var fn = this,
-			args = arguments.length > 1 ? Array.slice(arguments, 1) : null;
-		return function() {
-			return fn.apply(context || this, args);
-		};
-	}
-}
-
 /* 保存常用DOM的全局变量（变量名可以被压缩） */
 var 
 	 /**  @type {Document} */ 
@@ -105,11 +76,41 @@ var
 	
 	_hasGetElementsByClassName = DOC.getElementsByClassName,
 	_fnConcat = [].concat,
+	_fnSlice = [].slice,
 	_kSelectorTest = [',', '+', '~', '[', '>', '#', '.', ' '],
 	_kSelectorTestLength = _kSelectorTest.length,
 	_obj = {},
 	_toString = _obj.toString,
 	_hasOwnProperty = _obj.hasOwnProperty;
+
+/**
+ * 如果浏览器不支持String原生trim的方法，模拟一个
+ */
+if (!String.prototype.hasOwnProperty('trim')) {
+	/**
+	 * @return {string}
+	 */
+	String.prototype.trim = function() {
+		return this.replace(/^[\s\uFEFF\xA0]+|[\s\uFEFF\xA0]+$/g, '');
+	}
+}
+
+/**
+ * 如果浏览器不支持Function原生bind的方法，模拟一个
+ */
+if (!Function.prototype.hasOwnProperty('bind')) {
+	/**
+	 * @param {*} context
+	 * @return {function}
+	 */
+	Function.prototype.bind = function(context) {
+		var fn = this,
+			args = arguments.length > 1 ? _fnSlice.call(arguments, 1) : null;
+		return function() {
+			return fn.apply(context || this, args);
+		};
+	}
+}
 
 if (ENABLE_IE_SUPPORT && IsIE) {
 	/* 防止IE6下对象的背景图在hover的时候闪动 */

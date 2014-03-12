@@ -67,6 +67,11 @@ $.prototype.prop =  function(name, value) {
 	}
 };
 
+/**
+ * @param {(string|Object)} name
+ * @param {(string|number)=} value
+ * @return {($|string)=}
+ */
 $.prototype.attr =  function(name, value) {
 
 	if (undefined !== value) {
@@ -100,6 +105,10 @@ $.prototype.attr =  function(name, value) {
 	}
 };
 
+/**
+ * @param {string} name
+ * @return {$}
+ */
 $.prototype.removeAttr =  function(name) {
 	return this.each(function(index, element) {
 		element.removeAttribute && element.removeAttribute(name);

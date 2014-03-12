@@ -1,6 +1,7 @@
 /**
  * 迭代一个{$}对象，对其中的每个子元素执行一个方法
  * @param {function(number=, Element=)} fn
+ * @return {$}
  */
 $.prototype.each = function(fn) {
 	for (var i = 0, l = this.length, element; i < l; i++) {
@@ -29,7 +30,6 @@ $.prototype.slice = function(start, end) {
 
 	result.context = [].slice.call(this.context, start, end);
 	result.length = result.context.length;
-
 	return result;
 };
 
@@ -57,15 +57,15 @@ $.prototype.last = function() {
 $.prototype.eq = function(index) {
 	return $(this.get(index));
 };
-
+/*
 $.prototype.index = function(){
     return this.parent().children().context.indexOf(this.get(0));
 };
-
+*/
 /**
  * 返回一个或者多个$对象中的原生DOM对象
  * @param {number=} index 从0开始的索引数字
- * @return {(Element|Array|{length: number})}
+ * @return {(Element|Array.<Element>|{length: number})}
  */
 $.prototype.get = function(index) {
 	if (undefined === index) {
@@ -90,6 +90,11 @@ $.is = function(element, selector) {
 	}
 };
 
+/**
+ * 使用选择符过滤当前DOM集合，并返回一个新的集合
+ * @param {string} selector 
+ * @return {$}
+ */
 $.prototype.filter = function(selector) {
 	var result = new $(),
 		elements = [];
@@ -107,43 +112,124 @@ $.prototype.filter = function(selector) {
 	return result;
 }
 
-$.prototype.parent = function(selector) {
+/**
+ * 对当前DOM集合中的每个DOM对象沿DOM树向上查找，将第一个符合筛选的对象（含当前对象）放入返回的结果集中
+ * @param {string=} selector
+ * @param {Element=} context  原生DOM对象，如果传了这个参数，返回的结果会在这个对象范围内进行查找
+ * @return {$}
+ */
+$.prototype.closest = function(selector, context) {
 	var result = new $(),
 		elements = [];
-	this.each(function(index, element) {
-		if (!selector || (selector && $.is(element, selector))) {
-			elements.push(element.parentNode);
+
+	if (undefined !== context) {
+		selector = selector || '';
+		var id = context.id || (context.id = '__rid' + $._contextId++),
+			selectors = selector.split(','),
+			i = selectors.length;
+		while (i--) {
+			selectors[i] = '[id=' + id + '] ' + selectors[i];
 		}
+		selector = selectors.join(',');
+	}
+
+	this.each(function(index, element) {
+		do {
+			if (!selector || (selector && $.is(element, selector))) {
+				elements.push(element);
+				break;
+			}
+		} while (
+			(element = element.parentNode) && 
+			(element !== DOC) && 
+			(elements.indexOf(element) < 0)
+		)
 	});
+
 	result.context = elements;
 	result.length = elements.length;
 	return result;
 };
 
+/**
+ * 当前DOM集合中的每个DOM对象的直接父节点的集合
+ * @param {string=} selector 选择符，如果传了此参数，将对结果集进行筛选
+ * @return {$}
+ */
+$.prototype.parent = function(selector) {
+	var result = new $(),
+		elements = [];
+
+	this.each(function(index, element) {
+		var elParent = element.parentNode;
+		if (
+			(!selector || (selector && $.is(elParent, selector))) && 
+			(elements.indexOf(elParent) < 0) 
+		) {
+			elements.push(elParent);
+		}
+	});
+
+	result.context = elements;
+	result.length = elements.length;
+	return result;
+};
+
+/**
+ * 当前DOM集合中的每个DOM对象的所有父节点的集合
+ * @param {string=} selector 选择符，如果传了此参数，将对结果集进行筛选
+ * @return {$}
+ */
 $.prototype.parents = function(selector) {
 	var result = new $(),
 		elements = [];
+
 	this.each(function(index, element) {
-		while((element = element.parentNode) && element !== DOC &&  elements.indexOf(element) < 0) {
+		while (
+			(element = element.parentNode) && 
+			(element !== DOC) && 
+			(elements.indexOf(element) < 0)
+		) {
 			if (!selector || (selector && $.is(element, selector))) {
 				elements.push(element);
 			}
 		}
 	});
+
 	result.context = elements;
 	result.length = elements.length;
 	return result;
 };
 
-$.prototype.children = function() {
+/**
+ * 当前DOM集合中的每个DOM对象的直接子节点的集合
+ * @param {string=} selector 选择符，如果传了此参数，将对结果集进行筛选
+ * @return {$}
+ */
+$.prototype.children = function(selector) {
 	var result = new $(),
 		elements = [];
+
 	this.each(function(index, element) {
-		for (var i = 0, l = element.childNodes.length; i < l; i++) {
-			var child = element.childNodes[i];
-			(1 == child.nodeType) && elements.push(child);
-		}
+		elements = _fnConcat.apply(elements, element.children);
 	});
+
+	// 使用选择符筛选结果，
+	// 之所以事后筛选是因为如果在业务代码中调用.children()的时候都不传第二个参数，
+	// 这块代码可以被压缩器优化掉
+	if (undefined !== selector) {
+		var _elements = [],
+			element,
+			i = 0;
+		while (element = elements[i++]) {
+			if ($.is(element, selector)) {
+				_elements.push(element);
+			}
+		}
+		elements = null;
+		elements = _elements;
+	}
+
 	result.context = elements;
 	result.length = elements.length;
 	return result;
@@ -163,11 +249,10 @@ $.prototype.contents = function() {
 	return result;
 };
 
-$.prototype.data = function() {
-	return this;
-};
-
-
+/**
+ * @param {string=} selector 选择符，如果传了此参数，将对结果集进行筛选
+ * @return {$}
+ */
 $.prototype.find = function(selector) {
 	var result = new $(),
 		elements = [];
@@ -181,6 +266,9 @@ $.prototype.find = function(selector) {
 	return result;
 };
 
+/**
+ * @return {number}
+ */
 $.guid = function(element) {
 	return element['__ruid'] || (element['__ruid'] = $.uid++);
 };

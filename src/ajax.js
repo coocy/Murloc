@@ -156,7 +156,7 @@ ajaxObj.prototype = {
 		if (false !== options.beforeSend(this, options)) {
 
 			var data = options.data,
-				queryString = ('string' == typeof data) ? data : $().param(data),
+				queryString = ('string' == typeof data) ? data : $.param(data),
 				url = options.url;
 
 			if ('GET' == options.type) {

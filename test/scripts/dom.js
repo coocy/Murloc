@@ -1,3 +1,8 @@
+
+test("length", function() {
+	equal( $("#qunit-fixture p").length, 6, "Get Number of Elements Found" );
+});
+
 test("$(selector).get()", function() {
 	deepEqual( toArray($("#qunit-fixture p").get()), q("firstp","ap","sndp","en","sap","first"), "Get All Elements" );
 
@@ -6,6 +11,15 @@ test("$(selector).get()", function() {
 
 	equal( $("p").get(-1), document.getElementById("first"), "Get a single element with negative index" );
 	strictEqual( $("#firstp").get(-2), undefined, "Try get with index negative index larger then elements count" );
+});
+
+test("eq('-1')", function() {
+
+	var $divs = $( "div" );
+
+	equal( $divs.eq( -1 ).length, 1, "The number -1 returns a selection that has length 1" );
+	equal( $divs.eq( "-1" ).length, 1, "The string '-1' returns a selection that has length 1" );
+	deepEqual( $divs.eq( "-1" ), $divs.eq( -1 ), "String and number -1 match" );
 });
 
 test("$(selector).first()/last()", function() {
@@ -151,3 +165,75 @@ test("$(selector).slice()", function() {
 	deepEqual( toArray($links.eq("2").get()), q("anchor1"), "eq('2')" );
 	deepEqual( toArray($links.eq(-1).get()), q("mark"), "eq(-1)" );
 });
+
+test("$(selector).filter(Selector|undefined)", function() {
+	deepEqual( $("#form input").filter(":checked").get(), q("radio2", "check1"), "filter(String)" );
+	deepEqual( $("p").filter("#ap, #sndp").get(), q("ap", "sndp"), "filter('String, String')" );
+	deepEqual( $("p").filter("#ap,#sndp").get(), q("ap", "sndp"), "filter('String,String')" );
+
+	deepEqual( $("p").filter(null).get(),      [], "filter(null) should return an empty $ object");
+	deepEqual( $("p").filter(undefined).get(), [], "filter(undefined) should return an empty $ object");
+	deepEqual( $("p").filter(0).get(),         [], "filter(0) should return an empty $ object");
+	deepEqual( $("p").filter("").get(),        [], "filter('') should return an empty $ object");
+
+});
+
+test("$(selector).closest()", function() {
+
+	var el;
+
+	deepEqual( $("body").closest("body").get(), q("body"), "closest(body)" );
+	deepEqual( $("body").closest("html").get(), q("html"), "closest(html)" );
+	deepEqual( $("body").closest("div").get(), [], "closest(div)" );
+	deepEqual( $("#qunit-fixture").closest("span,#html").get(), q("html"), "closest(span,#html)" );
+
+	// Test .closest() limited by the context
+	el = $("#nothiddendivchild");
+	deepEqual( el.closest("html", document.body).get(), [], "Context limited." );
+	deepEqual( el.closest("body", document.body).get(), [], "Context limited." );
+	deepEqual( el.closest("#nothiddendiv", document.body).get(), q("nothiddendiv"), "Context not reached." );
+
+	//Test that .closest() returns unique'd set
+	equal( $("#qunit-fixture p").closest("#qunit-fixture").length, 1, "Closest should return a unique set" );
+
+	// Test on disconnected node
+	equal( $("<div><p></p></div>").find("p").closest("table").length, 0, "Make sure disconnected closest work." );
+
+	equal( $("<div foo='bar'></div>").closest("[foo]").length, 1, "Disconnected nodes with attribute selector" );
+	equal( $("<div>text</div>").closest("[lang]").length, 0, "Disconnected nodes with text and non-existent attribute selector" );
+
+	ok( !$(document).closest("#foo").length, "Calling closest on a document fails silently" );
+
+	//el = $("<div>text</div>");
+	//deepEqual( el.contents().closest("*").get(), el.get(), "Text node input (#13332)" );
+});
+
+test("$(selector).children()", function() {
+	deepEqual( $("#foo").children().get(), q("sndp", "en", "sap"), "Check for children" );
+	deepEqual( $("#foo").children("#en, #sap").get(), q("en", "sap"), "Check for multiple filters" );
+});
+
+test("$(selector).parent()", function() {
+
+	var $el;
+
+	equal( $("#groups").parent().get(0).id, "ap", "Simple parent check" );
+	equal( $("#groups").parent("p").get(0).id, "ap", "Filtered parent check" );
+	equal( $("#groups").parent("div").length, 0, "Filtered parent check, no match" );
+	equal( $("#groups").parent("div, p").get(0).id, "ap", "Check for multiple filters" );
+	deepEqual( $("#en, #sndp").parent().get(), q("foo"), "Check for unique results from parent" );
+
+	//$el = $("<div>text</div>");
+	//deepEqual( $el.contents().parent().get(), $el.get(), "Check for parent of text node" );
+});
+
+test("$(selector).parents()", function() {
+	equal( $("#groups").parents().get(0).id, "ap", "Simple parents check" );
+	//deepEqual( $("#nonnodes").contents().eq(1).parents().eq(0).get(), q("nonnodes"), "Text node parents check" );
+	equal( $("#groups").parents("p").get(0).id, "ap", "Filtered parents check" );
+	equal( $("#groups").parents("div").get(0).id, "qunit-fixture", "Filtered parents check2" );
+	deepEqual( $("#groups").parents("p, div").get(), q("ap", "qunit-fixture"), "Check for multiple filters" );
+	deepEqual( $("#en, #sndp").parents().get(), q("foo", "qunit-fixture", "dl", "body", "html"), "Check for unique results from parents" );
+});
+
+

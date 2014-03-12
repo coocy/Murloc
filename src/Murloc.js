@@ -1,4 +1,13 @@
 /**
+ * Murloc JavaScript Library v@VERSION
+ * https://github.com/coocy/Murloc
+ *
+ * Includes Sizzle.js
+ * http://sizzlejs.com/
+ *
+ * Date: @DATE
+ */
+/**
  * @requires core.js
  * @requires sizzle.js
  * @requires json.js

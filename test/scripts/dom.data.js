@@ -1,26 +1,3 @@
-// attempting to access the data of an undefined $ element should be undefined
-test("$().data() === undefined", 2, function() {
-	strictEqual($().data(), undefined);
-	strictEqual($().data("key"), undefined);
-});
-
-test("$(selector).data()", function() {
-
-	var div, dataObj, nodiv, obj;
-
-	div = $("#foo");
-	strictEqual( div.data("foo"), undefined, "Make sure that missing result is undefined" );
-	div.data("test", "success");
-
-	dataObj = div.data();
-
-	deepEqual( dataObj, {test: "success"}, "data() returns entire data object with expected properties" );
-	strictEqual( div.data("foo"), undefined, "Make sure that missing result is still undefined" );
-
-	nodiv = $("#unfound");
-	equal( nodiv.data(), null, "data() on empty set returns null" );
-
-});
 
 function testDataTypes( $obj ) {
 	$.each({
@@ -42,7 +19,28 @@ function testDataTypes( $obj ) {
 	});
 }
 
-test("$(Element).data(String, Object).data(String)", function() {
+// attempting to access the data of an undefined $ element should be undefined
+test("$().data() === undefined", function() {
+	strictEqual($().data(), undefined, '$().data() === undefined');
+	strictEqual($().data("key"), undefined, '$().data(key) === undefined');
+
+	var div, dataObj, nodiv, obj;
+
+	div = $("#foo");
+	strictEqual( div.data("foo"), undefined, "Make sure that missing result is undefined" );
+	div.data("test", "success");
+
+	dataObj = div.data();
+
+	deepEqual( dataObj, {test: "success"}, "data() returns entire data object with expected properties" );
+	strictEqual( div.data("foo"), undefined, "Make sure that missing result is still undefined" );
+
+	nodiv = $("#unfound");
+	equal( nodiv.data(), null, "data() on empty set returns null" );
+
+});
+
+test("$(selector).data(String, Object).data(String)", function() {
 	var parent = $("<div><div></div></div>"),
 		div = parent.children();
 
@@ -56,7 +54,7 @@ test("$(Element).data(String, Object).data(String)", function() {
 	parent.remove();
 });
 
-test(".data(object) does not retain references.", function() {
+test("$(selector).data(object) does not retain references.", function() {
 
 	var $divs = $("<div></div><div></div>");
 
@@ -68,7 +66,7 @@ test(".data(object) does not retain references.", function() {
 	return;
 });
 
-test(".data(Object)", function() {
+test("$(selector).data(Object)", function() {
 
 	var obj, jqobj,
 		div = $("<div/>");
@@ -80,8 +78,7 @@ test(".data(Object)", function() {
 	div.remove();
 });
 
-
-test(".removeData()", function() {
+test("$(selector).removeData()", function() {
 
 	var div = $("#foo");
 	div.data("test", "testing");

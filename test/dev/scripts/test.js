@@ -12,12 +12,22 @@ $('button').on('click', function() {
 $('button').slice(0, 1);
 */
 
-$('button').data('abc', function() {});
+//console.log(_toString.call(window));
 
-console.log($('button').data('abcd'));
-console.log($('button').data());
+var obj = {};
+var _fn = function() {var a = (2)};
+var fn = new _fn;
 
-$('button').removeData('abc');
+var dom = document.createElement("div");
 
-console.log($('button').data());
+$.extend(obj, {'abc': new Date});
+//console.log(obj);
+
+var a = $.copy(obj);
+//console.log(obj);
+
+
+console.log($.isObject(null));
+
+//_hasOwnProperty
 

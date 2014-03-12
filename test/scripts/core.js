@@ -35,6 +35,83 @@ test("$(selector, context)", function() {
 	deepEqual( toArray($("div p", $("#qunit-fixture")).get()), q("sndp", "en", "sap"), "Basic selector with RR.dom object as context" );
 });
 
+asyncTest("$.isPlainObject()", function() {
+
+	var pass, iframe, doc,
+		fn = function() {};
+
+	// The use case that we want to match
+	ok( $.isPlainObject({}), "{}" );
+
+	// Not objects shouldn't be matched
+	ok( !$.isPlainObject(""), "string" );
+	ok( !$.isPlainObject(0) && !$.isPlainObject(1), "number" );
+	ok( !$.isPlainObject(true) && !$.isPlainObject(false), "boolean" );
+	ok( !$.isPlainObject(null), "null" );
+	ok( !$.isPlainObject(undefined), "undefined" );
+
+	// Arrays shouldn't be matched
+	ok( !$.isPlainObject([]), "array" );
+
+	// Instantiated objects shouldn't be matched
+	ok( !$.isPlainObject(new Date()), "new Date" );
+
+	// Functions shouldn't be matched
+	ok( !$.isPlainObject(fn), "fn" );
+
+	// Again, instantiated objects shouldn't be matched
+	ok( !$.isPlainObject(new fn()), "new fn (no methods)" );
+
+	// Makes the function a little more realistic
+	// (and harder to detect, incidentally)
+	fn.prototype["someMethod"] = function(){};
+
+	var _fn = new fn();
+
+	//console.log(Object.getPrototypeOf(new fn()), _fn.prototype);
+
+
+	// Again, instantiated objects shouldn't be matched
+	ok( !$.isPlainObject(new fn()), "new fn" );
+
+	// DOM Element
+	//console.log('DOM ', $.isPlainObject( document.createElement("div") ));
+	ok( !$.isPlainObject( document.createElement("div") ), "DOM Element" );
+
+	// Window
+	ok( !$.isPlainObject( window ), "window" );
+
+	pass = false;
+	try {
+		$.isPlainObject( window.location );
+		pass = true;
+	} catch ( e ) {}
+	ok( pass, "Does not throw exceptions on host objects" );
+
+	// Objects from other windows should be matched
+	window.iframeDone = function( otherObject, detail ) {
+		window.iframeDone = undefined;
+		iframe && iframe.parentNode.removeChild( iframe );
+
+	
+
+		ok( $.isPlainObject(new otherObject()), "new otherObject" + ( detail ? " - " + detail : "" ) );
+		start();
+	};
+
+	try {
+		iframe = $("#qunit-fixture").get(0).appendChild( document.createElement("iframe") );
+
+		doc = iframe.contentDocument || iframe.contentWindow.document;
+		doc.open();
+		doc.write("<body onload='window.parent.iframeDone(Object);'>");
+		doc.close();
+	} catch(e) {
+		window.iframeDone( Object, "iframes not supported" );
+	}
+});
+
+
 /*
 test("$('html')", function() {
 

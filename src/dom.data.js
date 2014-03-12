@@ -1,18 +1,16 @@
 
-/*
-$._dataCache = {
-	'uid_1': {...},
-	'uid_2': {...},
-	...
-};
-*/
-
 /**
+ * $._dataCache = {
+ *	'uid_1': {...},
+ * 	'uid_2': {...},
+ * 	...
+ * };
  * @private
  */
 $._dataCache = {};
 
 /**
+ * 给DOM对象添加数据
  * @param {(string|Object)=} key
  * @param {*=} value
  */
@@ -30,7 +28,7 @@ $.prototype.data = function(key, value) {
 	}
 
 	// $(selector).data(obj[, undefined])
-	if ('object' !== typeof key) {
+	if ('string' === typeof key) {
 		var _key = {};
 		if (undefined !== value) {
 			_key[key + ''] = value;
@@ -45,11 +43,11 @@ $.prototype.data = function(key, value) {
 		for (var _key in key) {
 			elementData[_key] = key[_key];
 		}
-		//$.extend(elementData, key);
 	});
 };
 
 /**
+ * 移除DOM对象上的数据
  * @param {?string=} key
  */
 $.prototype.removeData = function(key) {

@@ -107,7 +107,9 @@ var
 	_fnConcat = [].concat,
 	_kSelectorTest = [',', '+', '~', '[', '>', '#', '.', ' '],
 	_kSelectorTestLength = _kSelectorTest.length,
-	_toString = {}.toString;
+	_obj = {},
+	_toString = _obj.toString,
+	_hasOwnProperty = _obj.hasOwnProperty;
 
 if (ENABLE_IE_SUPPORT && IsIE) {
 	/* 防止IE6下对象的背景图在hover的时候闪动 */
@@ -276,6 +278,33 @@ $.find = (DOC.querySelectorAll || !ENABLE_IE_SUPPORT) ?
 	};
 
 /**
+ * 判断一个对象是否是Object结构
+ * @param {*} obj
+ * @return {boolean}
+ */
+$.isPlainObject = function(obj) {
+	var result = 
+		('[object Object]' === _toString.call(obj)) && 
+		obj && // exclude undefined && null (IE < 9)
+		(obj.constructor ? _hasOwnProperty.call(obj.constructor.prototype, 'isPrototypeOf') : false) && 
+
+		// IE 8
+		!obj.nodeType && 
+		(obj.window !== WIN);
+
+	return result;
+};
+
+/**
+ * 简单判断一个对象是否是Object结构
+ * @param {*} obj
+ * @return {boolean}
+ */
+$.isObject = function(obj) {
+	return ('[object Object]' === _toString.call(obj)) && !!obj; // exclude undefined && null (IE < 9)
+};
+
+/**
  * 迭代一个数组或者Object对象，对其中的每个子元素执行一个方法
  * @param {(Array|Object)} collection
  * @param {function(number=, Element=)} fn
@@ -300,9 +329,7 @@ $.extend = function(dest, source) {
 	var property, item;
 	for (var property in source) {
 		item = source[property];
-
-		var type = _toString.call(item);
-		dest[property] = ('[object Object]' === type) ? $.extend({}, item) : item;
+		dest[property] = $.isObject(item) ? $.extend({}, item) : item;
 	}
 	return dest;
 };
@@ -320,7 +347,7 @@ $.copy = function(dest) {
 			result[i] = $.copy(dest[i]);
 		}
 		return result;
-	} else if (typeof(dest) == 'object') {
+	} else if ($.isObject(dest)) {
 		return $.extend({}, dest);
 	}
 	return dest;

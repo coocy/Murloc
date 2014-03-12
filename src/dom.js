@@ -211,7 +211,7 @@ $.prototype.children = function(selector) {
 		elements = [];
 
 	this.each(function(index, element) {
-		elements = _fnConcat.apply(elements, element.children);
+		elements = _concat.apply(elements, element.children);
 	});
 
 	// 使用选择符筛选结果，

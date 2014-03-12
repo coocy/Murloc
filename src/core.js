@@ -75,10 +75,11 @@ var
 	ScreenSizeCorrect = 1,
 	
 	_hasGetElementsByClassName = DOC.getElementsByClassName,
-	_fnConcat = [].concat,
-	_fnSlice = [].slice,
 	_kSelectorTest = [',', '+', '~', '[', '>', '#', '.', ' '],
 	_kSelectorTestLength = _kSelectorTest.length,
+	_array = [],
+	_concat = _array.concat,
+	_slice = _array.slice,
 	_obj = {},
 	_toString = _obj.toString,
 	_hasOwnProperty = _obj.hasOwnProperty;
@@ -184,7 +185,7 @@ var $ = function(selector, context) {
 	} else
 
 	if (selector.length) { //数组或者类数组
-		this.context = _fnConcat.apply([], selector);
+		this.context = _concat.apply([], selector);
 		/*this.context = function(selector) {
 			for (var elements = [], i = 0, l = selector.length; i < l; i++) {
 				elements.push(selector[i]);

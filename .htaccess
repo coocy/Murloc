@@ -9,11 +9,7 @@ Options +FollowSymLinks -Indexes
  RewriteRule ^.+\.(js|css)$ _include/static.php [L]
  RewriteRule ^.+\.js\.html$ _include/compress_test.php [L]
  
- RewriteCond %{REQUEST_FILENAME} -f [OR]
- RewriteCond %{REQUEST_FILENAME} -d
- RewriteRule ^(.+) - [PT,L]
- 
- RewriteRule ^(.*) index.php
+
 
 </IfModule>
 

@@ -1,21 +1,55 @@
 <!DOCTYPE html>
 <html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en" dir="ltr" id="html">
 <head>
-	<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
-	<title>Murloc Test</title>
-	<link rel="stylesheet" href="qunit/qunit.css">
-	<script src="qunit/qunit.js"></script>
+	<meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
 
-	<!-- Load tests -->
-	<script src="scripts/tests.js"></script>
+	<script type="text/javascript">
+
+		var match = location.href.match(/\?js=(.+)$/);
+		if (match) {
+			var s = document.createElement('script');
+			s.src = decodeURIComponent(match[1]);
+			document.getElementsByTagName('head')[0].appendChild(s);
+		}
+
+		function q() {
+			var r = [],
+				i = 0;
+
+			for (; i < arguments.length; i++ ) {
+				r.push(document.getElementById(arguments[i]));
+			}
+			return r;
+		};
+	
+		test = function(codes, round){
+			round = round || 10;
+			var start = new Date().getTime();
+			try {
+				
+				var testFn = new Function(codes), result;
+				
+				for (var i = 0; i < round; i++) {
+					result = testFn();
+				}
+				
+				var end = (new Date().getTime() - start);
+				return {'time': Math.round(end), result: result};
+			} catch(err){
+				return ({'time': (new Date().getTime() - start) / i, 'error': err});
+			}
+
+		};
+	
+	</script>
+	
 </head>
 
 <body id="body">
-	<div id="qunit"></div>
 
 	<!-- Test HTML -->
 	<!-- this iframe is outside the #qunit-fixture so it won't reload constantly wasting time, but it means the tests must be "safe" and clean up after themselves -->
-	<iframe id="loadediframe" name="loadediframe" style="display:none;" src="scripts/iframe.html"></iframe>
+	<iframe id="loadediframe" name="loadediframe" style="display:none;" src="../scripts/iframe.html"></iframe>
 	<dl id="dl" style="position:absolute;top:-32767px;left:-32767px;width:1px;">
 	<div id="qunit-fixture">
 		<p id="firstp">See <a id="simon1" href="http://simon.incutio.com/archive/2003/03/25/#getElementsBySelector" rel="bookmark">this blog entry</a> for more information.</p>
@@ -261,7 +295,6 @@ Z</textarea>
 	<map name="imgmap" id="imgmap">
 		<area shape="rect" coords="0,0,200,50">
 	</map>
-
 
 </body>
 

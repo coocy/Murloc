@@ -29,34 +29,34 @@ var
 	 */
 	IsTouch = 'ontouchstart' in WIN,
 
-	/**  @type {string} */
+	/** @type {string} */
 	UA = WIN.navigator.userAgent,
 
-	/**  @type {boolean} */
+	/** @type {boolean} */
 	IsAndroid = (/Android|HTC/i.test(UA) || /Linux/i.test(WIN.navigator['platform'] + '')), /* HTC Flyer平板的UA字符串中不包含Android关键词 */
 
-	/**  @type {boolean} */
+	/** @type {boolean} */
 	IsIPad = !IsAndroid && /iPad/i.test(UA),
 
-	/**  @type {boolean} */
+	/** @type {boolean} */
 	IsIPhone = !IsAndroid && /iPod|iPhone/i.test(UA),
 
-	/**  @type {boolean} */
+	/** @type {boolean} */
 	IsIOS =  IsIPad || IsIPhone,
 
-	/**  @type {boolean} */
+	/** @type {boolean} */
 	IsWindowsPhone =  /Windows Phone/i.test(UA),
 
-	/**  @type {boolean} */
+	/** @type {boolean} */
 	IsBlackBerry =  /BB10|BlackBerry/i.test(UA),
 
-	/**  @type {boolean} */
+	/** @type {boolean} */
 	IsIEMobile =  /IEMobile/i.test(UA),
 
-	/**  @type {boolean} */
+	/** @type {boolean} */
 	IsIE = !!DOC.all,
 
-	/**  @type {boolean} */
+	/** @type {boolean} */
 	IsWeixin = /MicroMessenger/i.test(UA),
 
 	/**

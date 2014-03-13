@@ -1,6 +1,9 @@
 
 test("$(selector, context)", function() {
 	add('$("#qunit-fixture")', "ID selector");
+	add('$("p")', "tag selector");
+	add('$(".blog")', "class selector");
+	add('$("#ap a")', "Basic selector");
 	add('$("div p", "#qunit-fixture")', "Basic selector with string as context");
 	add('$("div p", q("qunit-fixture")[0])', "Basic selector with element as context");
 	add('$("div p", $("#qunit-fixture"))', "Basic selector with $ object as context");
@@ -21,10 +24,10 @@ test(".data()", function() {
 
 
 test("DOM", function() {
-	add('$("div").eq(-1)', '$(selector).eq(-1)');
-	add('$("#ap a").first()', '$(selector).first()');
-	add('$("#ap a").last()', '$(selector).last()');
-	add('$("#ap a").slice(0,3)', '$(selector).slice()');
+	add('$("p").eq(-1)', '$(selector).eq(-1)');
+	add('$("p").first()', '$(selector).first()');
+	add('$("p").last()', '$(selector).last()');
+	add('$("p").slice(0,3)', '$(selector).slice()');
 	add('$("p").filter("#ap, #sndp")', '$(selector).filter()');
 
 	add('$("p").closest()', '$(selector).closest()');

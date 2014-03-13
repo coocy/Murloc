@@ -257,7 +257,8 @@ $._contextId = 1;
  * @return {{length: number}} 返回一个类数组的DOM集合，包含length属性
  * @private
  */
-$.find = (DOC.querySelectorAll || !ENABLE_IE_SUPPORT) ? 
+
+$.find = ((DOC.querySelectorAll && !IsIE) || !ENABLE_IE_SUPPORT) ? 
 
 	function(selector, context) {
 		if (DOC !== context) {
@@ -292,7 +293,7 @@ $.isPlainObject = function(obj) {
 
 		// IE 8
 		!obj.nodeType && 
-		(obj.window !== WIN);
+		!obj.window;
 
 	return result;
 };

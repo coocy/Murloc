@@ -7,8 +7,20 @@ q = function() {
 	}
 	return r;
 };
-toArray = function(obj) {
-	return [].slice.call(obj);
+toArray = function(elements) {
+	var result, 
+		element,
+		i = 0;
+
+	try {
+		result = [].slice.call(elements);
+	} catch (e) {
+		result = [];
+		while (element = elements[i++]) {
+			result.push(element);
+		}
+	}
+	return result;
 };
 
 /**

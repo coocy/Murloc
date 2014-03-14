@@ -13,7 +13,7 @@ test("$(selector).get()", function() {
 	strictEqual( $("#firstp").get(-2), undefined, "Try get with index negative index larger then elements count" );
 });
 
-test("eq('-1')", function() {
+test("eq()", function() {
 
 	var $divs = $( "div" );
 
@@ -184,6 +184,7 @@ test("$(selector).closest()", function() {
 
 	deepEqual( $("body").closest("body").get(), q("body"), "closest(body)" );
 	deepEqual( $("body").closest("html").get(), q("html"), "closest(html)" );
+
 	deepEqual( $("body").closest("div").get(), [], "closest(div)" );
 	deepEqual( $("#qunit-fixture").closest("span,#html").get(), q("html"), "closest(span,#html)" );
 
@@ -234,6 +235,35 @@ test("$(selector).parents()", function() {
 	equal( $("#groups").parents("div").get(0).id, "qunit-fixture", "Filtered parents check2" );
 	deepEqual( $("#groups").parents("p, div").get(), q("ap", "qunit-fixture"), "Check for multiple filters" );
 	deepEqual( $("#en, #sndp").parents().get(), q("foo", "qunit-fixture", "dl", "body", "html"), "Check for unique results from parents" );
+});
+
+test("is(String|undefined)", function() {
+	ok( $("#form").is("form"), "Check for element: A form must be a form" );
+	ok( !$("#form").is("div"), "Check for element: A form is not a div" );
+	ok( $("#mark").is(".blog"), "Check for class: Expected class 'blog'" );
+	ok( !$("#mark").is(".link"), "Check for class: Did not expect class 'link'" );
+	ok( $("#simon").is(".blog.link"), "Check for multiple classes: Expected classes 'blog' and 'link'" );
+	ok( !$("#simon").is(".blogTest"), "Check for multiple classes: Expected classes 'blog' and 'link', but not 'blogTest'" );
+	ok( $("#en").is("[lang=\"en\"]"), "Check for attribute: Expected attribute lang to be 'en'" );
+	ok( !$("#en").is("[lang=\"de\"]"), "Check for attribute: Expected attribute lang to be 'en', not 'de'" );
+	ok( $("#text1").is("[type=\"text\"]"), "Check for attribute: Expected attribute type to be 'text'" );
+	ok( !$("#text1").is("[type=\"radio\"]"), "Check for attribute: Expected attribute type to be 'text', not 'radio'" );
+	ok( $("#text2").is(":disabled"), "Check for pseudoclass: Expected to be disabled" );
+	ok( !$("#text1").is(":disabled"), "Check for pseudoclass: Expected not disabled" );
+	ok( $("#radio2").is(":checked"), "Check for pseudoclass: Expected to be checked" );
+	ok( !$("#radio1").is(":checked"), "Check for pseudoclass: Expected not checked" );
+
+	ok( !$("#foo").is(0), "Expected false for an invalid expression - 0" );
+	ok( !$("#foo").is(null), "Expected false for an invalid expression - null" );
+	ok( !$("#foo").is(""), "Expected false for an invalid expression - \"\"" );
+	ok( !$("#foo").is(undefined), "Expected false for an invalid expression - undefined" );
+	ok( !$("#foo").is({ plain: "object" }), "Check passing invalid object" );
+
+	// test is() with comma-separated expressions
+	ok( $("#en").is("[lang=\"en\"],[lang=\"de\"]"), "Comma-separated; Check for lang attribute: Expect en or de" );
+	ok( $("#en").is("[lang=\"de\"],[lang=\"en\"]"), "Comma-separated; Check for lang attribute: Expect en or de" );
+	ok( $("#en").is("[lang=\"en\"] , [lang=\"de\"]"), "Comma-separated; Check for lang attribute: Expect en or de" );
+	ok( $("#en").is("[lang=\"de\"] , [lang=\"en\"]"), "Comma-separated; Check for lang attribute: Expect en or de" );
 });
 
 

@@ -41,7 +41,7 @@ window.onload = function() {
 		
 		elCell = document.createElement('td');
 		elCell.className = 'c1';
-		elCell.innerText = title || fn;
+		elCell.innerHTML = title || fn;
 		elRow.appendChild(elCell);
 		
 		for (jsToolName in jsTools) {
@@ -62,7 +62,7 @@ window.onload = function() {
 
 	for (jsToolName in jsTools) {
 		elCell = document.createElement('th');
-		elCell.innerText = jsToolName;
+		elCell.innerHTML = jsToolName;
 		elRow.appendChild(elCell);
 		
 		elFrame = document.createElement('iframe');
@@ -82,7 +82,7 @@ window.onload = function() {
 		elRow = document.createElement('tr');
 		elCell = document.createElement('th');
 		elCell.setAttribute('colspan', jsToolsCount + 1);
-		elCell.innerText = codeGroups[i][0];
+		elCell.innerHTML = codeGroups[i][0];
 		elRow.appendChild(elCell);
 		codeTable.appendChild(elRow);
 
@@ -116,15 +116,18 @@ window.onload = function() {
 					var testFn  = window.frames[_jsToolName].test;
 					
 					var result = testFn(_code, testRound),
-						time = isNaN(result.time) ?  '-' : result.time;
+						time = result.time,
+						text = 'x';
 					
-					times.push(time);
+					if (!isNaN(time) && isFinite(time)) {
+						times.push(time);
+						text = (time + 'ms');
+					}
 					
-					var text = time + 'ms';
 					if (result.result) {
 						text += '|' + result.result;
 					}
-					elCell.innerText = text;
+					elCell.innerHTML = text;
 					
 					elCell.time = time;
 					

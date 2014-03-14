@@ -3,6 +3,7 @@ test("Basic requirements", function() {
 	ok( Array.prototype.push, "Array.push()" );
 	ok( Array.prototype.concat, "Array.concat()" );
 	ok( Array.prototype.slice, "Array.slice()" );
+	ok( Array.prototype.indexOf, "Array.indexOf()" );
 	ok( String.prototype.trim, "String.trim()" );
 	ok( String.prototype.indexOf, "String.indexOf()" );
 	ok( Function.prototype.bind, "Function.bind()" );

@@ -1,3 +1,22 @@
+
+
+$.toArray = function(elements) {
+	var result, 
+		element,
+		i = 0;
+
+	try {
+		result = _slice.call(elements);
+	} catch (e) {
+		result = [];
+		while (element = elements[i++]) {
+			result.push(element);
+		}
+	}
+	return result;
+};
+
+
 /**
  * 迭代一个{$}对象，对其中的每个子元素执行一个方法
  * @param {function(number=, Element=)} fn
@@ -28,7 +47,11 @@ $.prototype.slice = function(start, end) {
 		end = end + (end < 0 ? length : 0),
 		result = new $();
 
-	result.context = [].slice.call(this.context, start, end);
+	if (ENABLE_IE_SUPPORT) {
+		this.context = $.toArray(this.context);
+	}
+
+	result.context = _slice.call(this.context, start, end);
 	result.length = result.context.length;
 	return result;
 };
@@ -78,18 +101,77 @@ $.prototype.get = function(index) {
 	return idx < 0 ? undefined : this.context[idx];
 };
 
+/**
+ * @type {Element}
+ * @private
+ */
+var _tempParent;
+
+/**
+ * 检查一个DOM节点是否符合指定的选择符
+ * @param {Element} element
+ * @param {string} selector
+ * @return {boolean}
+ */
 $.is = function(element, selector) {
-	if (!selector) return false;
+
+	if (!selector || !element || (element === DOC)) return false;
 	var matchesSelector = element.webkitMatchesSelector || 
 		element.mozMatchesSelector || 
 		element.oMatchesSelector || 
 		element.matchesSelector;
 
+		//alert(element + ' ' + element.parentNode);
+
 	if (matchesSelector) {
-		return  matchesSelector.call(element, selector);
+		return matchesSelector.call(element, selector);
+
+	} else if (ENABLE_IE_SUPPORT) {
+		var elParent = element.parentNode,
+			temp = !elParent || elParent.nodeType > 9,
+			matches,
+			match,
+			el,
+			i = 0;
+
+		if (temp) {
+			elParent =  _tempParent || (_tempParent = DOC.createElement('div'));
+			elParent.appendChild(element);
+		} 
+
+		matches = $._find(selector, elParent);
+
+		while (el = matches[i++]) {
+			if (el === element) {
+				return true;
+			}
+		}
+		
+		if (temp) {
+			elParent.removeChild(element);
+		}
+
+		return false;
 	}
 };
 
+/**
+ * 检查当前集合中的每个DOM节点是否符合指定的选择符，如果至少有一个符合，则返回true
+ * @param {string=} selector 
+ * @return {boolean}
+ */
+$.prototype.is = function(selector) {
+	var result = false;
+	if ('string' === typeof selector) {
+		this.each(function(index, element) {
+			if ($.is(element, selector)) {
+				result = true;
+				return false;
+			}
+		});
+	}
+	return result;
+}
 /**
  * 使用选择符过滤当前DOM集合，并返回一个新的集合
  * @param {string} selector 
@@ -122,26 +204,19 @@ $.prototype.closest = function(selector, context) {
 	var result = new $(),
 		elements = [];
 
-	if (undefined !== context) {
-		selector = selector || '';
-		var id = context.id || (context.id = '__rid' + $._contextId++),
-			selectors = selector.split(','),
-			i = selectors.length;
-		while (i--) {
-			selectors[i] = '[id=' + id + '] ' + selectors[i];
-		}
-		selector = selectors.join(',');
-	}
+	context = context || DOC;
 
 	this.each(function(index, element) {
 		do {
-			if (!selector || (selector && $.is(element, selector))) {
+			if (1 === element.nodeType && 
+				(!selector || (selector && $.is(element, selector)))
+			) {
 				elements.push(element);
 				break;
 			}
 		} while (
 			(element = element.parentNode) && 
-			(element !== DOC) && 
+			(element !== context) && 
 			(elements.indexOf(element) < 0)
 		)
 	});
@@ -211,11 +286,15 @@ $.prototype.children = function(selector) {
 		elements = [];
 
 	this.each(function(index, element) {
-		elements = _concat.apply(elements, element.children);
+		var chilldren = element.children;
+		if (ENABLE_IE_SUPPORT) {
+			chilldren = $.toArray(element.children);
+		}
+		elements = _concat.apply(elements, chilldren);
 	});
 
 	// 使用选择符筛选结果，
-	// 之所以事后筛选是因为如果在业务代码中调用.children()的时候都不传第二个参数，
+	// 如果在业务代码中调用.children()的时候都不传第二个参数，
 	// 这块代码可以被压缩器优化掉
 	if (undefined !== selector) {
 		var _elements = [],
@@ -250,7 +329,7 @@ $.prototype.contents = function() {
 };
 
 /**
- * @param {string=} selector 选择符，如果传了此参数，将对结果集进行筛选
+ * @param {string=} selector 选择符，如果传了此参数，将使用选择符对结果集进行筛选
  * @return {$}
  */
 $.prototype.find = function(selector) {

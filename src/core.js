@@ -105,6 +105,28 @@ if (!String.prototype.hasOwnProperty('trim')) {
 }
 
 /**
+ * 如果浏览器不支持Array原生indexOf的方法，模拟一个
+ */
+if (!Array.prototype.hasOwnProperty('indexOf')) {
+	/**
+	 * @this {Array}
+	 * @param {*} element
+	 * @return {number}
+	 * @suppress {duplicate}
+	 */
+	Array.prototype.indexOf = function(element) {
+		var i = 0, l = this.length;
+
+		for (; i < l; i++) {
+			if (this[i] === element) {
+				return i;
+			}
+		}
+		return -1;
+	}
+}
+
+/**
  * 如果浏览器不支持Function原生bind的方法，模拟一个
  */
 if (!Function.prototype.hasOwnProperty('bind')) {
@@ -169,8 +191,9 @@ var $ = function(selector, context) {
 			var containter = DOC.createElement('div');
 			containter.innerHTML = selector;
 			for (var i = 0, l = containter.childNodes.length; i < l; i++) {
-				this.context.push(containter.childNodes[i]);
+				this.context.push(containter.removeChild(containter.childNodes[0]));
 			}
+			containter = null;
 		} else {
 			//CSS选择符
 			if (context instanceof $) {
@@ -259,6 +282,18 @@ $.selectorAll = function(selector, context) {
  */
 $._contextId = 1;
 
+var _useQSA = (DOC.querySelectorAll && !IsIE) || !ENABLE_IE_SUPPORT;
+
+$._find = _useQSA ? 
+
+	function(selector, context) {
+		return context.querySelectorAll(selector);
+	} : 
+
+	function(selector, context) {
+		return Sizzle(selector, context);
+	};
+
 /**
  * 使用CSS3选择符查找对应的DOM集合，在旧浏览器下使用Sizzle引擎
  * @param {string} selector CSS选择符
@@ -267,7 +302,7 @@ $._contextId = 1;
  * @private
  */
 
-$.find = ((DOC.querySelectorAll && !IsIE) || !ENABLE_IE_SUPPORT) ? 
+$.find = _useQSA ? 
 
 	function(selector, context) {
 		if (DOC !== context) {
@@ -277,17 +312,15 @@ $.find = ((DOC.querySelectorAll && !IsIE) || !ENABLE_IE_SUPPORT) ?
 				i = selectors.length;
 
 			while (i--) {
-				selectors[i] = '[id=' + id + '] ' + selectors[i];
+				selectors[i] = '#' + id + ' ' + selectors[i];
 			}
 			selector = selectors.join(',');
 		}
 
-		return DOC.querySelectorAll(selector);
+		return $._find(selector, DOC);
 	} : 
-	
-	function(selector, context) {
-		return Sizzle(selector, context);
-	};
+
+	$._find;
 
 /**
  * 判断一个对象是否是Object结构

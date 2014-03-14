@@ -57,11 +57,11 @@ $.event = function(e) {
 	var changedTouches = e.changedTouches, 
 		ee = (changedTouches && changedTouches.length > 0) ? changedTouches[0] : e;
 
-	this.event = /** @type {Event} */ e;
-	this.originalEvent = /** @type {Event} */ ee;
+	this.event = e;
+	this.originalEvent = ee;
 
-	this.target = /** @type {Element} */ e.target || e.srcElement;
-	this.type = /** @type {string} */ e.type;
+	this.target = e.target || e.srcElement;
+	this.type = e.type;
 	return this;
 };
 
@@ -193,11 +193,15 @@ $.addTagEvent = function(type, tagName, fn) {
 	$._addEventData(type, uid, DOC, fn);
 };
 
-$.dispatchEvent = function(e) {
+/**
+ * @param {Event} evt
+ * @this {Element}
+ */
+$.dispatchEvent = function(evt) {
 	var element = this,
 
 		/** @type {$.event} */
-		e = new $.event(e),
+		e = new $.event(evt),
 		type = e.type,
 		elCur = e.target,
 		eventData = $._eventCache[type] || {};

@@ -10,7 +10,10 @@ $.getScript = function(url, callback, opts) {
 
 	elScript.src = url;
 
-	elScript.onload = elScript.onreadystatechange = function() {
+	/**
+	 * @this {Element}
+	 */
+	var fnOnload = function() {
 		if (!done && (!this.readyState || this.readyState !== 'loading')) {
 			done = true;
 			if(callback) callback.apply(null, opts || []);
@@ -18,6 +21,9 @@ $.getScript = function(url, callback, opts) {
 			elHead.removeChild(elScript);
 		}
 	};
+
+	elScript.onload = fnOnload;
+	elScript.onreadystatechange = fnOnload;
 	elHead.appendChild(elScript);
 };
 

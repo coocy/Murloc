@@ -1,4 +1,7 @@
 
+/**
+ * @param {Function} fn
+ */
 $.ready = function(fn) {
 
 	//如果页面已经加载完成，直接执行方法
@@ -8,7 +11,6 @@ $.ready = function(fn) {
 		$.loader.callbacks.push(fn);
 		$.loader.init();
 	}
-	return this;
 };
 $.prototype.ready = $.ready;
 
@@ -73,16 +75,23 @@ $.loader = {
 				} else {
 					//IE
 					var id = '_ir_';
+
+					/** @type {Element} */
 					var script = DOC.getElementById(id);
 					if (!script) {
 						DOC.write('<script id="' + id + '" defer="true" src="://"></script>');
 						script = DOC.getElementById(id);
 					}
-					script.onreadystatechange = script.onload = function() {
+
+					/**
+					 * @this {Element}
+					 */
+					var fnOnload = function() {
 						if (this.readyState == 'complete') {
 							$.loader.loaded();
 						}
 					};
+					script.onreadystatechange = script.onload = fnOnload;
 				}
 			}
 		}

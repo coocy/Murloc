@@ -16,6 +16,8 @@ if ($pos !== FALSE) {
 
 $temp_array = array();
 
+$is_html = (boolean)(preg_match('/^.+\.js\.html(\?.*)?$/i', $uri, $temp_array));
+
 if (preg_match('/^.+\.(js|css)/i', $uri, $temp_array)) {
 
 	$static_type = $temp_array[1]; /* scripts || styles */
@@ -26,7 +28,8 @@ if (preg_match('/^.+\.(js|css)/i', $uri, $temp_array)) {
 	
 	$static_contents = get_static_content($file_path);
 	
-	$compressed_contents = trim(compress_js($file_path, true));
+	$compressed_result = compress_js($file_path, true, !$is_html);
+	$compressed_contents = $compressed_result['output'];
 
 	$origin_size = strlen($static_contents);
 	$compressed_size = strlen($compressed_contents);
@@ -38,7 +41,7 @@ if (preg_match('/^.+\.(js|css)/i', $uri, $temp_array)) {
 	
 }
 
-if (preg_match('/^.+\.min\.js(\?.*)?$/i', $uri, $temp_array)) {
+if (!$is_html) {
 	@header( 'Content-Type: application/x-javascript');
 	die($compressed_contents);
 }
@@ -48,7 +51,7 @@ if (preg_match('/^.+\.min\.js(\?.*)?$/i', $uri, $temp_array)) {
 <style type="text/css">
 	body,td,th{
 		font-family:verdana;
-		font-size:.75em;
+		font-size:.7em;
 		line-height:1.5;
 	}
 	td,th{
@@ -63,6 +66,10 @@ if (preg_match('/^.+\.min\.js(\?.*)?$/i', $uri, $temp_array)) {
 		padding:1em;
 		margin:.5em 0 0;
 		font-family: 'Lucida Sans Typewriter','Courier New',Courier,Fixed,monospace;
+	}
+	.warnings{
+		border:1px solid #e3e081;
+		background:#FFFDBA;
 	}
 </style>
 </head>
@@ -81,5 +88,6 @@ if (preg_match('/^.+\.min\.js(\?.*)?$/i', $uri, $temp_array)) {
 	</table>
 
 	<div class="code_wrap"><?php echo htmlspecialchars($compressed_contents) ?></div>
+	<pre class="code_wrap warnings"><?php echo htmlspecialchars($compressed_result['errors']) ?></pre>
 </body>
 </html>

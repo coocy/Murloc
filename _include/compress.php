@@ -62,7 +62,7 @@ function compile_requires($file_contents, $file_path) {
 	}
 }
 
-function compress_js($file_path, $return_content = false) {
+function compress_js($file_path, $return_content = false, $formatting = false) {
 
 	$file_path = '/'.ltrim($file_path, '\/\\');
 	$static_contents = get_static_content($file_path, true);
@@ -92,34 +92,52 @@ function compress_js($file_path, $return_content = false) {
 		'--define ENABLE_DEBUG=false',
 		'--use_types_for_optimization',
 		'--output_wrapper "(function(){%output%})()"',
-		'--js_output_file ' . $output_file,
+		// '--js_output_file ' . $output_file,
 		'--js ' . $temp_file
 	);
+
+	if ($formatting === true) {
+		$parms[] = '--formatting=pretty_print';
+	}
 	
 	foreach($parms as $v) {
 		$parm_array[] = $v;
 	}
 	
 	$compiler_command = 'java -jar '.INCLUDE_PATH.'cmd/compiler.jar '.join(' ', $parm_array);
-		
-	$_output = array();
-	exec($compiler_command, $_output , $code);
+
+	$tunnels=array(
+		0 => array('pipe','r'), // Process std input
+		1 => array('pipe','w'), // Process std output
+		2 => array('pipe','w') // Process std error
+	);
+
+	$io = array(); 
+	$resource = proc_open($compiler_command, $tunnels, $io);
+
+	if (!is_resource($resource)) {
+		$output = 'Something is wrong...';
+	}
+
+	$output = stream_get_contents($io[1]);
+	// We are not interested in process standard output.. close it
+	fclose($io[1]);               
+
+	// Get process std error
+	$errors = stream_get_contents($io[2]);
+	fclose($io[2]);
+
+	// Close process reousrce
+	$result = proc_close($resource);
 
 	//echo $compiler_command;
 	
 	unlink($temp_file);
 	
-	if ($return_content === true) {
-		$content = file_get_contents($output_file);
-
-		unlink($output_file);
-		return $content;
-	}
-	
-	if (1 == $code) {
-		return false;
-	}
-	return true;
+	return array(
+		'errors' => $errors,
+		'output' => $output
+	);
 }
 
 function compress_css($file_path) {

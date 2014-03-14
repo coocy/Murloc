@@ -68,10 +68,16 @@ var
 	/* 如果手指在屏幕上按下后再继续移动的偏移超过这个值，则取消touchend中click事件的触发，Android和iOS下的值不同 */
 	MAX_TOUCHMOVE_DISTANCE_FOR_CLICK = IsAndroid ? 10 : 6,
 
+	/**  @type {string} */
 	START_EVENT = IsTouch ? 'touchstart' : 'mousedown',
+
+	/**  @type {string} */
 	MOVE_EVENT = IsTouch ? 'touchmove' : 'mousemove',
+
+	/**  @type {string} */
 	END_EVENT = IsTouch ? 'touchend' : 'mouseup',
 
+	/**  @type {number} */
 	ScreenSizeCorrect = 1,
 	
 	_hasGetElementsByClassName = DOC.getElementsByClassName,
@@ -89,7 +95,9 @@ var
  */
 if (!String.prototype.hasOwnProperty('trim')) {
 	/**
+	 * @this {String|string}
 	 * @return {string}
+	 * @suppress {duplicate}
 	 */
 	String.prototype.trim = function() {
 		return this.replace(/^[\s\uFEFF\xA0]+|[\s\uFEFF\xA0]+$/g, '');
@@ -101,8 +109,9 @@ if (!String.prototype.hasOwnProperty('trim')) {
  */
 if (!Function.prototype.hasOwnProperty('bind')) {
 	/**
-	 * @param {*} context
-	 * @return {function}
+	 * @param {Object} context
+	 * @return {!Function}
+	 * @suppress {duplicate}
 	 */
 	Function.prototype.bind = function(context) {
 		var fn = this,

@@ -1,7 +1,5 @@
 /**
  * 对本地存贮对象的操作封装
- * @static
- * @class Storage
  */
 
 var Storage = function(key, value) {

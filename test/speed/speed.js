@@ -12,7 +12,7 @@ window.onload = function() {
 		'Murloc': '../../src/Murloc.js',
 		'jQuery 1.10.2': 'libs/jquery-1.10.2.js',
 		'jQuery 2.0.3': 'libs/jquery-2.0.3.js',
-		'Zepto 1.1.2': 'libs/zepto.js'
+		'Zepto 1.1.3': 'libs/zepto-1.1.3.js'
 	};
 
 	var wrapHTML = [

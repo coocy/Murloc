@@ -44,4 +44,20 @@ test("DOM", function() {
 
 });
 
+test("DOM className", function() {
+	add('$("p").hasClass("classA")', '$("p").hasClass("classA")');
+
+	add('$("p").addClass("classA")', '$("p").addClass("classA")');
+	add('$("p").addClass("classA classB")', '$("p").addClass("classA classB")');
+
+	add('$("p").removeClass("classB")', '$("p").removeClass("classB")');
+
+	add('$("p").addClass("classB").removeClass("classB")', '$("p").addClass("classB").removeClass("classB")');
+	add('$("p").addClass("classB").removeClass("classNotExists")', '$("p").addClass("classB").removeClass("classNotExists")');
+
+	add('$("p").toggleClass("classB")', '$("p").toggleClass("classB")');
+	add('$("p").addClass("classA").toggleClass("classA classB")', '$("p").addClass("classA").toggleClass("classA classB")');
+
+});
+
 

@@ -34,6 +34,8 @@ test("$(selector, context)", function() {
 	deepEqual( toArray($("div p", "#qunit-fixture").get()), q("sndp", "en", "sap"), "Basic selector with string as context" );
 	deepEqual( toArray($("div p", q("qunit-fixture")[0]).get()), q("sndp", "en", "sap"), "Basic selector with element as context" );
 	deepEqual( toArray($("div p", $("#qunit-fixture")).get()), q("sndp", "en", "sap"), "Basic selector with RR.dom object as context" );
+	deepEqual( toArray($("div p", $("#element-not-exists")).get()), q(), "Basic selector with blank RR.dom object object as context" );
+	deepEqual( $(".blog", $("p")).get(), q("mark", "simon"), "Finding elements with a context." );
 });
 
 asyncTest("$.isPlainObject()", function() {
@@ -69,9 +71,6 @@ asyncTest("$.isPlainObject()", function() {
 
 	var _fn = new fn();
 
-	//console.log(Object.getPrototypeOf(new fn()), _fn.prototype);
-
-
 	// Again, instantiated objects shouldn't be matched
 	ok( !$.isPlainObject(new fn()), "new fn" );
 
@@ -94,7 +93,7 @@ asyncTest("$.isPlainObject()", function() {
 		window.iframeDone = undefined;
 		iframe && iframe.parentNode.removeChild( iframe );
 
-	
+
 
 		ok( $.isPlainObject(new otherObject()), "new otherObject" + ( detail ? " - " + detail : "" ) );
 		start();

@@ -1,7 +1,7 @@
 
 
 $.toArray = function(elements) {
-	var result, 
+	var result,
 		element,
 		i = 0;
 
@@ -116,9 +116,9 @@ var _tempParent;
 $.is = function(element, selector) {
 
 	if (!selector || !element || (element === DOC)) return false;
-	var matchesSelector = element.webkitMatchesSelector || 
-		element.mozMatchesSelector || 
-		element.oMatchesSelector || 
+	var matchesSelector = element.webkitMatchesSelector ||
+		element.mozMatchesSelector ||
+		element.oMatchesSelector ||
 		element.matchesSelector;
 
 		//alert(element + ' ' + element.parentNode);
@@ -137,7 +137,7 @@ $.is = function(element, selector) {
 		if (temp) {
 			elParent =  _tempParent || (_tempParent = DOC.createElement('div'));
 			elParent.appendChild(element);
-		} 
+		}
 
 		matches = $._find(selector, elParent);
 
@@ -146,7 +146,7 @@ $.is = function(element, selector) {
 				return true;
 			}
 		}
-		
+
 		if (temp) {
 			elParent.removeChild(element);
 		}
@@ -157,7 +157,7 @@ $.is = function(element, selector) {
 
 /**
  * 检查当前集合中的每个DOM节点是否符合指定的选择符，如果至少有一个符合，则返回true
- * @param {string=} selector 
+ * @param {string=} selector
  * @return {boolean}
  */
 $.prototype.is = function(selector) {
@@ -174,7 +174,7 @@ $.prototype.is = function(selector) {
 }
 /**
  * 使用选择符过滤当前DOM集合，并返回一个新的集合
- * @param {string} selector 
+ * @param {string} selector
  * @return {$}
  */
 $.prototype.filter = function(selector) {
@@ -208,15 +208,15 @@ $.prototype.closest = function(selector, context) {
 
 	this.each(function(index, element) {
 		do {
-			if (1 === element.nodeType && 
+			if (1 === element.nodeType &&
 				(!selector || (selector && $.is(element, selector)))
 			) {
 				elements.push(element);
 				break;
 			}
 		} while (
-			(element = element.parentNode) && 
-			(element !== context) && 
+			(element = element.parentNode) &&
+			(element !== context) &&
 			(elements.indexOf(element) < 0)
 		)
 	});
@@ -238,8 +238,8 @@ $.prototype.parent = function(selector) {
 	this.each(function(index, element) {
 		var elParent = element.parentNode;
 		if (
-			(!selector || (selector && $.is(elParent, selector))) && 
-			(elements.indexOf(elParent) < 0) 
+			(!selector || (selector && $.is(elParent, selector))) &&
+			(elements.indexOf(elParent) < 0)
 		) {
 			elements.push(elParent);
 		}
@@ -261,8 +261,8 @@ $.prototype.parents = function(selector) {
 
 	this.each(function(index, element) {
 		while (
-			(element = element.parentNode) && 
-			(element !== DOC) && 
+			(element = element.parentNode) &&
+			(element !== DOC) &&
 			(elements.indexOf(element) < 0)
 		) {
 			if (!selector || (selector && $.is(element, selector))) {
@@ -329,20 +329,12 @@ $.prototype.contents = function() {
 };
 
 /**
- * @param {string=} selector 选择符，如果传了此参数，将使用选择符对结果集进行筛选
+ * 使用选择符对当前DOM结果集进行筛选，返回一个新的DOM集合，如果selector为空的话返回结果为空
+ * @param {string} selector 选择符
  * @return {$}
  */
 $.prototype.find = function(selector) {
-	var result = new $(),
-		elements = [];
-	this.each(function(index, element) {
-		if (selector && $.is(element, selector)) {
-			elements.push(element);
-		}
-	});
-	result.context = elements;
-	result.length = elements.length;
-	return result;
+	return $(selector, this);
 };
 
 /**

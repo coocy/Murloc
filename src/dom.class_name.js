@@ -4,7 +4,7 @@ $.prototype.hasClass =  function(value) {
 		len = classes.length;
 	for (var i = 0, j, l = this.length; i < l; i++) {
 		for  (j = 0; j < len; j++) {
-			if ((' ' + this.context[i].className + ' ').indexOf(' ' + classes[j] + ' ') > -1) {
+			if ((' ' + this.context[i].className.replace(/\s+/g, ' ') + ' ').indexOf(' ' + classes[j] + ' ') > -1) {
 				return true;
 			}
 		}
@@ -29,11 +29,22 @@ $.prototype.addClass =  function(value) {
 	});
 };
 
+/**
+ * 移除对象的className
+ * @param {string=} value 要移除的className，如果value为空，移除对象的全部className
+ * @return {$}
+ */
 $.prototype.removeClass =  function(value) {
 	var classes = (value || '').match(/\S+/g) || [],
-		len = classes.length;
+		len = classes.length,
+		removeAllClasses = arguments.length < 1;
 	return this.each(function(index, element) {
-		var className = ' ' + element.className + ' ',
+		//如果value为空，移除对象的全部className
+		if (removeAllClasses) {
+			element.className = '';
+			return;
+		}
+		var className = ' ' + element.className.replace(/\s+/g, ' ') + ' ',
 			oClassName = className,
 			curClass,
 			i;
@@ -53,22 +64,21 @@ $.prototype.removeClass =  function(value) {
 $.prototype.toggleClass =  function(value, condition) {
 	var classes = (value || '').match(/\S+/g) || [],
 		len = classes.length;
+
 	return this.each(function(index, element) {
-		var className = ' ' + element.className + ' ',
+		var className = ' ' + element.className.replace(/\s+/g, ' ') + ' ',
 			curClass,
-			isAdd,
+			needAdd,
+			forceAdd,
 			i;
 		for  (i = 0; i < len; i++) {
 			curClass = classes[i];
 
-			var isAdd = className.indexOf(' ' + curClass + ' ') < 0;
+			needAdd = className.indexOf(' ' + curClass + ' ') < 0;
+			forceAdd = (undefined === condition) ? needAdd : condition;
 
-			if ('undefined' === typeof condition) {
-				condition = isAdd;
-			}
-
-			if (condition) {
-				if (isAdd) {
+			if (forceAdd) {
+				if (needAdd) {
 					className += curClass + ' ';
 				}
 			} else {

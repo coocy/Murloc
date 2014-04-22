@@ -85,11 +85,29 @@ $.prototype.appendTo = function(targetElement) {
 	return this;
 };
 
+/**
+ * 复制一个DOM集合，返回复制后的新集合
+ * @param {boolean=} cloneDataAndEvents 是否复制data和事件
+ * @return {$}
+ */
 $.prototype.clone = function(cloneDataAndEvents) {
 	var result = new $(),
-		elements = [];
+		newElement,
+		elements = [],
+		uid,
+		data;
+
 	this.each(function(index, element) {
-		elements.push(element.cloneNode(true));
+		newElement = element.cloneNode(true);
+		if (cloneDataAndEvents) {
+			uid = element['__ruid'] || '0';
+			data = $._dataCache[uid];
+			if (data) {
+				uid = $.guid(newElement),
+				$._dataCache[uid] = $.copy(data);
+			}
+		}
+		elements.push(newElement);
 	});
 	result.context = elements;
 	result.length = elements.length;

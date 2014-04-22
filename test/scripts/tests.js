@@ -8,7 +8,7 @@ q = function() {
 	return r;
 };
 toArray = function(elements) {
-	var result, 
+	var result,
 		element,
 		i = 0;
 
@@ -27,6 +27,7 @@ toArray = function(elements) {
  * @requires ../../src/Murloc.js
  * @requires core.js
  * @requires dom.js
- * @rrequires dom.nodes.js
+ * @requires dom.class_name.js
+ * @requires dom.nodes.js
  * @requires dom.data.js
  */

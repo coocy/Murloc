@@ -266,4 +266,12 @@ test("is(String|undefined)", function() {
 	ok( $("#en").is("[lang=\"de\"] , [lang=\"en\"]"), "Comma-separated; Check for lang attribute: Expect en or de" );
 });
 
+test( "find(selector)", function() {
+	equal( "Yahoo", $("#foo").find(".blogTest").text(), "Check for find" );
+
+	deepEqual( $("#qunit-fixture").find("> div").get(), q( "foo", "nothiddendiv", "moretests", "tabindex-tests", "liveHandlerOrder", "siblingTest", "fx-test-group" ), "find child elements" );
+	deepEqual( $("#qunit-fixture").find("> #foo, > #moretests").get(), q( "foo", "moretests" ), "find child elements" );
+	deepEqual( $("#qunit-fixture").find("> #foo > p").get(), q( "sndp", "en", "sap" ), "find child elements" );
+
+});
 

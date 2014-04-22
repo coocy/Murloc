@@ -16,3 +16,9 @@ $("p").slice(0,3);
 //console.log($("<div foo='bar'></div>").closest("[foo]").length);
 
 //$("body").closest("div");
+
+var e = $("#log");
+e.addClass("testA testB");
+e.toggleClass( "testB testC");
+
+console.log(e.get(0).className);

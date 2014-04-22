@@ -1,4 +1,4 @@
-/** 
+/**
  * 标记是否是开发模式的常量；
  * 在使用Closure Compiler压缩JS的时候，传递--define='ENABLE_DEBUG=false'给压缩器，可以自动把此常量值改为false;
  * 在开发过程中可以使用这个变量放调试代码，压缩器会在压缩的时候把if (ENABLE_DEBUG) {...} 中的代码全部过滤掉
@@ -6,7 +6,7 @@
  */
 var ENABLE_DEBUG = true;
 
-/** 
+/**
  * 标记是否需要支持IE的常量；
  * 在使用Closure Compiler压缩JS的时候，传递--define='ENABLE_IE_SUPPORT=false'给压缩器，可以自动把此常量值改为false;
  * 库中会有一些针对IE的代码，在不需要兼容IE的项目中，设置ENABLE_IE_SUPPORT=false可以减少压缩后的代码
@@ -15,14 +15,14 @@ var ENABLE_DEBUG = true;
 var ENABLE_IE_SUPPORT = true;
 
 /* 保存常用DOM的全局变量（变量名可以被压缩） */
-var 
-	 /**  @type {Document} */ 
+var
+	 /**  @type {Document} */
 	DOC = document,
 
 	/**  @type {Window} */
 	WIN = window,
 
-	/** 
+	/**
 	 * 设备是否支持触摸事件
 	 * 这里使用WIN.hasOwnProperty('ontouchstart')在Android上会得到错误的结果
 	 * @type {boolean}
@@ -79,7 +79,7 @@ var
 
 	/**  @type {number} */
 	ScreenSizeCorrect = 1,
-	
+
 	_hasGetElementsByClassName = DOC.getElementsByClassName,
 	_kSelectorTest = [',', '+', '~', '[', '>', '#', '.', ' '],
 	_kSelectorTestLength = _kSelectorTest.length,
@@ -172,21 +172,21 @@ var $ = function(selector, context) {
 	this.context = [];
 	if (!selector) {
 		this.length = 0;
-	} else 
-	
+	} else
+
 	//单个DOM对象
 	if (selector.nodeType || selector === WIN) {
 		this.context = [selector];
 		this.length = 1;
-	} else 
-	
+	} else
+
 	//字符串选择符
 	if ('string' === typeof selector) {
 		var selectorLength = selector.length;
 
 		//HTML片段
 		if ('<' === selector.charAt(0) && selectorLength > 2 && '>' === selector.charAt(selectorLength - 1)) {
-			selector = selector.replace(/<(?!area|br|col|embed|hr|img|input|link|meta|param)(([\w:]+)[^>]*)\/>/gi, 
+			selector = selector.replace(/<(?!area|br|col|embed|hr|img|input|link|meta|param)(([\w:]+)[^>]*)\/>/gi,
 				'<$1></$2>');
 			var containter = DOC.createElement('div');
 			containter.innerHTML = selector;
@@ -196,20 +196,35 @@ var $ = function(selector, context) {
 			containter = null;
 		} else {
 			//CSS选择符
-			if (context instanceof $) {
-				context = context.context[0];
-				if (!context) {
-					this.context = [];
-					this.length = 0;
-					return this;
-				}
-			} else if ('string' === typeof context) {
-				context = $.selectorAll(context)[0];
+			if ('string' === typeof context) {
+				selector = context + ' ' + selector;
+				context = null;
+
+			} else if (context instanceof $) {
+				context = context.context;
+
+			} else {
+				context = context ? [context] : null;
 			}
-			this.context = $.selectorAll(selector, context);
+
+			var result = [];
+
+			if (context) {
+
+				var length = context.length,
+					i = 0;
+
+				for (; i < length; i++) {
+					result = _concat.apply(result, $.selectorAll(selector, context[i]));
+				}
+			} else {
+				result = $.selectorAll(selector);
+			}
+
+			this.context = result;
 		}
 		this.length = this.context.length;
-	} else 
+	} else
 
 	//初始化过的对象直接返回，例如$($('div'))
 	if (selector instanceof $) {
@@ -245,11 +260,11 @@ $.uid = 1;
 $.selectorAll = function(selector, context) {
 	context = context || DOC;
 
-	var _s = selector.slice(1), 
+	var _s = selector.slice(1),
 		els,
 		singleSelector = true,
 		l = _kSelectorTestLength;
-	
+
 	/* 判断是否是简单选择符 */
 	while (l--) {
 		if (_s.indexOf(_kSelectorTest[l]) != -1) {
@@ -266,7 +281,7 @@ $.selectorAll = function(selector, context) {
 			}
 			return [];
 		} else if (_hasGetElementsByClassName && '.' == selector.charAt(0)) {
-			return context.getElementsByClassName(_s);	
+			return context.getElementsByClassName(_s);
 		} else {
 			return context.getElementsByTagName(selector);
 		}
@@ -284,11 +299,11 @@ $._contextId = 1;
 
 var _useQSA = (DOC.querySelectorAll && !IsIE) || !ENABLE_IE_SUPPORT;
 
-$._find = _useQSA ? 
+$._find = _useQSA ?
 
 	function(selector, context) {
 		return context.querySelectorAll(selector);
-	} : 
+	} :
 
 	function(selector, context) {
 		return Sizzle(selector, context);
@@ -302,7 +317,7 @@ $._find = _useQSA ?
  * @private
  */
 
-$.find = _useQSA ? 
+$.find = _useQSA ?
 
 	function(selector, context) {
 		if (DOC !== context) {
@@ -318,7 +333,7 @@ $.find = _useQSA ?
 		}
 
 		return $._find(selector, DOC);
-	} : 
+	} :
 
 	$._find;
 
@@ -328,13 +343,13 @@ $.find = _useQSA ?
  * @return {boolean}
  */
 $.isPlainObject = function(obj) {
-	var result = 
-		('[object Object]' === _toString.call(obj)) && 
+	var result =
+		('[object Object]' === _toString.call(obj)) &&
 		obj && // exclude undefined && null (IE < 9)
-		(obj.constructor ? _hasOwnProperty.call(obj.constructor.prototype, 'isPrototypeOf') : false) && 
+		(obj.constructor ? _hasOwnProperty.call(obj.constructor.prototype, 'isPrototypeOf') : false) &&
 
 		// IE 8
-		!obj.nodeType && 
+		!obj.nodeType &&
 		!obj.window;
 
 	return result;

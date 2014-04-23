@@ -1,5 +1,5 @@
 
-test("length", function() {
+test("$(selector).length", function() {
 	equal( $("#qunit-fixture p").length, 6, "Get Number of Elements Found" );
 });
 
@@ -13,7 +13,7 @@ test("$(selector).get()", function() {
 	strictEqual( $("#firstp").get(-2), undefined, "Try get with index negative index larger then elements count" );
 });
 
-test("eq()", function() {
+test("$(selector).eq()", function() {
 
 	var $divs = $( "div" );
 
@@ -237,7 +237,7 @@ test("$(selector).parents()", function() {
 	deepEqual( $("#en, #sndp").parents().get(), q("foo", "qunit-fixture", "dl", "body", "html"), "Check for unique results from parents" );
 });
 
-test("is(String|undefined)", function() {
+test("$(selector).is(String|undefined)", function() {
 	ok( $("#form").is("form"), "Check for element: A form must be a form" );
 	ok( !$("#form").is("div"), "Check for element: A form is not a div" );
 	ok( $("#mark").is(".blog"), "Check for class: Expected class 'blog'" );
@@ -266,7 +266,7 @@ test("is(String|undefined)", function() {
 	ok( $("#en").is("[lang=\"de\"] , [lang=\"en\"]"), "Comma-separated; Check for lang attribute: Expect en or de" );
 });
 
-test( "find(selector)", function() {
+test( "$(selector).find(selector)", function() {
 	equal( "Yahoo", $("#foo").find(".blogTest").text(), "Check for find" );
 
 	deepEqual( $("#qunit-fixture").find("> div").get(), q( "foo", "nothiddendiv", "moretests", "tabindex-tests", "liveHandlerOrder", "siblingTest", "fx-test-group" ), "find child elements" );

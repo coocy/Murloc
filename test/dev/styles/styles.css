@@ -65,9 +65,7 @@ a{
 	width: 500px;
 	margin: 0 auto;
 }
-input,textarea{
-	-webkit-appearance: none;
-}
+
 input[type=text],
 input[type=button],
 input[type=submit],

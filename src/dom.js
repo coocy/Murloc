@@ -157,7 +157,7 @@ $.is = function(element, selector) {
 
 /**
  * 检查当前集合中的每个DOM节点是否符合指定的选择符，如果至少有一个符合，则返回true
- * @param {string=} selector
+ * @param {string} selector
  * @return {boolean}
  */
 $.prototype.is = function(selector) {
@@ -318,10 +318,7 @@ $.prototype.contents = function() {
 	var result = new $(),
 		elements = [];
 	this.each(function(index, element) {
-		for (var i = 0, l = element.childNodes.length; i < l; i++) {
-			var child = element.childNodes[i];
-			(1 == child.nodeType) && elements.push(child);
-		}
+		elements = _concat.apply(elements, element.childNodes);
 	});
 	result.context = elements;
 	result.length = elements.length;

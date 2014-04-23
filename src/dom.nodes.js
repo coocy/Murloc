@@ -15,7 +15,7 @@ $.prototype.remove = function() {
 
 /**
  * 在指定的父对象中插入一个DOM对象
- * @param {Element} element
+ * @param {(Element|$|String|Number|Array.<(Element|$)>)} element 单个DOM对象或者包含DOM集合的数组
  * @param {Element} parent
  * @param {Element} target
  * @private
@@ -26,42 +26,63 @@ $._insertNodeBefore = function(element, parent, target) {
 	if (element.nodeType) {
 		parent[method](element, target);
 
+	//$
 	} else if (element instanceof $) {
 		for (var i = 0, l = element.length; i < l; i++) {
 			parent[method](element.context[i], target);
 		}
 
-	} else if ('string' === typeof element) {
+	//数组
+	} else if (('string' !== typeof element) && !isNaN(element.length)) {
+		for (var i = 0, l = element.length; i < l; i++) {
+			$._insertNodeBefore(element[i], parent, target);
+		}
+
+	} else {
 		//处理添加HTML片段，不使用+=innerHTML是因为这样会消除给容器内的对象绑定的事件
 		var containter = DOC.createElement('div');
-		containter.innerHTML = element;
+		containter.innerHTML = element + '';
 		for (var i = 0, l = containter.childNodes.length; i < l; i++) {
 			parent[method](containter.childNodes[0], target);
 		}
 	}
 };
 
-$.prototype.before = function(preElement) {
+$.prototype.before = function() {
+	var elements = arguments;
 	return this.each(function(index, element) {
-		$._insertNodeBefore(preElement, element.parentNode, element);
+		$._insertNodeBefore(elements, element.parentNode, element);
 	});
 };
 
-$.prototype.after = function(nextElement) {
+$.prototype.after = function() {
+	var elements = arguments;
 	return this.each(function(index, element) {
-		$._insertNodeBefore(nextElement, element.parentNode, element.nextSibling);
+		$._insertNodeBefore(elements, element.parentNode, element.nextSibling);
 	});
 };
 
+/**
+ * 在指定的父对象中前置插入一个DOM对象
+ * @param {...(Element|$|String|Number|Array.<(Element|$)>)} element 单个DOM对象或者包含DOM集合的数组
+ * @return {$}
+ */
 $.prototype.prepend = function(childElement) {
+	var elements = arguments;
 	return this.each(function(index, element) {
-		$._insertNodeBefore(childElement, element, element.firstChild);
+		$._insertNodeBefore(elements, element, element.firstChild);
 	});
 };
 
-$.prototype.append = function(childElement) {
+/**
+ * 在指定的父对象中插入一个DOM对象
+ * @param {...(Element|$|String|Number|Array.<(Element|$)>)} element 单个DOM对象或者包含DOM集合的数组
+ * @return {$}
+ */
+$.prototype.append = function() {
+	var elements = arguments;
 	return this.each(function(index, element) {
-		$._insertNodeBefore(childElement, element);
+		$._insertNodeBefore(elements, element);
 	});
 };
 
@@ -82,6 +103,10 @@ $.prototype.prependTo = function(targetElement) {
 
 $.prototype.appendTo = function(targetElement) {
 	$(targetElement).append(this);
+	return this;
+};
+
+$.prototype.wrap = function() {
 	return this;
 };
 

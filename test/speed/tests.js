@@ -41,7 +41,15 @@ test("DOM", function() {
 
 	add('$("#groups").parents("#en, #sap")', '$(selector).parents()');
 	add('$("#groups").parents("div")', '$(selector).parents(selector)');
+});
 
+test("DOM nodes", function() {
+	add('$("ul").append("<span>")', '$("ul").append("&lt;span&gt;")');
+	//add('$("div").append("<span>", $("#groups"))', '$("div").append("&lt;span&gt;", $("#groups"))');
+	add('$("ul").append($("#groups"))', '$("ul").append($("#groups"))');
+
+	add('$("<div>").clone()', '$("&lt;div&gt;").clone()');
+	//add('$("ul").clone(true)', '$("ul").clone(true)');
 });
 
 test("DOM className", function() {
@@ -57,7 +65,6 @@ test("DOM className", function() {
 
 	add('$("p").toggleClass("classB")', '$("p").toggleClass("classB")');
 	add('$("p").addClass("classA").toggleClass("classA classB")', '$("p").addClass("classA").toggleClass("classA classB")');
-
 });
 
 

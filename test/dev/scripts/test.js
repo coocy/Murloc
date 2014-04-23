@@ -17,8 +17,3 @@ $("p").slice(0,3);
 
 //$("body").closest("div");
 
-var e = $("#log");
-e.addClass("testA testB");
-e.toggleClass( "testB testC");
-
-console.log(e.get(0).className);

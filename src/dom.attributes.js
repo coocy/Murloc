@@ -1,9 +1,9 @@
 
 $.prototype.html =  function() {
 	var html = arguments[0];
-		
+
 	if (undefined !== html) {
-		
+
 		/* 把html转换为字符串 */
 		html += '';
 		/* 简单检测是否是纯文本的内容 */
@@ -25,13 +25,11 @@ $.prototype.html =  function() {
 	}
 };
 
-$.prototype.text =  function() {
-	var text = arguments[0];
-		
-	if (undefined !== text) {
-		
-		text += '';
-
+$.prototype.text = function(text) {
+	if (arguments.length > 0) {
+		if (undefined === text) {
+			return this;
+		}
 		return this.each(function(index, element) {
 			if (element && ('innerText' in element)) {
 				element.innerText = text;
@@ -39,16 +37,22 @@ $.prototype.text =  function() {
 		});
 	} else {
 		var element = this.context[0];
-		return element && element.innerText;
+		return element && (element.innerText || element.textContent);
 	}
 };
 
-$.prototype.val =  function() {
-	var val = arguments[0];
-		
-	if (undefined !== val) {
+/**
+ * 设置DOM对象集合的value或者读取集合中第一个DOM对象的value
+ * @param {(string|number)=} value
+ * @return {($|string)=}
+ */
+$.prototype.val =  function(value) {
+	if (arguments.length > 0) {
+		if (!value && 0 !== value) {
+			value = '';
+		}
 		return this.each(function(index, element) {
-			element.value = val;
+			element.value = value;
 		});
 	} else {
 		var element = this.context[0];
@@ -115,21 +119,29 @@ $.prototype.removeAttr =  function(name) {
 	});
 };
 
+/**
+ * 设置DOM对象集合的css或者读取集合中第一个DOM对象的css
+ * @param {(string|Object)} key
+ * @param {string=} value
+ * @return {$}
+ */
 $.prototype.css =  function(key, value) {
 
-	if (('string' === typeof key) && (undefined === value)) {
+	if (('string' === typeof key) && (arguments.length < 2)) {
 		var element = this.context[0];
-		return element && (element.currentStyle || window.getComputedStyle(element, null))[key];
+		key = $.camelCase(key);
+		return element && (element.currentStyle || WIN.getComputedStyle(element, ''))[key];
 	}
 
 	return this.each(function(index, element) {
-		if ('object' !== typeof key) {
+		if ('string' === typeof key) {
 			var _key = {};
 			_key[key] = value;
 			key = _key;
 		}
 		for (var k in key) {
 			var _value =  key[k];
+			k = $.camelCase(k);
 			if (k !== 'opacity' && _value !== '' && !isNaN(_value) && _value != 0) {
 				_value += 'px';
 			}

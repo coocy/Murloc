@@ -413,3 +413,15 @@ $.copy = function(dest) {
 	return dest;
 };
 $.prototype.copy = $.copy;
+
+/**
+ * 将连字符字符串转化为驼峰形式
+ * @param {string} string
+ * @return {string}
+ */
+$.camelCase = function(string){
+	return string.replace(/-+(.)?/g, function(match, char){
+		return char ? char.toUpperCase() : ''
+	});
+};
+

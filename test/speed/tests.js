@@ -44,9 +44,9 @@ test("DOM", function() {
 });
 
 test("DOM nodes", function() {
-	add('$("ul").append("<span>")', '$("ul").append("&lt;span&gt;")');
+	add('$("#ap").append("<span>")', '$("#ap").append("&lt;span&gt;")');
 	//add('$("div").append("<span>", $("#groups"))', '$("div").append("&lt;span&gt;", $("#groups"))');
-	add('$("ul").append($("#groups"))', '$("ul").append($("#groups"))');
+	add('$("#ap").append($("#groups"))', '$("#ap").append($("#groups"))');
 
 	add('$("<div>").clone()', '$("&lt;div&gt;").clone()');
 	//add('$("ul").clone(true)', '$("ul").clone(true)');

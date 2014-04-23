@@ -50,6 +50,9 @@ $._insertNodeBefore = function(element, parent, target) {
 
 $.prototype.before = function() {
 	var elements = arguments;
+	if (elements.length < 2) {
+		elements = elements[0];
+	}
 	return this.each(function(index, element) {
 		$._insertNodeBefore(elements, element.parentNode, element);
 	});
@@ -57,6 +60,9 @@ $.prototype.before = function() {
 
 $.prototype.after = function() {
 	var elements = arguments;
+	if (elements.length < 2) {
+		elements = elements[0];
+	}
 	return this.each(function(index, element) {
 		$._insertNodeBefore(elements, element.parentNode, element.nextSibling);
 	});
@@ -69,6 +75,9 @@ $.prototype.after = function() {
  */
 $.prototype.prepend = function(childElement) {
 	var elements = arguments;
+	if (elements.length < 2) {
+		elements = elements[0];
+	}
 	return this.each(function(index, element) {
 		$._insertNodeBefore(elements, element, element.firstChild);
 	});
@@ -81,6 +90,9 @@ $.prototype.prepend = function(childElement) {
  */
 $.prototype.append = function() {
 	var elements = arguments;
+	if (elements.length < 2) {
+		elements = elements[0];
+	}
 	return this.each(function(index, element) {
 		$._insertNodeBefore(elements, element);
 	});

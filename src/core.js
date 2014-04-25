@@ -420,8 +420,8 @@ $.prototype.copy = $.copy;
  * @return {string}
  */
 $.camelCase = function(string){
-	return string.replace(/-+(.)?/g, function(match, char){
-		return char ? char.toUpperCase() : ''
+	return string.replace(/-+(.)?/g, function(match, chr){
+		return chr ? chr.toUpperCase() : '';
 	});
 };
 

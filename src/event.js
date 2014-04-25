@@ -290,6 +290,10 @@ $.prototype.trigger = function(type, data) {
 	});
 };
 
+$.prototype.click = function(fn) {
+	this.on('click', fn);
+};
+
 /**
  * 实现触屏的点击事件委托
  * 它做的事情：

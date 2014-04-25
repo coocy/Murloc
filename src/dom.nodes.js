@@ -70,7 +70,7 @@ $.prototype.after = function() {
 
 /**
  * 在指定的父对象中前置插入一个DOM对象
- * @param {...(Element|$|String|Number|Array.<(Element|$)>)} element 单个DOM对象或者包含DOM集合的数组
+ * @param {...(Element|$|String|Number|Array.<(Element|$)>)} childElement 单个DOM对象或者包含DOM集合的数组
  * @return {$}
  */
 $.prototype.prepend = function(childElement) {
@@ -85,10 +85,10 @@ $.prototype.prepend = function(childElement) {
 
 /**
  * 在指定的父对象中插入一个DOM对象
- * @param {...(Element|$|String|Number|Array.<(Element|$)>)} element 单个DOM对象或者包含DOM集合的数组
+ * @param {...(Element|$|String|Number|Array.<(Element|$)>)} childElement 单个DOM对象或者包含DOM集合的数组
  * @return {$}
  */
-$.prototype.append = function() {
+$.prototype.append = function(childElement) {
 	var elements = arguments;
 	if (elements.length < 2) {
 		elements = elements[0];

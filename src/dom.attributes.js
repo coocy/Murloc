@@ -25,19 +25,25 @@ $.prototype.html =  function() {
 	}
 };
 
+/**  @type {string} */
+var _kTextContentProp;
+
 $.prototype.text = function(text) {
+	if (!_kTextContentProp) { //只在第一次调用的时候检查浏览器支持的innerText属性
+		_kTextContentProp = 'textContent' in DOC ? 'textContent' : 'innerText';
+	}
 	if (arguments.length > 0) {
 		if (undefined === text) {
 			return this;
 		}
 		return this.each(function(index, element) {
-			if (element && ('innerText' in element)) {
-				element.innerText = text;
+			if (_kTextContentProp in element) {
+				element[_kTextContentProp] = text;
 			}
 		});
 	} else {
 		var element = this.context[0];
-		return element && (element.innerText || element.textContent);
+		return element && element[_kTextContentProp];
 	}
 };
 

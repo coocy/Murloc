@@ -16,7 +16,6 @@ $.toArray = function(elements) {
 	return result;
 };
 
-
 /**
  * 迭代一个{$}对象，对其中的每个子元素执行一个方法
  * @param {function(number=, Element=)} fn
@@ -286,10 +285,19 @@ $.prototype.children = function(selector) {
 		elements = [];
 
 	this.each(function(index, element) {
+
 		var chilldren = element.children;
-		if (ENABLE_IE_SUPPORT) {
-			chilldren = $.toArray(element.children);
+
+		//没有children属性的时候，用childNodes来筛选结果，（在FF中DocumentFragment没有children属性）
+		if (!chilldren) {
+			chilldren = [];
+			for (var childNode = element.firstChild; childNode; childNode = childNode.nextSibling) {
+				if (1 === childNode.nodeType) {
+					chilldren.push(childNode);
+				}
+			}
 		}
+
 		elements = _concat.apply(elements, chilldren);
 	});
 
@@ -314,12 +322,22 @@ $.prototype.children = function(selector) {
 	return result;
 };
 
+/**
+ * 当前DOM集合中的每个DOM对象的直接子节点的集合，包含文本和注释节点
+ * @return {$}
+ */
 $.prototype.contents = function() {
 	var result = new $(),
 		elements = [];
 	this.each(function(index, element) {
-		elements = _concat.apply(elements, element.childNodes);
+		var contentDocument = element.contentDocument;
+		if (contentDocument) {
+			elements.push(contentDocument);
+		} else {
+			elements =  _concat.apply(elements, element.childNodes);
+		}
 	});
+
 	result.context = elements;
 	result.length = elements.length;
 	return result;

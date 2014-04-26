@@ -330,7 +330,6 @@ test( "$(selector).append(param) to object", function() {
 	equal( object.children().eq(0).attr("name"), "bar", "param has name=bar" );
 });
 
-
 test( "append HTML5 sectioning elements", function() {
 	var article, aside;
 
@@ -342,4 +341,84 @@ test( "append HTML5 sectioning elements", function() {
 	equal( article.get( 0 ).style.fontSize, "10px", "HTML5 elements are styleable" );
 	equal( aside.length, 1, "HTML5 elements do not collapse their children" );
 });
+
+test( "$(selector).appendTo(selector)", function() {
+
+	var l, defaultText;
+
+	defaultText = "Try them out:";
+	$("<b>buga</b>").appendTo("#first");
+	equal( $("#first").text(), defaultText + "buga", "Check if text appending works" );
+	equal( $("<option value='appendTest'>Append Test</option>")
+		.appendTo("#select3").parent().find("option").last()
+		.attr("value"), "appendTest", "Appending html options to select element" );
+
+	l = $("#first").children().length + 2;
+
+	$($("<strong>test</strong>").get(0)).appendTo("#first");
+	$($("<strong>test</strong>").get(0)).appendTo("#first");
+
+	equal( $("#first").children().length, l, "Make sure the elements were inserted." );
+	equal( $("#first").children().last().get(0).nodeName.toLowerCase(), "strong", "Verify the last element." );
+
+});
+
+test( "appendTo(Element|Array<Element>)", function() {
+
+	var expected = "This link has class=\"blog\": Simon Willison's WeblogTry them out:";
+	$( document.getElementById("first") ).appendTo(document.getElementById("sap"));
+	equal( $("#sap").text(), expected, "Check for appending of element" );
+
+	expected = "This link has class=\"blog\": Simon Willison's WeblogTry them out:Yahoo";
+	$(document.getElementById("first")).appendTo("#sap");
+	$(document.getElementById("yahoo")).appendTo("#sap");
+	equal( $("#sap").text(), expected, "Check for appending of array of elements" );
+
+});
+
+test( "$(selector).appendTo($)", function() {
+
+  var expected, num, div;
+	ok( $(document.createElement("script")).appendTo("body").length, "Make sure a disconnected script can be appended." );
+
+	expected = "This link has class=\"blog\": Simon Willison's WeblogYahooTry them out:";
+	$("#yahoo, #first").appendTo("#sap");
+	equal( $("#sap").text(), expected, "Check for appending of $ object" );
+
+	$("#select1").appendTo($("#foo"));
+	t( "Append select", "#foo select", [ "select1" ] );
+
+	div = $("<div/>").on( "click", function() {
+		ok( true, "Running a cloned click." );
+	});
+	div.appendTo("#qunit-fixture, #moretests");
+
+	$("#qunit-fixture div").last().trigger("click");
+	$("#moretests div").last().trigger("click");
+
+	div = $("<div/>").appendTo("#qunit-fixture, #moretests");
+
+	equal( div.length, 2, "appendTo returns the inserted elements" );
+
+	div.addClass("test");
+
+	ok( $("#qunit-fixture div").last().hasClass("test"), "appendTo element was modified after the insertion" );
+	ok( $("#moretests div").last().hasClass("test"), "appendTo element was modified after the insertion" );
+
+	div = $("<div/>");
+	$("<span>a</span><span>b</span><b>b</b>").filter("span").appendTo( div );
+
+	equal( div.children().length, 2, "Make sure the right number of children were inserted." );
+
+	div = $("#moretests div");
+
+	num = $("#qunit-fixture div").length;
+	div.remove().appendTo("#qunit-fixture");
+
+	equal( $("#qunit-fixture div").length, num, "Make sure all the removed divs were inserted." );
+});
+
+
+
+
 

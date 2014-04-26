@@ -7,7 +7,7 @@ function get_static_content($file_path, $get_origin_file = false) {
 		$static_contents .= "\r\n".trim($file_contents);
 
 	} else {
-	
+
 		$file = rtrim(OUTPUT_DIR, '\/\\').$file_path;
 		if (file_exists($file)) {
 			$static_contents = file_get_contents($file);
@@ -15,7 +15,7 @@ function get_static_content($file_path, $get_origin_file = false) {
 			return('未找到文件: '.$file);
 		}
 	}
-	
+
 	return $static_contents;
 }
 
@@ -26,7 +26,7 @@ function get_file_dir($file_path) {
 	} else {
 		$file_dir = $file_path;
 	}
-	$file_dir = rtrim($file_dir, '\/\\').'/'; 
+	$file_dir = rtrim($file_dir, '\/\\').'/';
 	return $file_dir;
 }
 
@@ -37,7 +37,7 @@ function compile_comments($file_path) {
 	$file_full_path = rtrim(ROOT_PATH, '\/\\').$file_path;
 	if (file_exists($file_full_path)) {
 		$file_contents = file_get_contents($file_full_path);
-		
+
 		$file_contents = preg_replace('/(\\/\*.+?\*\\/)/ise', 'compile_requires(\'\\1\', \''.$file_path.'\')', $file_contents);
 		return $file_contents;
 	}
@@ -66,23 +66,23 @@ function compress_js($file_path, $return_content = false, $formatting = false) {
 
 	$file_path = '/'.ltrim($file_path, '\/\\');
 	$static_contents = get_static_content($file_path, true);
-	
+
 	if ($return_content === true) {
-	
+
 		$_file_path = '/'.ltrim($file_path, '\/\\');
 		$_file_full_path = rtrim(ROOT_PATH, '\/\\').$_file_path;
-	
+
 		$output_file = $_file_full_path.'___';
 	} else {
 		$output_file = OUTPUT_DIR.ltrim($file_path, '\/\\');
 	}
-	
+
 	$file_full_path = rtrim(ROOT_PATH, '\/\\').$file_path;
-	
+
 	$temp_file = $file_full_path.'____';
 	write_file($temp_file, $static_contents);
 	$static_contents = null;
-	
+
 	$level = 1;
 	$compilation_level = $level == 1 ? 'ADVANCED_OPTIMIZATIONS' : 'SIMPLE_OPTIMIZATIONS' ;
 
@@ -99,11 +99,11 @@ function compress_js($file_path, $return_content = false, $formatting = false) {
 	if ($formatting === true) {
 		$parms[] = '--formatting=pretty_print';
 	}
-	
+
 	foreach($parms as $v) {
 		$parm_array[] = $v;
 	}
-	
+
 	$compiler_command = 'java -jar '.INCLUDE_PATH.'cmd/compiler.jar '.join(' ', $parm_array);
 
 	$tunnels=array(
@@ -112,7 +112,7 @@ function compress_js($file_path, $return_content = false, $formatting = false) {
 		2 => array('pipe','w') // Process std error
 	);
 
-	$io = array(); 
+	$io = array();
 	$resource = proc_open($compiler_command, $tunnels, $io);
 
 	if (!is_resource($resource)) {
@@ -121,7 +121,7 @@ function compress_js($file_path, $return_content = false, $formatting = false) {
 
 	$output = stream_get_contents($io[1]);
 	// We are not interested in process standard output.. close it
-	fclose($io[1]);               
+	fclose($io[1]);
 
 	// Get process std error
 	$errors = stream_get_contents($io[2]);
@@ -131,9 +131,9 @@ function compress_js($file_path, $return_content = false, $formatting = false) {
 	$result = proc_close($resource);
 
 	//echo $compiler_command;
-	
+
 	unlink($temp_file);
-	
+
 	return array(
 		'errors' => $errors,
 		'output' => $output
@@ -145,18 +145,18 @@ function compress_css($file_path) {
 	$file_path = '/'.ltrim($file_path, '\/\\');
 	$static_contents = get_static_content($file_path, true);
 	$output_file = OUTPUT_DIR.ltrim($file_path, '\/\\');
-	
+
 	$file_full_path = rtrim(ROOT_PATH, '\/\\').$file_path;
-	
+
 	$temp_file = $file_full_path.'____';
 	write_file($temp_file, $static_contents);
 	$static_contents = null;
-	
+
 	$compiler_command = 'java -jar '.INCLUDE_PATH.'cmd/yuicompressor-2.4.6.jar '.$temp_file.' -v --type css -o '.$output_file;
-	
+
 	exec($compiler_command, $return, $code);
 	unlink($temp_file);
-	
+
 	if (1 == $code) {
 		return false;
 	}
@@ -167,13 +167,13 @@ function compress_png($file_path) {
 
 	$file_path = '/'.ltrim($file_path, '\/\\');
 	$output_file = OUTPUT_DIR.ltrim($file_path, '\/\\');
-	
+
 	$file_full_path = rtrim(ROOT_PATH, '\/\\').$file_path;
-	
+
 	$compiler_command = INCLUDE_PATH.'cmd/pngcrush_1_7_42_w32.exe "'.$file_full_path.'" "'.$output_file.'"';
-	
+
 	exec($compiler_command, $return, $code);
-	
+
 	if (1 == $code) {
 		return false;
 	}
@@ -189,12 +189,12 @@ function compress_template($file_path) {
 		'compressHTML' => true,
 		'output_template' => true
 	), null);
-	
+
 	$output = $temp -> output_string();
-	
+
 	$file_dir = get_dir_of_path($file_path);
 	make_dir($file_dir, ROOT_PATH);
-	
+
 	write_file(rtrim(OUTPUT_DIR, '\/\\').$file_path, $output);
 	$output = null;
 

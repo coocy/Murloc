@@ -28,11 +28,6 @@ test( "$(selector).text()", function() {
 	//$newLineTest.remove();
 });
 
-test( "$(selector).text(undefined)", function() {
-
-	equal( $("#foo").text("<div").text(undefined).get(0).innerHTML, "&lt;div", ".text(undefined) is chainable" );
-});
-
 var testText = function( valueObj ) {
 
 	var val, j;
@@ -48,6 +43,10 @@ var testText = function( valueObj ) {
 
 test( "$(selector).text(String)", function() {
 	testText( manipulationBareObj );
+});
+
+test( "$(selector).text(undefined)", function() {
+	equal( $("#foo").text("<div").text(undefined).get(0).innerHTML, "&lt;div", ".text(undefined) is chainable" );
 });
 
 var testVal = function( valueObj ) {

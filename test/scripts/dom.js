@@ -275,3 +275,38 @@ test( "$(selector).find(selector)", function() {
 
 });
 
+test("$(selector).contents()", function() {
+	var ibody, c;
+
+	equal( $("#ap").contents().length, 9, "Check element contents" );
+	ok( $("#iframe").contents().get(0), "Check existence of IFrame document" );
+
+	ibody = $("#loadediframe").contents().get(0).body;
+	ok( ibody, "Check existence of IFrame body" );
+
+	equal( $("span", ibody).text(), "span text", "Find span in IFrame and check its text" );
+
+	$(ibody).append("<div>init text</div>");
+	equal( $("div", ibody).length, 2, "Check the original div and the new div are in IFrame" );
+
+	equal( $("div", ibody).last().text(), "init text", "Add text to div in IFrame" );
+
+	$("div", ibody).last().text("div text");
+	equal( $("div", ibody).last().text(), "div text", "Add text to div in IFrame" );
+
+	$("div", ibody).last().remove();
+	equal( $("div", ibody).length, 1, "Delete the div and check only one div left in IFrame" );
+
+	equal( $("div", ibody).text(), "span text", "Make sure the correct div is still left after deletion in IFrame" );
+
+	$("<table/>", ibody).append("<tr><td>cell</td></tr>").appendTo(ibody);
+	$("table", ibody).remove();
+	equal( $("div", ibody).length, 1, "Check for JS error on add and delete of a table in IFrame" );
+
+	// using contents will get comments regular, text, and comment nodes
+	c = $("#nonnodes").contents().contents();
+	equal( c.length, 1, "Check node,textnode,comment contents is just one" );
+	equal( c.get(0).nodeValue, "hi", "Check node,textnode,comment contents is just the one from span" );
+});
+
+

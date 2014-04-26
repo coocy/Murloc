@@ -24,16 +24,19 @@ var
 
 	/**
 	 * 设备是否支持触摸事件
-	 * 这里使用WIN.hasOwnProperty('ontouchstart')在Android上会得到错误的结果
+	 * 这里使用WIN.hasOwnProperty('ontouchend')在Android上会得到错误的结果
 	 * @type {boolean}
 	 */
-	IsTouch = 'ontouchstart' in WIN,
+	IsTouch = 'ontouchend' in WIN,
 
 	/** @type {string} */
-	UA = WIN.navigator.userAgent,
+	NA = WIN.navigator,
+
+	/** @type {string} */
+	UA = NA.userAgent,
 
 	/** @type {boolean} */
-	IsAndroid = (/Android|HTC/i.test(UA) || /Linux/i.test(WIN.navigator['platform'] + '')), /* HTC Flyer平板的UA字符串中不包含Android关键词 */
+	IsAndroid = (/Android|HTC/i.test(UA) || /Linux/i.test(NA.platform + '')), /* HTC Flyer平板的UA字符串中不包含Android关键词 */
 
 	/** @type {boolean} */
 	IsIPad = !IsAndroid && /iPad/i.test(UA),

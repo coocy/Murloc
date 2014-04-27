@@ -18,24 +18,27 @@ $.prototype.remove = function() {
  * @param {(Element|$|String|Number|Array.<(Element|$)>)} element 单个DOM对象或者包含DOM集合的数组
  * @param {Element} parent
  * @param {Element} target
+ * @return {Array.<Element>}
  * @private
  */
 $._insertNodeBefore = function(element, parent, target) {
 	//原生DOM对象直接添加
-	var method = target ? 'insertBefore' : 'appendChild';
+	var method = target ? 'insertBefore' : 'appendChild',
+		resultElements = [];
+
 	if (element.nodeType) {
-		parent[method](element, target);
+		resultElements = $._insertNodeIntoParents(method, parent, element, target);
 
 	//$
 	} else if (element instanceof $) {
 		for (var i = 0, l = element.length; i < l; i++) {
-			parent[method](element.context[i], target);
+			resultElements = resultElements.concat($._insertNodeIntoParents(method, parent, element.context[i], target));
 		}
 
 	//数组
 	} else if (('string' !== typeof element) && !isNaN(element.length)) {
 		for (var i = 0, l = element.length; i < l; i++) {
-			$._insertNodeBefore(element[i], parent, target);
+			resultElements = resultElements.concat($._insertNodeBefore(element[i], parent, target));
 		}
 
 	} else {
@@ -43,8 +46,35 @@ $._insertNodeBefore = function(element, parent, target) {
 		var containter = DOC.createElement('div');
 		containter.innerHTML = element + '';
 		for (var i = 0, l = containter.childNodes.length; i < l; i++) {
-			parent[method](containter.childNodes[0], target);
+			resultElements = resultElements.concat($._insertNodeIntoParents(method, parent, containter.childNodes[0], target));
 		}
+	}
+
+	return resultElements;
+};
+
+/**
+ * 在一个或者多个父对象中插入一个DOM对象；如果是一个父对象，直接插入DOM对象；如果是多个父对象，则在每个父对象中插入复制的DOM对象
+ * @param {string} method
+ * @param {(Element|Array.<Element>)} parents
+ * @param {Element} element
+ * @param {Element} target
+ * @return {Array.<Element>}
+ * @private
+ */
+$._insertNodeIntoParents = function(method,  parents, element, target) {
+	if (parents.nodeType) {
+		parents[method](element, target);
+		return [element];
+	} else {
+		var elem,
+			elements = [];
+		for (var i = 0, l = parents.length; i < l; i++) {
+			elem = (i < l - 1) ? $.clone(element, true) : element;
+			parents[i][method](elem, target);
+			elements.push(elem);
+		}
+		return elements;
 	}
 };
 
@@ -93,9 +123,10 @@ $.prototype.append = function(childElement) {
 	if (elements.length < 2) {
 		elements = elements[0];
 	}
-	return this.each(function(index, element) {
-		$._insertNodeBefore(elements, element);
-	});
+
+	$._insertNodeBefore(elements, this.context);
+
+	return this;
 };
 
 $.prototype.insertBefore = function(targetElement) {
@@ -114,12 +145,51 @@ $.prototype.prependTo = function(targetElement) {
 };
 
 $.prototype.appendTo = function(targetElement) {
-	$(targetElement).append(this);
+	var elements = this.context;
+	if (elements.length < 2) {
+		elements = elements[0];
+	}
+	this.context = $._insertNodeBefore(elements, $(targetElement).context);
+	this.length = this.context.length;
 	return this;
 };
 
 $.prototype.wrap = function() {
 	return this;
+};
+
+/**
+ * 复制一个DOM对象，返回复制后的新集合
+ * @param {Element} element 要复制的DOM对象
+ * @param {boolean=} cloneDataAndEvents 是否复制data和事件
+ * @return {Element} 复制的DOM对象
+ */
+$.clone = function(element, cloneDataAndEvents) {
+	var newElement = element.cloneNode(true);
+
+	if (cloneDataAndEvents) {
+		var uid = element['__ruid'] || '0',
+			data = $._dataCache[uid],
+			eventName,
+			eventData,
+			elemData,
+			newUid = $.guid(newElement);
+
+		//复制data
+		if (data) {
+			$._dataCache[newUid] = $.copy(data);
+		}
+
+		//复制事件
+		for (eventName in $._eventCache) {
+			eventData = $._eventCache[eventName];
+			elemData = eventData[uid];
+			if (elemData) {
+				eventData[newUid] = $.copy(elemData);
+			}
+		}
+	}
+	return newElement;
 };
 
 /**
@@ -130,20 +200,10 @@ $.prototype.wrap = function() {
 $.prototype.clone = function(cloneDataAndEvents) {
 	var result = new $(),
 		newElement,
-		elements = [],
-		uid,
-		data;
+		elements = [];
 
 	this.each(function(index, element) {
-		newElement = element.cloneNode(true);
-		if (cloneDataAndEvents) {
-			uid = element['__ruid'] || '0';
-			data = $._dataCache[uid];
-			if (data) {
-				uid = $.guid(newElement),
-				$._dataCache[uid] = $.copy(data);
-			}
-		}
+		newElement = $.clone(element, cloneDataAndEvents);
 		elements.push(newElement);
 	});
 	result.context = elements;

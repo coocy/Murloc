@@ -2,7 +2,7 @@
  * Event
  */
 
- /* 
+ /*
 $._eventCache = {
 	'event_1': {
 		'uid_1': [
@@ -21,7 +21,7 @@ $._eventCache = {
 			fn2: 1,
 			...
 		]
-		
+
 	},
 	'event_2': {
 		'uid_1':[
@@ -38,7 +38,7 @@ $._eventCache = {
 /* 标记是否使用Touch事件模拟点击 */
 var UseTouchClick = IsTouch;
 
-if (UseTouchClick &&!IsAndroid /* Android下使用模拟点击会导致不稳定（比如跨页面点击、视频退出全屏后跨页面后退） */ && 
+if (UseTouchClick &&!IsAndroid /* Android下使用模拟点击会导致不稳定（比如跨页面点击、视频退出全屏后跨页面后退） */ &&
 	UA.indexOf('PlayStation') < 0 /* PlayStation手持设备使用模拟点击会造成在滑动页面的时候触发点击 */
 ) {
 	UseTouchClick = true;
@@ -54,7 +54,7 @@ $.event = function(e) {
 		return e;
 	}
 
-	var changedTouches = e.changedTouches, 
+	var changedTouches = e.changedTouches,
 		ee = (changedTouches && changedTouches.length > 0) ? changedTouches[0] : e;
 
 	this.event = e;
@@ -68,17 +68,17 @@ $.event = function(e) {
 $.event.prototype = {
 
 	/*
-	 * @type {?Event} 
+	 * @type {?Event}
 	 */
 	event: null,
 
 	/*
-	 * @type {?Event} 
+	 * @type {?Event}
 	 */
 	originalEvent: null,
 
 	/*
-	 * @type {?Element} 
+	 * @type {?Element}
 	 */
 	target: null,
 
@@ -88,12 +88,12 @@ $.event.prototype = {
 	type: null,
 
 	/*
-	 * @type {boolean} 
+	 * @type {boolean}
 	 */
 	isPropagationStopped: false,
 
 	/*
-	 * @type {boolean} 
+	 * @type {boolean}
 	 */
 	isDefaultPrevented: false,
 
@@ -103,7 +103,7 @@ $.event.prototype = {
 	currentTarget: null,
 
 	/*
-	 * @type {function} 
+	 * @type {function}
 	 */
 	preventDefault: function() {
 		var e = this.event;
@@ -119,7 +119,7 @@ $.event.prototype = {
 	},
 
 	/*
-	 * @type {function} 
+	 * @type {function}
 	 */
 	stopPropagation: function() {
 		var e = this.event;
@@ -172,10 +172,10 @@ $._addEventData = function(type, uid, element, fn) {
 	var eventData = $._eventCache[type] || ($._eventCache[type] = {}),
 		elemData = eventData[uid] || (eventData[uid] = []),
 		capture = (-1 !== $._eventType.captured.indexOf(type));
-			
-	/* 
+
+	/*
 	 * 在第一次给某个DOM对象添加事件的时候绑定$.dispatchEvent()方法，
-	 * 后续添加的方法推入elemData数组在$.dispatchEvent()中调用 
+	 * 后续添加的方法推入elemData数组在$.dispatchEvent()中调用
 	 */
 	if (elemData.length < 1) {
 
@@ -206,9 +206,9 @@ $.dispatchEvent = function(evt) {
 		elCur = e.target,
 		eventData = $._eventCache[type] || {};
 
-	/* 
+	/*
 	 * 在触屏浏览器中，只执行在touchend中合成的click事件
-	 * 在触屏浏览（合成的时候给event对象添加了自定义的isSimulated属性） 
+	 * 在触屏浏览（合成的时候给event对象添加了自定义的isSimulated属性）
 	 */
 
 	if ('click' === type && UseTouchClick && !e.originalEvent.isSimulated) {
@@ -231,19 +231,19 @@ $.dispatchEvent = function(evt) {
 			/* 把冒泡过程中当前的DOM对象保存在Event的currentTarget属性中 */
 			e.currentTarget = elCur;
 
-			/* 
+			/*
 			 * 执行事件方法
 			 * 在方法中的this指针默认指向冒泡过程中当前的DOM对象（和currentTarget属性一样）
 			 * 可以使用Function的bind方法改变this指针指向的对象
 			 */
 			var re = elemData[i].apply(elCur, [e]);
-			
+
 			/* 有任一方法返回false的话标记result为false */
 			if (false === re) {
 				result = re;
 			}
 		}
-		
+
 		/* 如果任一绑定给对象的方法返回false，停止默认事件并终止冒泡 */
 		if (false === result) {
 			e.preventDefault();
@@ -276,6 +276,13 @@ $.prototype.on = function(type, fn) {
 	});
 };
 
+/**
+ * 触发DOM集合的制定事件
+ * @function
+ * @param {String} type 事件类型
+ * @param {*=} data 传给Event对象的自定义数据，可以在事件传播过程中传递
+ * @return {$}
+ */
 $.prototype.trigger = function(type, data) {
 	var theEvent = DOC.createEvent('MouseEvents');
 	theEvent.initEvent(type, true, true);
@@ -288,10 +295,6 @@ $.prototype.trigger = function(type, data) {
 			element[type]();
 		}
 	});
-};
-
-$.prototype.click = function(fn) {
-	this.on('click', fn);
 };
 
 /**
@@ -327,7 +330,7 @@ $.touchEvent = {
 				onTouchEnd: END_EVENT
 			},
 			type;
-			
+
 			for (type in events) {
 				$.addEvent(events[type], DOC, $.touchEvent[type], false);
 			}
@@ -376,7 +379,7 @@ $.touchEvent = {
 		if (touch.hasTouchStart) {
 			var e = new $.event(e),
 				event = e.originalEvent,
-				movedDistance = Math.pow(Math.pow(event.screenX * ScreenSizeCorrect - touch.startPoint[0], 2) 
+				movedDistance = Math.pow(Math.pow(event.screenX * ScreenSizeCorrect - touch.startPoint[0], 2)
 				                         + Math.pow(event.screenY * ScreenSizeCorrect - touch.startPoint[1], 2), .5);
 
 			if (movedDistance > MAX_TOUCHMOVE_DISTANCE_FOR_CLICK) {
@@ -401,7 +404,7 @@ $.touchEvent = {
 				theEvent.isSimulated = true;
 
 				/* 给目标DOM对象触发合成事件
-				 * （目标DOM对象是touchstart事件的target对象，touchstart和touchend的target可能不一样，所以在touchstart里面保留了一个引用） 
+				 * （目标DOM对象是touchstart事件的target对象，touchstart和touchend的target可能不一样，所以在touchstart里面保留了一个引用）
 				 */
 				target.dispatchEvent(theEvent);
 			}
@@ -430,3 +433,186 @@ $.touchEvent = {
 }
 
 $.touchEvent.init();
+
+/**
+ * 给DOM集合绑定点击事件或者触发点击事件
+ * @function
+ * @param {Function} fn 绑定的事件
+ * @return {$}
+ */
+$.prototype.click = function(fn) {
+	return arguments.length > 0 ? this.on('click', fn) : this.trigger('click');
+};
+
+/**
+ * 给DOM集合绑定mousedown事件或者触发mousedown事件
+ * @function
+ * @param {Function} fn 绑定的事件
+ * @return {$}
+ */
+$.prototype.mousedown = function(fn) {
+	return arguments.length > 0 ? this.on('mousedown', fn) : this.trigger('mousedown');
+};
+
+/**
+ * 给DOM集合绑定mouseup事件或者触发mouseup事件
+ * @function
+ * @param {Function} fn 绑定的事件
+ * @return {$}
+ */
+$.prototype.mouseup = function(fn) {
+	return arguments.length > 0 ? this.on('mouseup', fn) : this.trigger('mouseup');
+};
+
+/**
+ * 给DOM集合绑定mousemove事件或者触发mousemove事件
+ * @function
+ * @param {Function} fn 绑定的事件
+ * @return {$}
+ */
+$.prototype.mousemove = function(fn) {
+	return arguments.length > 0 ? this.on('mousemove', fn) : this.trigger('mousemove');
+};
+
+/**
+ * 给DOM集合绑定mouseover事件或者触发mouseover事件
+ * @function
+ * @param {Function} fn 绑定的事件
+ * @return {$}
+ */
+$.prototype.mouseover = function(fn) {
+	return arguments.length > 0 ? this.on('mouseover', fn) : this.trigger('mouseover');
+};
+
+/**
+ * 给DOM集合绑定mouseout事件或者触发mouseout事件
+ * @function
+ * @param {Function} fn 绑定的事件
+ * @return {$}
+ */
+$.prototype.mouseout = function(fn) {
+	return arguments.length > 0 ? this.on('mouseout', fn) : this.trigger('mouseout');
+};
+
+/**
+ * 给DOM集合绑定失焦事件或者触发失焦事件
+ * @function
+ * @param {Function} fn 绑定的事件
+ * @return {$}
+ */
+$.prototype.blur = function(fn) {
+	return arguments.length > 0 ? this.on('blur', fn) : this.trigger('blur');
+};
+
+/**
+ * 给DOM集合绑定聚焦事件或者触发聚焦事件
+ * @function
+ * @param {Function} fn 绑定的事件
+ * @return {$}
+ */
+$.prototype.focus = function(fn) {
+	return arguments.length > 0 ? this.on('focus', fn) : this.trigger('focus');
+};
+
+/**
+ * 给DOM集合绑定unload事件或者触发unload事件
+ * @function
+ * @param {Function} fn 绑定的事件
+ * @return {$}
+ */
+$.prototype.unload = function(fn) {
+	return arguments.length > 0 ? this.on('unload', fn) : this.trigger('unload');
+};
+
+/**
+ * 给DOM集合绑定change事件或者触发change事件
+ * @function
+ * @param {Function} fn 绑定的事件
+ * @return {$}
+ */
+$.prototype.change = function(fn) {
+	return arguments.length > 0 ? this.on('change', fn) : this.trigger('change');
+};
+
+/**
+ * 给DOM集合绑定select事件或者触发select事件
+ * @function
+ * @param {Function} fn 绑定的事件
+ * @return {$}
+ */
+$.prototype.select = function(fn) {
+	var name = 'select';
+	return arguments.length > 0 ? this.on(name, fn) : this.trigger(name);
+};
+
+/**
+ * 给DOM集合绑定submit事件或者触发submit事件
+ * @function
+ * @param {Function} fn 绑定的事件
+ * @return {$}
+ */
+$.prototype.submit = function(fn) {
+	return arguments.length > 0 ? this.on('submit', fn) : this.trigger('submit');
+};
+
+/**
+ * 给DOM集合绑定keydown事件或者触发keydown事件
+ * @function
+ * @param {Function} fn 绑定的事件
+ * @return {$}
+ */
+$.prototype.keydown = function(fn) {
+	return arguments.length > 0 ? this.on('keydown', fn) : this.trigger('keydown');
+};
+
+/**
+ * 给DOM集合绑定keypress事件或者触发keypress事件
+ * @function
+ * @param {Function} fn 绑定的事件
+ * @return {$}
+ */
+$.prototype.keypress = function(fn) {
+	return arguments.length > 0 ? this.on('keypress', fn) : this.trigger('keypress');
+};
+
+/**
+ * 给DOM集合绑定keyup事件或者触发keyup事件
+ * @function
+ * @param {Function} fn 绑定的事件
+ * @return {$}
+ */
+$.prototype.keyup = function(fn) {
+	return arguments.length > 0 ? this.on('keyup', fn) : this.trigger('keyup');
+};
+
+/**
+ * 给DOM集合绑定error事件或者触发error事件
+ * @function
+ * @param {Function} fn 绑定的事件
+ * @return {$}
+ */
+$.prototype.error = function(fn) {
+	return arguments.length > 0 ? this.on('error', fn) : this.trigger('error');
+};
+
+/**
+ * 给DOM集合绑定contextmenu事件或者触发keyup事件
+ * @function
+ * @param {Function} fn 绑定的事件
+ * @return {$}
+ */
+$.prototype.contextmenu = function(fn) {
+	return arguments.length > 0 ? this.on('contextmenu', fn) : this.trigger('contextmenu');
+};
+
+/**
+ * 给DOM集合绑定scroll事件
+ * @function
+ * @param {Function} fn 绑定的事件
+ * @return {$}
+ */
+$.prototype.scroll = function(fn) {
+	return this.on('scroll', fn);
+};
+
+

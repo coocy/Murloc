@@ -47,6 +47,7 @@ test("DOM nodes", function() {
 	add('$("#ap").append("<span>")', '$("#ap").append("&lt;span&gt;")');
 	//add('$("div").append("<span>", $("#groups"))', '$("div").append("&lt;span&gt;", $("#groups"))');
 	add('$("#ap").append($("#groups"))', '$("#ap").append($("#groups"))');
+	add('$("form").append($("#groups"))', '$("form").append($("#groups"))');
 
 	add('$("<div>").clone()', '$("&lt;div&gt;").clone()');
 	//add('$("ul").clone(true)', '$("ul").clone(true)');

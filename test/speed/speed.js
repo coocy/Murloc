@@ -2,6 +2,13 @@
 var codeGroups = [];
 
 var test = function(title, fn) {
+	var testMatch = location.href.match(/t=([^&]+)/),
+		testName;
+	if (testMatch) {
+		if (title !== decodeURIComponent(testMatch[1])) {
+			return;
+		}
+	}
 	codeGroups.push([title, fn]);
 };
 var add;
@@ -16,7 +23,7 @@ window.onload = function() {
 	};
 
 	var wrapHTML = [
-		'<h1 id="qunit-header"><a>' + document.title + '</a> </h1>',
+		'<h1 id="qunit-header"><a href="./">' + document.title + '</a> </h1>',
 
 		'<table id="code_table"></table>'
 	];
@@ -38,20 +45,20 @@ window.onload = function() {
 		elRow = document.createElement('tr');
 		elRow.isTest = true;
 		code = codeGroups[i][1];
-		
+
 		elCell = document.createElement('td');
 		elCell.className = 'c1';
 		elCell.innerHTML = title || fn;
 		elRow.appendChild(elCell);
-		
+
 		for (jsToolName in jsTools) {
 			elCell = document.createElement('td');
 			elCell.code = fn;
 			elCell.jsToolName = jsToolName;
-			
+
 			elRow.appendChild(elCell);
 		}
-		
+
 		codeTable.appendChild(elRow);
 	};
 
@@ -64,7 +71,7 @@ window.onload = function() {
 		elCell = document.createElement('th');
 		elCell.innerHTML = jsToolName;
 		elRow.appendChild(elCell);
-		
+
 		elFrame = document.createElement('iframe');
 		elFrame.src = 'test_page.html?js=' + encodeURIComponent(jsTools[jsToolName]);
 		elFrame.style.display = 'none';
@@ -82,7 +89,7 @@ window.onload = function() {
 		elRow = document.createElement('tr');
 		elCell = document.createElement('th');
 		elCell.setAttribute('colspan', jsToolsCount + 1);
-		elCell.innerHTML = codeGroups[i][0];
+		elCell.innerHTML = '<a href="?t=' + encodeURIComponent(codeGroups[i][0]) + '">' + codeGroups[i][0] + '</a>';
 		elRow.appendChild(elCell);
 		codeTable.appendChild(elRow);
 
@@ -96,11 +103,11 @@ window.onload = function() {
 	}
 
 	var testRows = [];
-	
+
 	var testRowFn = function() {
-	
+
 		var elRow = testRows.shift();
-		
+
 		if (!elRow) return;
 
 		var times = [],
@@ -110,30 +117,30 @@ window.onload = function() {
 			elCell = elCells[j];
 			var _code = elCell.code,
 				_jsToolName = elCell.jsToolName;
-				
+
 				if (_code) {
 
 					var testFn  = window.frames[_jsToolName].test;
-					
+
 					var result = testFn(_code, testRound),
 						time = result.time,
 						text = 'x';
-					
+
 					if (!isNaN(time) && isFinite(time)) {
 						times.push(time);
 						text = (time + 'ms');
 					}
-					
+
 					if (result.result) {
 						text += '|' + result.result;
 					}
 					elCell.innerHTML = text;
-					
+
 					elCell.time = time;
-					
+
 				}
 		}
-		
+
 		var min = Math.min.apply(this, times);
 		var max = Math.max.apply(this, times);
 
@@ -149,22 +156,22 @@ window.onload = function() {
 				}
 			}
 		}
-		
+
 		setTimeout(testRowFn, 100);
 	};
 
 	var elRows = codeTable.getElementsByTagName('tr');
-	
-	
+
+
 	for (i = 0, l = elRows.length; i < l; i++) {
-	
+
 		elRow = elRows[i];
 		if (elRow.isTest) {
 			testRows.push(elRow);
 		}
-	
+
 	}
-	
+
 	setTimeout(testRowFn, 1000);
 
 }

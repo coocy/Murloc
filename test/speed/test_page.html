@@ -21,18 +21,18 @@
 			}
 			return r;
 		};
-	
+
 		test = function(codes, round){
 			round = round || 10;
 			var start = new Date().getTime();
 			try {
-				
+
 				var testFn = new Function(codes), result;
-				
+
 				for (var i = 0; i < round; i++) {
 					result = testFn();
 				}
-				
+
 				var end = (new Date().getTime() - start);
 				return {'time': Math.round(end), result: result};
 			} catch(err){
@@ -40,9 +40,9 @@
 			}
 
 		};
-	
+
 	</script>
-	
+
 </head>
 
 <body id="body">
@@ -71,7 +71,9 @@
 		</div>
 		<span id="name+value"></span>
 		<p id="first">Try them out:</p>
-		<ul id="firstUL"></ul>
+		<ul id="firstUL"><li></li><li></li></ul>
+		<ul id="secondUL"><li></li><li></li></ul>
+		<ul id="thirdUL"><li></li><li></li></ul>
 		<ol id="empty"></ol>
 		<form id="form" action="formaction">
 			<label for="action" id="label-for">Action:</label>

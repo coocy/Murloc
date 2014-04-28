@@ -392,7 +392,7 @@ $.extend = function(dest, source) {
 	var property, item;
 	for (var property in source) {
 		item = source[property];
-		dest[property] = $.isObject(item) ? $.extend({}, item) : item;
+		dest[property] = $.isObject(item) ? $.extend({}, item) : $.copy(item);
 	}
 	return dest;
 };

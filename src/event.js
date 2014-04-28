@@ -4,27 +4,40 @@
 
  /*
 $._eventCache = {
-	'event_1': {
-		'uid_1': [
+	'uid_1': {
+		'event_1': [
 			fn1: 1,
 			fn2: 1,
 			...
 		],
-		'uid_2': [
+		'event_2': [
 			fn1: 1,
 			fn2: 1,
 			...
 		],
-
-		'tA': [
-			fn1: 1,
-			fn2: 1,
-			...
-		]
-
+		...
 	},
-	'event_2': {
-		'uid_1':[
+	'uid_2': {
+		'event_1': [
+			fn1: 1,
+			fn2: 1,
+			...
+		],
+		'event_2': [
+			fn1: 1,
+			fn2: 1,
+			...
+		],
+		...
+	},
+	...,
+	'tA': {
+		'event_1': [
+			fn1: 1,
+			fn2: 1,
+			...
+		],
+		'event_2': [
 			fn1: 1,
 			fn2: 1,
 			...
@@ -168,16 +181,23 @@ $.addEvent = DOC.addEventListener ? function(type, element, fn, capture) {
 	element.attachEvent('on' + type, fn);
 };
 
+/**
+ * 生成特定DOM对象的eventCache
+ * @param {string} type
+ * @param {Number} uid
+ * @param {Element} element
+ * @param {function($.event=)} fn
+ */
 $._addEventData = function(type, uid, element, fn) {
-	var eventData = $._eventCache[type] || ($._eventCache[type] = {}),
-		elemData = eventData[uid] || (eventData[uid] = []),
+	var elemData = $._eventCache[uid] || ($._eventCache[uid] = {}),
+		elemEventData = elemData[type] || (elemData[type] = []),
 		capture = (-1 !== $._eventType.captured.indexOf(type));
 
 	/*
 	 * 在第一次给某个DOM对象添加事件的时候绑定$.dispatchEvent()方法，
 	 * 后续添加的方法推入elemData数组在$.dispatchEvent()中调用
 	 */
-	if (elemData.length < 1) {
+	if (elemEventData.length < 1) {
 
 		/* 把需要委托的事件绑定在document上面 */
 		if (-1 < $._eventType.delegated.indexOf(type)) {
@@ -185,7 +205,7 @@ $._addEventData = function(type, uid, element, fn) {
 		}
 		$.addEvent(type, element, $.dispatchEvent, capture);
 	}
-	elemData.push(fn);
+	elemEventData.push(fn);
 };
 
 $.addTagEvent = function(type, tagName, fn) {
@@ -203,8 +223,7 @@ $.dispatchEvent = function(evt) {
 		/** @type {$.event} */
 		e = new $.event(evt),
 		type = e.type,
-		elCur = e.target,
-		eventData = $._eventCache[type] || {};
+		elCur = e.target;
 
 	/*
 	 * 在触屏浏览器中，只执行在touchend中合成的click事件
@@ -218,15 +237,17 @@ $.dispatchEvent = function(evt) {
 
 	while(elCur) {
 		var uid = elCur['__ruid'] || '0',
-		elemData = eventData[uid] || [],
-		result = true,
-		tagEvents = eventData['t' + elCur.nodeName];
+			elemData = $._eventCache[uid] || {},
+			elemEventData = elemData[type] || [],
+			result = true,
+			tagData= $._eventCache['t' + elCur.nodeName] || {},
+			tagEventData = tagData[type];
 
-		if (tagEvents) {
-			elemData = elemData.concat(tagEvents);
+		if (tagEventData) {
+			elemEventData = elemEventData.concat(tagEventData);
 		}
 
-		for (var i = 0, l = elemData.length; i < l; i++) {
+		for (var i = 0, l = elemEventData.length; i < l; i++) {
 
 			/* 把冒泡过程中当前的DOM对象保存在Event的currentTarget属性中 */
 			e.currentTarget = elCur;
@@ -236,7 +257,7 @@ $.dispatchEvent = function(evt) {
 			 * 在方法中的this指针默认指向冒泡过程中当前的DOM对象（和currentTarget属性一样）
 			 * 可以使用Function的bind方法改变this指针指向的对象
 			 */
-			var re = elemData[i].apply(elCur, [e]);
+			var re = elemEventData[i].apply(elCur, [e]);
 
 			/* 有任一方法返回false的话标记result为false */
 			if (false === re) {
@@ -259,8 +280,8 @@ $.dispatchEvent = function(evt) {
 /**
  * 给DOM集合绑定事件
  * @function
- * @param {String} type 事件类型
- * @param {Function} fn 绑定的事件
+ * @param {string} type 事件类型
+ * @param {function($.event=)} fn 绑定的事件
  * @return {$}
  */
 $.prototype.on = function(type, fn) {
@@ -346,8 +367,7 @@ $.touchEvent = {
 	onTouchStart: function(e) {
 		var e = new $.event(e),
 			event = e.originalEvent,
-			elCur = e.target,
-			eventData = $._eventCache['click'] || {};
+			elCur = e.target;
 
 		$.touchEvent.clearHighlight();
 
@@ -363,10 +383,11 @@ $.touchEvent = {
 		$.touchEvent.targets = [];
 		while(elCur) {
 			var uid = $.guid(elCur),
-				elemData = eventData[uid];
+				elemData = $._eventCache[uid] || {},
+				elemEventData = elemData['click'];
 
 			/* 为绑定了事件或者特定DOM对象添加高亮样式 */
-			if (elemData || ['A', 'INPUT', 'BUTTON'].indexOf(elCur.nodeName) > -1) {
+			if (elemEventData || ['A', 'INPUT', 'BUTTON'].indexOf(elCur.nodeName) > -1) {
 				$.touchEvent.targets.push($(elCur).addClass($.touchEvent.activeCls));
 			}
 			elCur = elCur.parentNode;

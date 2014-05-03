@@ -93,6 +93,23 @@ var
 	_toString = _obj.toString,
 	_hasOwnProperty = _obj.hasOwnProperty;
 
+try {
+	_concat.apply([], DOC.getElementsByTagName('a'));
+} catch(e) {
+	_concat = {
+		apply: function(array1, array2) {
+			var element,
+				i = 0;
+
+			while (element = array2[i++]) {
+				array1.push(element);
+			}
+
+			return array1;
+		}
+	};
+}
+
 /**
  * 如果浏览器不支持String原生trim的方法，模拟一个
  */
@@ -213,7 +230,6 @@ var $ = function(selector, context) {
 			var result = [];
 
 			if (context) {
-
 				var length = context.length,
 					i = 0;
 
@@ -236,12 +252,6 @@ var $ = function(selector, context) {
 
 	if (selector.length) { //数组或者类数组
 		this.context = _concat.apply([], selector);
-		/*this.context = function(selector) {
-			for (var elements = [], i = 0, l = selector.length; i < l; i++) {
-				elements.push(selector[i]);
-			}
-			return elements;
-		}(selector);*/
 		this.length = this.context.length;
 	}
 

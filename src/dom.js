@@ -1,17 +1,11 @@
 
 
 $.toArray = function(elements) {
-	var result,
-		element,
-		i = 0;
-
+	var result;
 	try {
 		result = _slice.call(elements);
 	} catch (e) {
-		result = [];
-		while (element = elements[i++]) {
-			result.push(element);
-		}
+		result = _concat.apply([], elements);
 	}
 	return result;
 };

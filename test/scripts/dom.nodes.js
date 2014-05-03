@@ -12,7 +12,8 @@ test( "$.clone()", function() {
 	equal( $("#en").text(), "This is a normal link: Yahoo", "Reassert text for #en" );
 
 	$.each( "div button ul ol li select option textarea iframe".split(" "), function( i, nodeName ) {
-		equal( $( "<" + nodeName + "/>" ).clone().get(0).nodeName.toLowerCase(), nodeName, "Clone a " + nodeName );
+		var node = $( "<" + nodeName + "/>" ).clone().get(0) || {};
+		equal( (node.nodeName + '').toLowerCase(), nodeName, "Clone a " + nodeName );
 	});
 	equal( $("<input type='checkbox' />").clone().get(0).nodeName.toLowerCase(), "input", "Clone a <input type='checkbox' />" );
 

@@ -27,6 +27,17 @@ $.prototype.each = function(fn) {
 };
 
 /**
+ * 在现有的DOM集合中加入新的集合并返回
+ * @param {(Element|$|String)} selector
+ * @return {$}
+ */
+$.prototype.add = function(selector) {
+	this.context = _concat.apply(this.context, $(selector).context);
+	this.length = this.context.length;
+	return this;
+};
+
+/**
  * 使用指定的开始和结束位置创建一个新的DOM集合
  * @param {number} start 指定开始的位置，如果为负值，则从尾部开始计算偏移
  * @param {number=} end 指定开始的位置，如果为负值，则从尾部开始计算偏移，如果不指定，则默认到末尾的位置

@@ -138,7 +138,7 @@ test( "$(selector).val(String/Number)", function() {
 	$("#foo").css({"opacity": ""});
 	equal( $("#foo").css("opacity"), "1", "Assert opacity is 1 when set to an empty String" );
 
-	equal( $("#empty").css("opacity"), "0", "Assert opacity is accessible via filter property set in stylesheet in IE" );
+	equal( $("#empty").css("opacity") , "0", "Assert opacity is accessible via filter property set in stylesheet in IE" );
 	$("#empty").css({ "opacity": "1" });
 	equal( $("#empty").css("opacity"), "1", "Assert opacity is taken from style attribute when set vs stylesheet in IE with filters" );
 

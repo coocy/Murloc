@@ -22,7 +22,10 @@ $('span').click(function(e) {
 	console.log(this.__ruid);
 });
 
-$("p").append($('span'));
+//console.log($("button").click(function() {console.log(this);}).prependTo($('div')));
+
+
+console.log($("button").insertBefore($('form').after('123'), $('div').get(0)));
 
 
 

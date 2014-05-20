@@ -438,3 +438,13 @@ $.camelCase = function(string){
 	});
 };
 
+/**
+ * 改变一个函数的this指针。这个方法只是为了兼容jQuery，请尽量使用function的bind方法
+ * @param {Function} fn
+ * @param {Object} context
+ * @return {!Function}
+ */
+$.proxy = function(fn, context){
+	return fn.bind(context);
+};
+

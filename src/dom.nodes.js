@@ -14,49 +14,85 @@ $.prototype.remove = function() {
 };
 
 /**
- * 在指定的父对象中插入一个DOM对象
- * @param {(Element|$|String|Number|Array.<(Element|$)>)} element 单个DOM对象或者包含DOM集合的数组
- * @param {Array.<Element>} parent
- * @param {Element} target
+ * 把传入的$对象或者数组递归合并成1个数组
+ * @param {(Element|$|String|Number|Array.<(Element|$)>)} elements 单个DOM对象或者包含DOM集合的数组
  * @return {Array.<Element>}
  * @private
  */
-$._insertNodeBefore = function(element, parent, target) {
-	//原生DOM对象直接添加
-	var method = target ? 'insertBefore' : 'appendChild',
-		resultElements = [];
+$._getPlainArray = function(elements) {
 
-	if (element.nodeType) {
-		resultElements = $._insertNodeIntoParents(method, parent, element, target);
-
-	//$
-	} else if (element instanceof $) {
-
-		//如果element.context是由querySelectorAll得到的DOM集合，
-		//在改变集合中子对象在DOM树中的位置后，集合的中的对象顺序会马上发生改变（querySelectorAll得到的是动态集合，包含的子对象顺序始终维持子对象在DOM结构中的顺序），
-		//所以这里需要转换成普通的数组
-		var elements = $.toArray(element.context);
-
-		for (var i = 0, l = element.length; i < l; i++) {
-			resultElements = resultElements.concat($._insertNodeIntoParents(method, parent, elements[i], target));
-		}
-
-	//数组
-	} else if (('string' !== typeof element) && !isNaN(element.length)) {
-
-		//这里需要转换成普通的数组（原因同上）
-		element = $.toArray(element);
-
-		for (var i = 0, l = element.length; i < l; i++) {
-			resultElements = resultElements.concat($._insertNodeBefore(element[i], parent, target));
-		}
+	//原生DOM对象
+	if (elements.nodeType) {
+		return [elements];
 
 	} else {
-		//处理添加HTML片段，不使用+=innerHTML是因为这样会消除给容器内的对象绑定的事件
-		var containter = DOC.createElement('div');
-		containter.innerHTML = element + '';
-		for (var i = 0, l = containter.childNodes.length; i < l; i++) {
-			resultElements = resultElements.concat($._insertNodeIntoParents(method, parent, containter.childNodes[0], target));
+
+		var result = [];
+
+		//$
+		if (elements instanceof $) {
+			result = _concat.apply(result, elements.context);
+
+		//数组
+		} else if (('string' !== typeof elements) && !isNaN(elements.length)) {
+
+			for (var i = 0, l = elements.length; i < l; i++) {
+				result = _concat.apply(result, $._getPlainArray(elements[i]));
+			}
+
+		} else {
+
+			//按字符串处理，创建HTML片段
+			var containter = DOC.createElement('div');
+			containter.innerHTML = elements + '';
+			result = _concat.apply(result, containter.childNodes);
+		}
+
+		return result;
+	}
+};
+
+/**
+ * 在父对象集合中插入DOM对象集合
+ * @param {(Element|$|String|Number|Array.<(Element|$)>)} elements 单个DOM对象或者包含DOM集合的数组
+ * @param {Array.<Element>} parents DOM集合
+ * @param {String} targetPropName
+ * @param {Number=} siblingType
+ * @return {Array.<Element>}
+ * @private
+ */
+$._insertNodeBefore = function(elements, parents, targetPropName, siblingType) {
+	//原生DOM对象直接添加
+	var method = targetPropName ? 'insertBefore' : 'appendChild',
+		resultElements = [];
+
+	var elements = $._getPlainArray(elements),
+		parent,
+		l = parents.length,
+		i = 0,
+		j, k,
+		element;
+
+	for (; i < l; i++) {
+		parent = parents[i];
+
+		if (undefined !== siblingType) {
+			target = (0 === siblingType) ? parent : parent.nextSibling;
+			parent = parent.parentNode;
+			if (!parent) {
+				continue;
+			}
+		} else {
+			target = targetPropName ? parent[targetPropName] : undefined;
+		}
+
+		for (j = 0, k = elements.length; j < k; j++) {
+			element = elements[j];
+
+			element = (i < l - 1) ? $.clone(element, true) : element;
+
+			parent[method](element, target);
+			resultElements.push(element);
 		}
 	}
 
@@ -64,68 +100,24 @@ $._insertNodeBefore = function(element, parent, target) {
 };
 
 /**
- * 在一个或者多个父对象中插入一个DOM对象；如果是一个父对象，直接插入DOM对象；如果是多个父对象，则在每个父对象中插入复制的DOM对象
- * @param {string} method
- * @param {Array.<Element>} parents
- * @param {Element} element
- * @param {Element} target
- * @return {Array.<Element>}
- * @private
- */
-$._insertNodeIntoParents = function(method,  parents, element, target) {
-
-	//TODO: 在完成所有DOM方法后检查这里是否调用
-	if (parents.nodeType) {
-		parents[method](element, target);
-		return [element];
-	} else {
-		var elem,
-			i = 0,
-			l = parents.length,
-			elements = [];
-
-		for (; i < l; i++) {
-			elem = (i < l - 1) ? $.clone(element, true) : element;
-			parents[i][method](elem, target);
-			elements.push(elem);
-		}
-		return elements;
-	}
-};
-
-$.prototype.before = function() {
-	var elements = arguments;
-	if (elements.length < 2) {
-		elements = elements[0];
-	}
-	return this.each(function(index, element) {
-		$._insertNodeBefore(elements, element.parentNode, element);
-	});
-};
-
-$.prototype.after = function() {
-	var elements = arguments;
-	if (elements.length < 2) {
-		elements = elements[0];
-	}
-	return this.each(function(index, element) {
-		$._insertNodeBefore(elements, element.parentNode, element.nextSibling);
-	});
-};
-
-/**
- * 在指定的父对象中前置插入一个DOM对象
+ * 在指定的父对象中前置插入DOM对象
  * @param {...(Element|$|String|Number|Array.<(Element|$)>)} childElement 单个DOM对象或者包含DOM集合的数组
  * @return {$}
  */
 $.prototype.prepend = function(childElement) {
-	var elements = arguments;
-	if (elements.length < 2) {
-		elements = elements[0];
-	}
-	return this.each(function(index, element) {
-		$._insertNodeBefore(elements, element, element.firstChild);
-	});
+	$._insertNodeBefore(arguments, this.context, 'firstChild');
+	return this;
+};
+
+/**
+ * 把DOM对象前置插入到指定的父对象中
+ * @param {(Element|$|String)} targetElement 单个DOM对象或者包含DOM集合的数组
+ * @return {$}
+ */
+$.prototype.prependTo = function(targetElement) {
+	this.context = $._insertNodeBefore(this.context, $(targetElement).context, 'firstChild');
+	this.length = this.context.length;
+	return this;
 };
 
 /**
@@ -134,37 +126,59 @@ $.prototype.prepend = function(childElement) {
  * @return {$}
  */
 $.prototype.append = function(childElement) {
-	var elements = arguments;
-	if (elements.length < 2) {
-		elements = elements[0];
-	}
-
-	$._insertNodeBefore(elements, this.context);
-
+	$._insertNodeBefore(arguments, this.context);
 	return this;
 };
 
-$.prototype.insertBefore = function(targetElement) {
-	$(targetElement).before(this);
-	return this;
-};
-
-$.prototype.insertAfter = function(targetElement) {
-	$(targetElement).after(this);
-	return this;
-};
-
-$.prototype.prependTo = function(targetElement) {
-	$(targetElement).prepend(this);
-	return this;
-};
-
+/**
+ * 把DOM对象插入到指定的父对象中
+ * @param {(Element|$|String)} targetElement 单个DOM对象或者包含DOM集合的数组
+ * @return {$}
+ */
 $.prototype.appendTo = function(targetElement) {
-	var elements = this.context;
-	if (elements.length < 2) {
-		elements = elements[0];
-	}
-	this.context = $._insertNodeBefore(elements, $(targetElement).context);
+	this.context = $._insertNodeBefore(this.context, $(targetElement).context);
+	this.length = this.context.length;
+	return this;
+};
+
+/**
+ * 在指定的对象前插入DOM对象
+ * @param {...(Element|$|String|Number|Array.<(Element|$)>)} targetElement 单个DOM对象或者包含DOM集合的数组
+ * @return {$}
+ */
+$.prototype.before = function(targetElement) {
+	$._insertNodeBefore(arguments, this.context, 1, 0);
+	return this;
+};
+
+/**
+ * 把DOM对象插入到指定的对象前面
+ * @param {(Element|$|String)} targetElement 单个DOM对象或者包含DOM集合的数组
+ * @return {$}
+ */
+$.prototype.insertBefore = function(targetElement) {
+	this.context = $._insertNodeBefore(this.context, $(targetElement).context, 1, 0);
+	this.length = this.context.length;
+	return this;
+};
+
+/**
+ * 在指定的对象后面插入DOM对象
+ * @param {...(Element|$|String|Number|Array.<(Element|$)>)} targetElement 单个DOM对象或者包含DOM集合的数组
+ * @return {$}
+ */
+$.prototype.after = function(targetElement) {
+	$._insertNodeBefore(arguments, this.context, 1, 1);
+	return this;
+};
+
+/**
+ * 把DOM对象插入到指定的对象后面
+ * @param {(Element|$|String)} targetElement 单个DOM对象或者包含DOM集合的数组
+ * @return {$}
+ */
+$.prototype.insertAfter = function(targetElement) {
+	this.context = $._insertNodeBefore(this.context, $(targetElement).context, 1, 1);
 	this.length = this.context.length;
 	return this;
 };
@@ -210,7 +224,7 @@ $.clone = function(element, cloneDataAndEvents) {
 
 /**
  * 复制一个DOM集合，返回复制后的新集合
- * @param {boolean=} cloneDataAndEvents 是否复制data和事件
+ * @param {boolean=} cloneDataAndEvents 是否复制data和事件。出于性能和使用的可能性考虑，此方法不复制子对象的data和事件（如果需要用到的话可以自行实现）
  * @return {$}
  */
 $.prototype.clone = function(cloneDataAndEvents) {

@@ -1,8 +1,14 @@
+/**
+ * 获取DOM对象集合中第一个对象的innerHTML或者设置DOM对象集合的innerHTML
+ * @param {(string|number)=} html
+ * @return {($|string)=}
+ */
+$.prototype.html =  function(html) {
 
-$.prototype.html =  function() {
-	var html = arguments[0];
-
-	if (undefined !== html) {
+	if (arguments.length > 0) {
+		if (undefined === html) {
+			return this;
+		}
 
 		/* 把html转换为字符串 */
 		html += '';
@@ -23,6 +29,14 @@ $.prototype.html =  function() {
 		var element = this.context[0];
 		return element && element.innerHTML;
 	}
+};
+
+/**
+ * 移除DOM对象集合中对象的子对象
+ * @return {$}
+ */
+$.prototype.empty =  function() {
+	return this.html('');
 };
 
 /**  @type {string} */

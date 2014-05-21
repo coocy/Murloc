@@ -12,21 +12,8 @@ $("p").click(function(e) {
 });*/
 
 
-$("textarea").val('').attr('placeholder', 'Text').focus(function(e) {
-	console.log('focus');
-}).blur(function(e) {
-	console.log('blur');
-});
-
-$('span').click(function(e) {
-	console.log(this.__ruid);
-});
-
-//console.log($("button").click(function() {console.log(this);}).prependTo($('div')));
-
-
-console.log($("button").insertBefore($('form').after('123'), $('div').get(0)));
-
+$('div').addClass('abc');
+$('.abc').toggleClass('abc');
 
 
 //$.is($('<div foo="bar">').get(0), '[foo]');

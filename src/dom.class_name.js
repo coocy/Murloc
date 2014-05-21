@@ -38,6 +38,11 @@ $.prototype.removeClass =  function(value) {
 	var classes = (value || '').match(/\S+/g) || [],
 		len = classes.length,
 		removeAllClasses = arguments.length < 1;
+
+	//由elem.querySelector()得到的DOM集合为动态集合，在这里需要转化为常规数组，
+	//防止$('.abc').removeClass('abc')这种形式的调用得到不正确的结果
+	this.context = $.toArray(this.context);
+
 	return this.each(function(index, element) {
 		//如果value为空，移除对象的全部className
 		if (removeAllClasses) {
@@ -64,6 +69,10 @@ $.prototype.removeClass =  function(value) {
 $.prototype.toggleClass =  function(value, condition) {
 	var classes = (value || '').match(/\S+/g) || [],
 		len = classes.length;
+
+	//由elem.querySelector()得到的DOM集合为动态集合，在这里需要转化为常规数组，
+	//防止$('.abc').toggleClass('abc')这种形式的调用得到不正确的结果
+	this.context = $.toArray(this.context);
 
 	return this.each(function(index, element) {
 		var className = ' ' + element.className.replace(/\s+/g, ' ') + ' ',

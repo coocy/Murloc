@@ -52,4 +52,5 @@ function t( a, b, c ) {
  * @requires dom.class_name.js
  * @requires dom.nodes.js
  * @requires dom.data.js
+ * @requires dom.ready.js
  */

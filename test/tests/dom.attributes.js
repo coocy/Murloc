@@ -85,6 +85,128 @@ test( "$(selector).val(String/Number)", function() {
 	testVal( bareObj );
 });
 
+test( "html(undefined)", function() {
+	equal( $("#foo").html("<i>test</i>").html(undefined).html().toLowerCase(), "<i>test</i>", ".html(undefined) is chainable" );
+});
+
+test( "html() on empty set", function() {
+	strictEqual( $().html(), undefined, ".html() returns undefined for empty sets" );
+});
+
+function childNodeNames( node ) {
+	return $.map( node.childNodes, function( child ) {
+		return child.nodeName.toUpperCase();
+	}).join(" ");
+}
+
+function testHtml( valueObj ) {
+
+	var actual, expected, tmp,
+		div = $("<div></div>"),
+		fixture = $("#qunit-fixture");
+
+	div.html( valueObj("<div id='parent_1'><div id='child_1'/></div><div id='parent_2'/>") );
+
+	actual = []; expected = [];
+	tmp = $("<map/>").html( valueObj("<area alt='area'/>") ).each(function() {
+		expected.push("AREA");
+		actual.push( childNodeNames( this ) );
+	});
+	equal( expected.length, 1, "Expecting one parent" );
+	deepEqual( actual, expected, "Found the inserted area element" );
+
+	equal( div.html(valueObj(5)).html(), "5", "Setting a number as html" );
+	equal( div.html(valueObj(0)).html(), "0", "Setting a zero as html" );
+	equal( div.html(valueObj(Infinity)).html(), "Infinity", "Setting Infinity as html" );
+	equal( div.html(valueObj(1e2)).html(), "100", "Setting exponential number notation as html" );
+
+	div.html( valueObj("&#160;&amp;") );
+	equal(
+		div.get(0).innerHTML.replace( /\xA0/, "&nbsp;" ),
+		"&nbsp;&amp;",
+		"Entities are passed through correctly"
+	);
+
+	tmp = "&lt;div&gt;hello1&lt;/div&gt;";
+	equal( div.html(valueObj(tmp) ).html().replace( />/g, "&gt;" ), tmp, "Escaped html" );
+	tmp = "x" + tmp;
+	equal( div.html(valueObj( tmp )).html().replace( />/g, "&gt;" ), tmp, "Escaped html, leading x" );
+	tmp = " " + tmp.slice( 1 );
+	equal( div.html(valueObj( tmp )).html().replace( />/g, "&gt;" ), tmp, "Escaped html, leading space" );
+
+	actual = []; expected = []; tmp = {};
+	$("#nonnodes").contents().html( valueObj("<b>bold</b>") ).each(function() {
+		var html = $( this ).html();
+		tmp[ this.nodeType ] = true;
+		expected.push( this.nodeType === 1 ? "<b>bold</b>" : undefined );
+		actual.push( html ? html.toLowerCase() : html );
+	});
+	deepEqual( actual, expected, "Set containing element, text node, comment" );
+	ok( tmp[ 1 ], "element" );
+	ok( tmp[ 3 ], "text node" );
+	ok( tmp[ 8 ], "comment" );
+
+	actual = []; expected = [];
+	fixture.children("div").html( valueObj("<b>test</b>") ).each(function() {
+		expected.push("B");
+		actual.push( childNodeNames( this ) );
+	});
+	equal( expected.length, 7, "Expecting many parents" );
+	deepEqual( actual, expected, "Correct childNodes after setting HTML" );
+
+	actual = []; expected = [];
+	fixture.html( valueObj("<style>.foobar{color:green;}</style>") ).each(function() {
+		expected.push("STYLE");
+		actual.push( childNodeNames( this ) );
+	});
+	equal( expected.length, 1, "Expecting one parent" );
+	deepEqual( actual, expected, "Found the inserted style element" );
+
+	fixture.html( valueObj("<select/>") );
+	$("#qunit-fixture select").html( valueObj("<option>O1</option><option selected='selected'>O2</option><option>O3</option>") );
+	equal( $("#qunit-fixture select").val(), "O2", "Selected option correct" );
+
+	tmp = fixture.html(
+		valueObj([
+			"<script type='something/else'>ok( false, 'evaluated: non-script' );</script>",
+			"<script type='text/javascript'>ok( true, 'evaluated: text/javascript' );</script>",
+			"<script type='text/ecmascript'>ok( true, 'evaluated: text/ecmascript' );</script>",
+			"<script>ok( true, 'evaluated: no type' );</script>",
+			"<div>",
+				"<script type='something/else'>ok( false, 'evaluated: inner non-script' );</script>",
+				"<script type='text/javascript'>ok( true, 'evaluated: inner text/javascript' );</script>",
+				"<script type='text/ecmascript'>ok( true, 'evaluated: inner text/ecmascript' );</script>",
+				"<script>ok( true, 'evaluated: inner no type' );</script>",
+			"</div>"
+		].join(""))
+	).find("script");
+	equal( tmp.length, 8, "All script tags remain." );
+	equal( tmp.get(0).type, "something/else", "Non-evaluated type." );
+	equal( tmp.get(1).type, "text/javascript", "Evaluated type." );
+
+	fixture.html( valueObj("<script type='text/javascript'>ok( true, 'Injection of identical script' );</script>") );
+	fixture.html( valueObj("<script type='text/javascript'>ok( true, 'Injection of identical script' );</script>") );
+	fixture.html( valueObj("<script type='text/javascript'>ok( true, 'Injection of identical script' );</script>") );
+	fixture.html( valueObj("foo <form><script type='text/javascript'>ok( true, 'Injection of identical script (#975)' );</script></form>") );
+
+	$.scriptorder = 0;
+	fixture.html( valueObj([
+		"<script>",
+			"equal( $('#scriptorder').length, 1,'Execute after html' );",
+			"equal( $.scriptorder++, 0, 'Script is executed in order' );",
+		"</script>",
+		"<span id='scriptorder'><script>equal( $.scriptorder++, 1, 'Script (nested) is executed in order');</script></span>",
+		"<script>equal( $.scriptorder++, 2, 'Script (unnested) is executed in order' );</script>"
+	].join("")) );
+
+	fixture.html( valueObj( fixture.text() ) );
+	ok( /^[^<]*[^<\s][^<]*$/.test( fixture.html() ), "Replace html with text" );
+}
+
+test( "html(String|Number)", function() {
+	testHtml( manipulationBareObj );
+});
+
 
 /*test("css(String|Hash)", function() {
 

@@ -3,7 +3,53 @@ var manipulationBareObj = function( value ) {
 	return value;
 };
 
-test( "$.clone()", function() {
+test( "$(selector).remove()", function() {
+
+	var first = $("#ap").children().first();
+
+	first.data("foo", "bar");
+
+	$("#ap").children().remove();
+	ok( $("#ap").text().length > 10, "Check text is not removed" );
+	equal( $("#ap").children().length, 0, "Check remove" );
+
+	equal( first.data("foo"), null, "first data" );
+
+	var count, first, cleanUp;
+
+	count = 0;
+	first = $("#ap").children().first();
+	cleanUp = first.on( "click", function() {
+		count++;
+	}).remove().appendTo("#qunit-fixture").trigger("click");
+
+	strictEqual( 0, count, "Event handler has been removed" );
+
+	// Clean up detached data
+	cleanUp.remove();
+
+	var fragment = document.createDocumentFragment(),
+		div = fragment.appendChild( document.createElement("div") );
+
+	$( div ).remove();
+
+	equal( fragment.childNodes.length, 0, "div element was removed from documentFragment" );
+});
+
+
+test("empty()", function() {
+
+	equal( $("#ap").children().empty().text().length, 0, "Check text is removed" );
+	equal( $("#ap").children().length, 4, "Check elements are not removed" );
+
+	// using contents will get comments regular, text, and comment nodes
+	var j = $("#nonnodes").contents();
+	j.empty();
+	equal( j.html(), "", "Check node,textnode,comment empty works" );
+});
+
+
+test( "$(selector).clone()", function() {
 
 	var div, clone, form, body;
 

@@ -7,6 +7,13 @@ $.prototype.remove = function() {
 	while (i--) {
 		var element = this.context[i],
 			elParent = element.parentNode;
+
+		//移除绑定在该DOM上的data和事件
+		var uid = element['__ruid'] || '0';
+		if (uid) {
+			delete($._dataCache[uid]);
+			delete($._eventCache[uid]);
+		}
 		elParent && elParent.removeChild(element);
 	}
 	this.length = 0;

@@ -448,3 +448,37 @@ $.proxy = function(fn, context){
 	return fn.bind(context);
 };
 
+/**
+ * @param {Array} elements
+ * @param {Function} fn
+ * @param {*} args
+ * @return {Array}
+ */
+$.map = function(elements, fn, args) {
+	var value,
+		i = 0,
+		j = elements.length,
+		result = [];
+
+	if (('string' !== typeof elements) && !isNaN(elements.length)) {
+		for (; i < j; i++) {
+			value = fn(elements[i], i, args);
+
+			if (value != null) {
+				result.push(value);
+			}
+		}
+
+	} else {
+		for (i in elements) {
+			value = fn(elements[i], i, args);
+
+			if (value != null) {
+				result.push(value);
+			}
+		}
+	}
+
+	return result;
+};
+

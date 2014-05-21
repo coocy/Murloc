@@ -291,6 +291,9 @@ $.prototype.on = function(type, fn) {
 		}
 		return this;
 	}
+	if ('ready' === type) {
+		return this.ready(fn.bind(this));
+	}
 	return this.each(function(index, element) {
 		var uid = $.guid(element);
 		$._addEventData(type, uid, element, fn);

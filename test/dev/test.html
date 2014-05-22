@@ -32,12 +32,34 @@
 		.abc{
 			background: #066;
 		}
+		.box,.box_1,.box_2{
+			width:0;
+			height: 0;
+			border:10px solid #f00;
+			padding:12px;
+			margin-bottom:10px;
+		}
+		.box_1,.box_2{
+			width:50px;
+		}
+		.box_1{
+			-webkit-box-sizing: border-box;
+			-moz-box-sizing: border-box;
+			box-sizing: border-box;
+		}
+		.box_2{
+			margin:20px;
+		}
 	</style>
 </head>
 <body id="body">
 
 
 	<div id="nothiddendiv"><span>Text</span> content</div>
+
+	<div class="box"></div>
+	<div class="box_1"></div>
+	<div class="box_2"></div>
 
 	<div>
 		<p id="a">

@@ -16,6 +16,15 @@ $('div').addClass('abc');
 $('.abc').toggleClass('abc');
 
 
+console.log($(DOC).width(), $(DOC).height());
+
+var s = $('.box_1').width();
+console.log(s);
+
+var s = $('.box_2').width();
+console.log(s);
+
+
 //$.is($('<div foo="bar">').get(0), '[foo]');
 //$.is(document.getElementById('nothiddendiv'), '#body #nothiddendiv');
 

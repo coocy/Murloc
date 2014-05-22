@@ -138,35 +138,3 @@ $.prototype.removeAttr =  function(name) {
 		element.removeAttribute && element.removeAttribute(name);
 	});
 };
-
-/**
- * 设置DOM对象集合的css或者读取集合中第一个DOM对象的css
- * @param {(string|Object)} key
- * @param {string=} value
- * @return {$}
- */
-$.prototype.css =  function(key, value) {
-
-	if (('string' === typeof key) && (arguments.length < 2)) {
-		var element = this.context[0];
-		key = $.camelCase(key);
-		return element && (element.currentStyle || WIN.getComputedStyle(element, ''))[key];
-	}
-
-	return this.each(function(index, element) {
-		if ('string' === typeof key) {
-			var _key = {};
-			_key[key] = value;
-			key = _key;
-		}
-		for (var k in key) {
-			var _value =  key[k];
-			k = $.camelCase(k);
-			if (k !== 'opacity' && _value !== '' && !isNaN(_value) && _value != 0) {
-				_value += 'px';
-			}
-
-			element.style[k] = _value;
-		}
-	});
-};

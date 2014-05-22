@@ -130,8 +130,6 @@ $.is = function(element, selector) {
 		element.oMatchesSelector ||
 		element.matchesSelector;
 
-		//alert(element + ' ' + element.parentNode);
-
 	if (matchesSelector) {
 		return matchesSelector.call(element, selector);
 

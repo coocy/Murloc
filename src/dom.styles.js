@@ -71,8 +71,8 @@ $._size = function(element, name, type) {
 		documentElement;
 
 	if (element) {
-		if (element === element.window) {
-			return element['inner' + name];
+		if (element == element.window) {
+			return DOC.documentElement['client' + name];
 		} else {
 			element = element.documentElement || element;
 			return element['offset' + name];

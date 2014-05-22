@@ -293,8 +293,10 @@ $.selectorAll = function(selector, context) {
 				return [els];
 			}
 			return [];
-		} else if (_hasGetElementsByClassName && '.' == selector.charAt(0)) {
-			return context.getElementsByClassName(_s);
+		} else if ('.' == selector.charAt(0)) {
+			if (_hasGetElementsByClassName) {
+				return context.getElementsByClassName(_s);
+			}
 		} else {
 			return context.getElementsByTagName(selector);
 		}

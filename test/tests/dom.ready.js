@@ -18,12 +18,10 @@
 	// Bind to the ready event in every possible way.
 	$.ready(makeHandler("a"));
 	$(document).ready(makeHandler("b"));
-	$(document).on("ready", makeHandler("c"));
 
 	// Do it twice, just to be sure.
-	$.ready(makeHandler("d"));
-	$(document).ready(makeHandler("e"));
-	$(document).on("ready", makeHandler("f"));
+	$.ready(makeHandler("c"));
+	$(document).ready(makeHandler("d"));
 
 	noEarlyExecution = order.length === 0;
 
@@ -33,15 +31,15 @@
 		ok(noEarlyExecution, "Handlers bound to DOM ready should not execute before DOM ready");
 
 		// Ensure execution order.
-		deepEqual(order, ["a", "b", "c", "d", "e", "f"], "Bound DOM ready handlers should execute in on-order, but those bound with $(document).on( 'ready', fn ) will always execute last");
+		deepEqual(order, ["a", "b", "c", "d"], "Bound DOM ready handlers should execute in on-order, but those bound with $(document).on( 'ready', fn ) will always execute last");
 
 		order = [];
 
-		$.ready(makeHandler("g"));
-		equal(order.pop(), "g", "Event handler should execute immediately");
+		$.ready(makeHandler("e"));
+		equal(order.pop(), "e", "Event handler should execute immediately");
 
-		$(document).ready(makeHandler("h"));
-		equal(order.pop(), "h", "Event handler should execute immediately");
+		$(document).ready(makeHandler("f"));
+		equal(order.pop(), "f", "Event handler should execute immediately");
 
 	});
 

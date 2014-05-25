@@ -51,12 +51,17 @@ $.prototype.text = function(text) {
 			return this;
 		}
 		return this.each(function(index, element) {
-			if (_kTextContentProp in element) {
+			try {
 				element[_kTextContentProp] = text;
-			}
+			} catch(e) {}
 		});
 	} else {
 		var element = this.context[0];
+		if (ENABLE_IE_SUPPORT) {
+			if ('innerText' == _kTextContentProp) {
+				return element && Sizzle.getText(element);
+			}
+		} 
 		return element && element[_kTextContentProp];
 	}
 };

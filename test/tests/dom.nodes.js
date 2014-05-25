@@ -219,6 +219,7 @@ var testAppendForObject = function( valueObj, isFragment ) {
 		"Check for appending of array of $ objects"
 	);
 
+
 	equal( $base.clone().append( valueObj(" text with spaces ") ).text(),
 		text + " text with spaces ",
 		"Check for appending text with spaces" + type

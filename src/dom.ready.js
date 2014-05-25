@@ -1,6 +1,7 @@
 
 /**
  * @param {Function} fn
+ * @return {$}
  */
 $.ready = function(fn) {
 

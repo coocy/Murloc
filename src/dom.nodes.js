@@ -48,11 +48,17 @@ $._getPlainArray = function(elements) {
 			}
 
 		} else {
-
-			//按字符串处理，创建HTML片段
-			var containter = DOC.createElement('div');
-			containter.innerHTML = elements + '';
-			result = _concat.apply(result, containter.childNodes);
+			
+			//按字符串处理，创建HTML片段或者纯文本节点
+			elements += '';
+			if (!ENABLE_IE_SUPPORT || /<|&#?\w+;/.test(elements)) {
+				var containter = DOC.createElement('div');
+				containter.innerHTML = elements;
+				result = _concat.apply(result, containter.childNodes);
+			} else {
+				//在IE下，使用innerHTML设置纯文本内容会导致丢失空格，所以文本使用创建文本节点的方式
+				result.push(DOC.createTextNode(elements));
+			}
 		}
 
 		return result;

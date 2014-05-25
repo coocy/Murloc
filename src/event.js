@@ -159,7 +159,21 @@ $._eventType = {
 	 * @const
 	 * @type {string}
 	 */
-	delegated: '|click|mouseover|mouseout|mousemove|focus|blur|touchstart|touchmove|touchend|touchcancel',
+	delegated: '|click|mouseover|mouseout|mousemove|focus|blur|focusin|focusout|touchstart|touchmove|touchend|touchcancel' + (('onsubmit' in DOC) ? '|submit' : ''),
+
+	/**
+	 * IE使用focusin/focusout替换focus/blur来实现focus和blur的冒泡
+	  * @type {Object=}
+	 */
+	bubblesFix: null,
+
+	/**
+	  * @type {Object}
+	 */
+	bubblesFixTemplate: {
+		'focus': 'focusin',
+		'blur': 'focusout'
+	},
 
 	/**
 	 * @const
@@ -178,7 +192,9 @@ $._eventType = {
 $.addEvent = DOC.addEventListener ? function(type, element, fn, capture) {
 	element.addEventListener(type, fn, capture);
 } : function(type, element, fn, capture) {
-	element.attachEvent('on' + type, fn);
+	element.attachEvent('on' + type, function() {
+		fn.apply(element, arguments);
+	});
 };
 
 /**
@@ -190,21 +206,48 @@ $.addEvent = DOC.addEventListener ? function(type, element, fn, capture) {
  */
 $._addEventData = function(type, uid, element, fn) {
 	var elemData = $._eventCache[uid] || ($._eventCache[uid] = {}),
-		elemEventData = elemData[type] || (elemData[type] = []),
-		capture = (-1 !== $._eventType.captured.indexOf(type));
+		shouldAddEvent = false;
+
+	if (ENABLE_IE_SUPPORT) {
+		//IE使用focusin/focusout替换focus/blur来实现focus和blur的冒泡
+		if (null === $._eventType.bubblesFix) {
+			if ('onfocusin' in DOC) {
+				$._eventType.bubblesFix = $._eventType.bubblesFixTemplate;
+			} else {
+				$._eventType.bubblesFix = {};
+			}
+		}
+		type = $._eventType.bubblesFix[type] || type;
+	}
 
 	/*
 	 * 在第一次给某个DOM对象添加事件的时候绑定$.dispatchEvent()方法，
 	 * 后续添加的方法推入elemData数组在$.dispatchEvent()中调用
 	 */
-	if (elemEventData.length < 1) {
+	if (!(type in elemData)) {
+
+		shouldAddEvent = true;
 
 		/* 把需要委托的事件绑定在document上面 */
-		if (-1 < $._eventType.delegated.indexOf(type)) {
+		if ((-1 < $._eventType.delegated.indexOf(type)) && (element != DOC) && !$.isWindow(element)) {
 			element = DOC;
-		}
+			uid = $.guid(element);
+			var docData = $._eventCache[uid] || ($._eventCache[uid] = {});
+
+			if (type in docData) {
+				shouldAddEvent = false;
+			} else {
+				docData[type] = [];
+			}
+		} 
+	}
+
+	if (shouldAddEvent) {
+		var capture =  (-1 < $._eventType.captured.indexOf(type));
 		$.addEvent(type, element, $.dispatchEvent, capture);
 	}
+
+	var elemEventData = elemData[type] || (elemData[type] = []);
 	elemEventData.push(fn);
 };
 
@@ -223,13 +266,12 @@ $.dispatchEvent = function(evt) {
 		/** @type {$.event} */
 		e = new $.event(evt),
 		type = e.type,
-		elCur = e.target;
+		elCur = $.isWindow(element) ? element : e.target;
 
 	/*
 	 * 在触屏浏览器中，只执行在touchend中合成的click事件
 	 * 在触屏浏览（合成的时候给event对象添加了自定义的isSimulated属性）
 	 */
-
 	if ('click' === type && UseTouchClick && !e.originalEvent.isSimulated) {
 		e.preventDefault();
 		return;
@@ -291,9 +333,7 @@ $.prototype.on = function(type, fn) {
 		}
 		return this;
 	}
-	if ('ready' === type) {
-		return this.ready(fn.bind(this));
-	}
+
 	return this.each(function(index, element) {
 		var uid = $.guid(element);
 		$._addEventData(type, uid, element, fn);
@@ -307,19 +347,37 @@ $.prototype.on = function(type, fn) {
  * @param {*=} data 传给Event对象的自定义数据，可以在事件传播过程中传递
  * @return {$}
  */
-$.prototype.trigger = function(type, data) {
-	var theEvent = DOC.createEvent('MouseEvents');
-	theEvent.initEvent(type, true, true);
-	theEvent.data = data;
-	theEvent.isSimulated = true;
+$.prototype.trigger = DOC.createEventObject && ENABLE_IE_SUPPORT ? 
+	function(type, data) {
+		/*var theEvent = DOC.createEventObject();
+		theEvent.data = data;
+		theEvent.isSimulated = true;*/
 
-	return this.each(function(index, element) {
-		element.dispatchEvent && element.dispatchEvent(theEvent);
-		if (!theEvent.defaultPrevented && (-1 < 'submit|focus|blur'.indexOf(type))) {
-			element[type]();
-		}
-	});
-};
+		return this.each(function(index, element) {
+			if (type in element) {
+				element[type]();
+			} else {
+				//自定义方法
+				//...
+			}
+		});
+	} : 
+
+	function(type, data) {
+
+		var theEvent = DOC.createEvent('MouseEvents');
+		theEvent.initEvent(type, true, true);
+		theEvent.data = data;
+		theEvent.isSimulated = true;
+
+		return this.each(function(index, element) {
+			if (type in element) {
+				element[type]();
+			} else {
+				element.dispatchEvent && element.dispatchEvent(theEvent);
+			}
+		});
+	};
 
 /**
  * 实现触屏的点击事件委托
@@ -339,6 +397,12 @@ $.touchEvent = {
 	 * @type {boolean}
 	 */
 	hasTouchStart: false,
+
+	/**
+	 * 在触屏设备上取消DOM的高亮状态之前保留一个延时，使用户可以觉察到状态的改变，
+	 * 在桌面浏览器中端不需要这个延时
+	 */
+	clearHighlightTimeout: IsTouch ? 200 : 0,
 
 	/**
 	 * @const
@@ -382,7 +446,6 @@ $.touchEvent = {
 		/* 事件触发点相对于窗口的坐标 */
 		$.touchEvent.startPoint = [event.screenX * ScreenSizeCorrect, event.screenY * ScreenSizeCorrect];
 
-
 		$.touchEvent.targets = [];
 		while(elCur) {
 			var uid = $.guid(elCur),
@@ -414,13 +477,13 @@ $.touchEvent = {
 
 	onTouchEnd: function() {
 		if ($.touchEvent.hasTouchStart) {
-			var theEvent = DOC.createEvent('MouseEvents'),
-				target = $.touchEvent.elTarget;
-
 			/* 先做清除工作，再触发合成事件 */
 			$.touchEvent.onTouchCancel();
 
 			if (UseTouchClick) {
+				var theEvent = DOC.createEvent('MouseEvents'),
+					target = $.touchEvent.elTarget;
+
 				/* 初始化冒泡的事件 */
 				theEvent.initEvent('click', true, true);
 
@@ -440,7 +503,7 @@ $.touchEvent = {
 		$.touchEvent.elTarget = null;
 
 		/* 取消DOM的高亮状态之前保留一个延时，使用户可以觉察到状态的改变 */
-		setTimeout($.touchEvent.clearHighlight, 200);
+		setTimeout($.touchEvent.clearHighlight, $.touchEvent.clearHighlightTimeout);
 	},
 
 	clearHighlight: function() {

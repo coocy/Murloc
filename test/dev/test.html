@@ -17,6 +17,10 @@
 			color: #fff;
 			padding:1em 2em;
 			border:0;
+			cursor: pointer;
+		}
+		button.active{
+			background: #27b169;
 		}
 		iframe{
 			border:0;
@@ -54,6 +58,7 @@
 </head>
 <body id="body">
 
+<a href="#clicked" id="link">Link</a>
 
 	<div id="nothiddendiv"><span>Text</span> content</div>
 
@@ -69,7 +74,6 @@
 
 	<section>
 
-		<div id="log"></div>
 
 		<textarea>text</textarea>
 
@@ -84,16 +88,16 @@
 
 		<p><button class="button_1">Button 1</button></p>
 		<p><button class="button_2">Button 2</button></p>
-		<p><button class="button_3">Button 3</button></p>
 
 		<div id="test"></div>
 		<div><span>1</span></div>
 		<div>1</div>
 		<div>1</div>
-		<form>2</form>
-		<form></form>
-		<form></form>
 
+		<form><input type="submit" name="" value="Submit" /></form>
+
+
+		<div id="log"></div>
 
 	</section>
 

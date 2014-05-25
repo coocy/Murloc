@@ -157,7 +157,7 @@ if (!Function.prototype.hasOwnProperty('bind')) {
 	 */
 	Function.prototype.bind = function(context) {
 		var fn = this,
-			args = arguments.length > 1 ? _fnSlice.call(arguments, 1) : null;
+			args = arguments.length > 1 ? _slice.call(arguments, 1) : [];
 		return function() {
 			return fn.apply(context || this, args);
 		};
@@ -380,16 +380,33 @@ $.isObject = function(obj) {
 };
 
 /**
+ * 判断一个对象是否是window对象
+ * @param {*} element
+ * @return {boolean}
+ */
+$.isWindow = function(element) {
+	return element == element['window'];
+};
+
+/**
  * 迭代一个数组或者Object对象，对其中的每个子元素执行一个方法
  * @param {(Array|Object)} collection
  * @param {function(number=, Element=)} fn
  */
 $.each = function(collection, fn) {
-	for (var i in collection) {
-		var element = collection[i],
-			result = fn.call(element, i, element);
-		if (false === result) {
-			break;
+	if (collection instanceof Array) {
+		for (var i = 0, l = collection.length; i < l; i++) {
+			var element = collection[i];
+			if (false === fn.call(element, i, element)) {
+				break;
+			}
+		}
+	} else {
+		for (var i in collection) {
+			var element = collection[i];
+			if (false === fn.call(element, i, element)) {
+				break;
+			}
 		}
 	}
 };

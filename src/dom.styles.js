@@ -71,7 +71,7 @@ $._size = function(element, name, type) {
 		documentElement;
 
 	if (element) {
-		if (element == element.window) {
+		if ($.isWindow(element)) {
 			return DOC.documentElement['client' + name];
 		} else {
 			element = element.documentElement || element;

@@ -1,9 +1,8 @@
 
 /**
  * 把DOM集合转换为数组，由elem.querySelector()得到的DOM集合为动态集合，有时候需要转化为常规数组
- * @param {string} selector CSS选择符
- * @param {Element=} context (可选)
- * @return {{length: number}} 类似Array的DOM集合(只有length属性)
+ * @param {(Array.<(Element)>|{length: number})} elements 数组或者类似数组的DOM集合
+ * @return {Array} DOM数组
  */
 $.toArray = function(elements) {
 	var result;
@@ -21,7 +20,7 @@ $.toArray = function(elements) {
  * @return {$}
  */
 $.prototype.each = function(fn) {
-	for (var i = 0, l = this.length, element; i < l; i++) {
+	for (var i = 0, l = this.context.length, element; i < l; i++) {
 		element = this.context[i];
 		var result = fn.call(element, i, element);
 		if (false === result) {

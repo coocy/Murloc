@@ -3,7 +3,53 @@ var manipulationBareObj = function( value ) {
 	return value;
 };
 
-test( "$.clone()", function() {
+test( "$(selector).remove()", function() {
+
+	var first = $("#ap").children().first();
+
+	first.data("foo", "bar");
+
+	$("#ap").children().remove();
+	ok( $("#ap").text().length > 10, "Check text is not removed" );
+	equal( $("#ap").children().length, 0, "Check remove" );
+
+	equal( first.data("foo"), null, "first data" );
+
+	var count, first, cleanUp;
+
+	count = 0;
+	first = $("#ap").children().first();
+	cleanUp = first.on( "click", function() {
+		count++;
+	}).remove().appendTo("#qunit-fixture").trigger("click");
+
+	strictEqual( 0, count, "Event handler has been removed" );
+
+	// Clean up detached data
+	cleanUp.remove();
+
+	var fragment = document.createDocumentFragment(),
+		div = fragment.appendChild( document.createElement("div") );
+
+	$( div ).remove();
+
+	equal( fragment.childNodes.length, 0, "div element was removed from documentFragment" );
+});
+
+
+test("empty()", function() {
+
+	equal( $("#ap").children().empty().text().length, 0, "Check text is removed" );
+	equal( $("#ap").children().length, 4, "Check elements are not removed" );
+
+	// using contents will get comments regular, text, and comment nodes
+	var j = $("#nonnodes").contents();
+	j.empty();
+	equal( j.html(), "", "Check node,textnode,comment empty works" );
+});
+
+
+test( "$(selector).clone()", function() {
 
 	var div, clone, form, body;
 
@@ -12,7 +58,8 @@ test( "$.clone()", function() {
 	equal( $("#en").text(), "This is a normal link: Yahoo", "Reassert text for #en" );
 
 	$.each( "div button ul ol li select option textarea iframe".split(" "), function( i, nodeName ) {
-		equal( $( "<" + nodeName + "/>" ).clone().get(0).nodeName.toLowerCase(), nodeName, "Clone a " + nodeName );
+		var node = $( "<" + nodeName + "/>" ).clone().get(0) || {};
+		equal( (node.nodeName + '').toLowerCase(), nodeName, "Clone a " + nodeName );
 	});
 	equal( $("<input type='checkbox' />").clone().get(0).nodeName.toLowerCase(), "input", "Clone a <input type='checkbox' />" );
 
@@ -129,7 +176,6 @@ test( "$.clone()", function() {
 	body.remove();
 });
 
-
 var testAppendForObject = function( valueObj, isFragment ) {
 	var $base,
 		type = isFragment ? " (DocumentFragment)" : " (Element)",
@@ -172,6 +218,7 @@ var testAppendForObject = function( valueObj, isFragment ) {
 		text + "Try them out:GoogleYahoo",
 		"Check for appending of array of $ objects"
 	);
+
 
 	equal( $base.clone().append( valueObj(" text with spaces ") ).text(),
 		text + " text with spaces ",
@@ -418,7 +465,276 @@ test( "$(selector).appendTo($)", function() {
 	equal( $("#qunit-fixture div").length, num, "Make sure all the removed divs were inserted." );
 });
 
+test( "append to multiple elements", function() {
+
+	var selects = $("<select class='test8070'></select><select class='test8070'></select>").appendTo("#qunit-fixture");
+	selects.append("<OPTION>1</OPTION><OPTION>2</OPTION>");
+
+	equal( selects.get(0).childNodes.length, 2, "First select got two nodes" );
+	equal( selects.get(1).childNodes.length, 2, "Second select got two nodes" );
+});
+
+test( "prepend(String)", function() {
+
+	var result, expected;
+	expected = "Try them out:";
+	result = $("#first").prepend( "<b>buga</b>" );
+	equal( result.text(), "buga" + expected, "Check if text prepending works" );
+	equal( $("#select3").prepend( "<option value='prependTest'>Prepend Test</option>"  ).find("option").eq(0).attr("value"), "prependTest", "Prepending html options to select element" );
+});
+
+test( "prepend(Element)", function() {
+
+	var expected;
+	expected = "Try them out:This link has class=\"blog\": Simon Willison's Weblog";
+	$("#sap").prepend( document.getElementById("first") );
+	equal( $("#sap").text(), expected, "Check for prepending of element" );
+});
+
+test( "prepend(Array<Element>)", function() {
+
+	var expected;
+	expected = "Try them out:YahooThis link has class=\"blog\": Simon Willison's Weblog";
+	$("#sap").prepend( [ document.getElementById("first"), document.getElementById("yahoo") ] );
+	equal( $("#sap").text(), expected, "Check for prepending of array of elements" );
+});
+
+test( "prepend($)", function() {
+
+	var expected;
+	expected = "YahooTry them out:This link has class=\"blog\": Simon Willison's Weblog";
+	$("#sap").prepend( $("#yahoo, #first") );
+	equal( $("#sap").text(), expected, "Check for prepending of $ object" );
+});
+
+test( "prepend(Array<$>)", function() {
+
+	var expected;
+	expected = "Try them out:GoogleYahooThis link has class=\"blog\": Simon Willison's Weblog";
+	$("#sap").prepend( [ $("#first"), $("#yahoo, #google") ] );
+	equal( $("#sap").text(), expected, "Check for prepending of array of $ objects" );
+});
+
+test( "prependTo(String)", function() {
+
+	var defaultText;
+
+	defaultText = "Try them out:";
+	$("<b>buga</b>").prependTo("#first");
+	equal( $("#first").text(), "buga" + defaultText, "Check if text prepending works" );
+	equal( $("<option value='prependTest'>Prepend Test</option>").prependTo("#select3").parent().find("option").eq(0).attr("value"), "prependTest", "Prepending html options to select element" );
+
+});
+
+test( "prependTo(Element)", function() {
+
+	var expected;
+
+	expected = "Try them out:This link has class=\"blog\": Simon Willison's Weblog";
+	$( document.getElementById("first") ).prependTo("#sap");
+	equal( $("#sap").text(), expected, "Check for prepending of element" );
+});
+
+test( "prependTo(Array<Element>)", function() {
+
+	var expected;
+
+	expected = "Try them out:YahooThis link has class=\"blog\": Simon Willison's Weblog";
+	$( [ document.getElementById("first"), document.getElementById("yahoo") ] ).prependTo("#sap");
+	equal( $("#sap").text(), expected, "Check for prepending of array of elements" );
+});
+
+test( "prependTo($)", function() {
+
+	var expected;
+
+	expected = "YahooTry them out:This link has class=\"blog\": Simon Willison's Weblog";
+	$("#yahoo, #first").prependTo("#sap");
+	equal( $("#sap").text(), expected, "Check for prepending of $ object" );
+});
+
+test( "prependTo(Array<$>)", function() {
+
+	$("<select id='prependSelect1'></select>").prependTo("#form");
+	$("<select id='prependSelect2'><option>Test</option></select>").prependTo("#form");
+
+	t( "Prepend Select", "#prependSelect2, #prependSelect1", [ "prependSelect2", "prependSelect1" ] );
+});
+
+test( "before(String)", function() {
+
+	var expected;
+
+	expected = "This is a normal link: bugaYahoo";
+	$("#yahoo").before( manipulationBareObj("<b>buga</b>") );
+	equal( $("#en").text(), expected, "Insert String before" );
+});
+
+test( "before(Element)", function() {
+
+	var expected;
+
+	expected = "This is a normal link: Try them out:Yahoo";
+	$("#yahoo").before( manipulationBareObj(document.getElementById("first")) );
+	equal( $("#en").text(), expected, "Insert element before" );
+});
+
+test( "before(Array<Element>)", function() {
+
+	var expected;
+	expected = "This is a normal link: Try them out:diveintomarkYahoo";
+	$("#yahoo").before( manipulationBareObj([ document.getElementById("first"), document.getElementById("mark") ]) );
+	equal( $("#en").text(), expected, "Insert array of elements before" );
+});
+
+test( "before($)", function() {
+
+	var expected;
+	expected = "This is a normal link: diveintomarkTry them out:Yahoo";
+	$("#yahoo").before( manipulationBareObj($("#mark, #first")) );
+	equal( $("#en").text(), expected, "Insert $ before" );
+});
+
+test( "before(Array<$>)", function() {
+
+	var expected;
+	expected = "This is a normal link: Try them out:GooglediveintomarkYahoo";
+	$("#yahoo").before( manipulationBareObj([ $("#first"), $("#mark, #google") ]) );
+	equal( $("#en").text(), expected, "Insert array of $ objects before" );
+});
+
+test( "before(no-op)", function() {
+
+	var set;
+	set = $("<div/>").before("<span>test</span>");
+	equal( set.get(0).nodeName.toLowerCase(), "div", "Insert before a disconnected node should be a no-op" );
+	equal( set.length, 1, "Insert the element before the disconnected node. should be a no-op" );
+});
 
 
 
+test( "before and after w/ empty object", function() {
+
+	var res;
+	res = $( "#notInTheDocument" ).before( "(" ).after( ")" );
+	equal( res.length, 0, "didn't choke on empty object" );
+});
+
+
+test( ".before() and .after() disconnected node", function() {
+
+  equal( $("<input type='checkbox'/>").before("<div/>").length, 1, "before() on disconnected node is no-op" );
+	equal( $("<input type='checkbox'/>").after("<div/>").length, 1, "after() on disconnected node is no-op" );
+});
+
+
+test( "insert with .before() on disconnected node last", function() {
+
+  var expectedBefore = "This is a normal link: bugaYahoo";
+
+  $("#yahoo").add("<span/>").before("<b>buga</b>");
+	equal( $("#en").text(), expectedBefore, "Insert String before with disconnected node last" );
+});
+
+test( "insert with .before() on disconnected node first", function() {
+
+  var expectedBefore = "This is a normal link: bugaYahoo";
+
+	$("<span/>").add("#yahoo").before("<b>buga</b>");
+	equal( $("#en").text(), expectedBefore, "Insert String before with disconnected node first" );
+});
+
+test( "insert with .before() on disconnected node last", function() {
+
+  var expectedAfter = "This is a normal link: Yahoobuga";
+
+	$("#yahoo").add("<span/>").after("<b>buga</b>");
+	equal( $("#en").text(), expectedAfter, "Insert String after with disconnected node last" );
+});
+
+test( "insert with .before() on disconnected node last", function() {
+
+  var expectedAfter = "This is a normal link: Yahoobuga";
+
+	$("<span/>").add("#yahoo").after("<b>buga</b>");
+	equal( $("#en").text(), expectedAfter, "Insert String after with disconnected node first" );
+});
+
+test( "insertBefore(String)", function() {
+
+	var expected = "This is a normal link: bugaYahoo";
+	$("<b>buga</b>").insertBefore("#yahoo");
+	equal( $("#en").text(), expected, "Insert String before" );
+});
+
+test( "insertBefore(Element)", function() {
+
+  var expected = "This is a normal link: Try them out:Yahoo";
+	$( document.getElementById("first") ).insertBefore("#yahoo");
+	equal( $("#en").text(), expected, "Insert element before" );
+});
+
+test( "insertBefore($)", function() {
+
+  var expected = "This is a normal link: diveintomarkTry them out:Yahoo";
+	$("#mark, #first").insertBefore("#yahoo");
+	equal( $("#en").text(), expected, "Insert $ before" );
+});
+
+test( ".after(String)", function() {
+
+  var expected = "This is a normal link: Yahoobuga";
+	$("#yahoo").after( "<b>buga</b>" );
+	equal( $("#en").text(), expected, "Insert String after" );
+});
+
+test( ".after(Element)", function() {
+
+  var expected = "This is a normal link: YahooTry them out:";
+	$("#yahoo").after( document.getElementById("first") );
+	equal( $("#en").text(), expected, "Insert element after" );
+});
+
+test( ".after(Array<Element>)", function() {
+
+  var expected = "This is a normal link: YahooTry them out:diveintomark";
+	$("#yahoo").after( [ document.getElementById("first"), document.getElementById("mark") ] );
+	equal( $("#en").text(), expected, "Insert array of elements after" );
+});
+
+test( ".after($)", function() {
+
+  var expected = "This is a normal link: YahooTry them out:Googlediveintomark";
+	$("#yahoo").after( [ $("#first"), $("#mark, #google") ] );
+	equal( $("#en").text(), expected, "Insert array of $ objects after" );
+});
+
+
+test( ".after(disconnected node)", function() {
+
+  var set = $("<div/>").before("<span>test</span>");
+	equal( set.get(0).nodeName.toLowerCase(), "div", "Insert after a disconnected node should be a no-op" );
+	equal( set.length, 1, "Insert the element after the disconnected node should be a no-op" );
+});
+
+test( "insertAfter(String)", function() {
+
+	var expected = "This is a normal link: Yahoobuga";
+	$("<b>buga</b>").insertAfter("#yahoo");
+	equal( $("#en").text(), expected, "Insert String after" );
+});
+
+test( "insertAfter(Element)", function() {
+
+  var expected = "This is a normal link: YahooTry them out:";
+	$( document.getElementById("first") ).insertAfter("#yahoo");
+	equal( $("#en").text(), expected, "Insert element after" );
+});
+
+test( "insertAfter($)", function() {
+
+  var expected = "This is a normal link: YahoodiveintomarkTry them out:";
+	$("#mark, #first").insertAfter("#yahoo");
+	equal( $("#en").text(), expected, "Insert $ after" );
+});
 

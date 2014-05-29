@@ -1,8 +1,14 @@
+/**
+ * 获取DOM对象集合中第一个对象的innerHTML或者设置DOM对象集合的innerHTML
+ * @param {(string|number)=} html
+ * @return {($|string)=}
+ */
+$.prototype.html =  function(html) {
 
-$.prototype.html =  function() {
-	var html = arguments[0];
-
-	if (undefined !== html) {
+	if (arguments.length > 0) {
+		if (undefined === html) {
+			return this;
+		}
 
 		/* 把html转换为字符串 */
 		html += '';
@@ -25,6 +31,14 @@ $.prototype.html =  function() {
 	}
 };
 
+/**
+ * 移除DOM对象集合中对象的子对象
+ * @return {$}
+ */
+$.prototype.empty =  function() {
+	return this.html('');
+};
+
 /**  @type {string} */
 var _kTextContentProp;
 
@@ -37,12 +51,17 @@ $.prototype.text = function(text) {
 			return this;
 		}
 		return this.each(function(index, element) {
-			if (_kTextContentProp in element) {
+			try {
 				element[_kTextContentProp] = text;
-			}
+			} catch(e) {}
 		});
 	} else {
 		var element = this.context[0];
+		if (ENABLE_IE_SUPPORT) {
+			if ('innerText' == _kTextContentProp) {
+				return element && Sizzle.getText(element);
+			}
+		} 
 		return element && element[_kTextContentProp];
 	}
 };
@@ -122,37 +141,5 @@ $.prototype.attr =  function(name, value) {
 $.prototype.removeAttr =  function(name) {
 	return this.each(function(index, element) {
 		element.removeAttribute && element.removeAttribute(name);
-	});
-};
-
-/**
- * 设置DOM对象集合的css或者读取集合中第一个DOM对象的css
- * @param {(string|Object)} key
- * @param {string=} value
- * @return {$}
- */
-$.prototype.css =  function(key, value) {
-
-	if (('string' === typeof key) && (arguments.length < 2)) {
-		var element = this.context[0];
-		key = $.camelCase(key);
-		return element && (element.currentStyle || WIN.getComputedStyle(element, ''))[key];
-	}
-
-	return this.each(function(index, element) {
-		if ('string' === typeof key) {
-			var _key = {};
-			_key[key] = value;
-			key = _key;
-		}
-		for (var k in key) {
-			var _value =  key[k];
-			k = $.camelCase(k);
-			if (k !== 'opacity' && _value !== '' && !isNaN(_value) && _value != 0) {
-				_value += 'px';
-			}
-
-			element.style[k] = _value;
-		}
 	});
 };

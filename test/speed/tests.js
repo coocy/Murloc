@@ -44,13 +44,16 @@ test("DOM", function() {
 });
 
 test("DOM nodes", function() {
+	add('$("<div>").clone()', '$("&lt;div&gt;").clone()');
+	add('$("ul").clone()', '$("ul").clone()');
+	add('$("ul").clone(true)', '$("ul").clone(true)');
+	//add('$("ul").click(function() {}).clone(true)', '$("ul").click(function() {}).clone(true)');
+
 	add('$("#ap").append("<span>")', '$("#ap").append("&lt;span&gt;")');
 	//add('$("div").append("<span>", $("#groups"))', '$("div").append("&lt;span&gt;", $("#groups"))');
 	add('$("#ap").append($("#groups"))', '$("#ap").append($("#groups"))');
-	add('$("form").append($("#groups"))', '$("form").append($("#groups"))');
+	add('$("ul").append($("#groups"))', '$("ul").append($("#groups"))');
 
-	add('$("<div>").clone()', '$("&lt;div&gt;").clone()');
-	//add('$("ul").clone(true)', '$("ul").clone(true)');
 });
 
 test("DOM className", function() {
@@ -66,6 +69,12 @@ test("DOM className", function() {
 
 	add('$("p").toggleClass("classB")', '$("p").toggleClass("classB")');
 	add('$("p").addClass("classA").toggleClass("classA classB")', '$("p").addClass("classA").toggleClass("classA classB")');
+});
+
+
+test("Events", function() {
+	add('$("#foo").click(function() {})', '$("#foo").click(function() {})');
+	add('$("form").submit(function() {})', '$("form").submit(function() {})');
 });
 
 

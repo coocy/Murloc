@@ -1,16 +1,19 @@
 
 /**
  * @param {Function} fn
+ * @return {$}
  */
 $.ready = function(fn) {
 
 	//如果页面已经加载完成，直接执行方法
 	if (true === $.loader.isLoaded) {
 		fn();
-	} else {	
+	} else {
 		$.loader.callbacks.push(fn);
 		$.loader.init();
 	}
+
+	return this;
 };
 $.prototype.ready = $.ready;
 
@@ -18,14 +21,14 @@ $.loader = {
 
 	callbacks: [],
 
-    /**
-     * @type {boolean}  是否已经初始化
-     */
+	/**
+	 * @type {boolean}  是否已经初始化
+	 */
 	isInited: false,
 
-    /**
-     * @type {boolean}  是否已经加载完成
-     */
+	/**
+	 * @type {boolean}  是否已经加载完成
+	 */
 	isLoaded: false,
 
 	timer: null,
@@ -41,7 +44,7 @@ $.loader = {
 			$.loader.isInited = true;
 		}
 	},
-	
+
 	/**
 	 * 初始化函数
 	 * 因为页面中引用的Javascript文件是异步加载的，因此加载完Javascript文件后需要判断HTML页面是否加载完全:
@@ -64,7 +67,7 @@ $.loader = {
 				if (IsIE && ('interactive' == readyState)) {
 					$.loader.ieTimer();
 					return;
-				} else { 
+				} else {
 					$.loader.loaded();
 				}
 			} else {
@@ -121,5 +124,5 @@ $.loader = {
 		}
 		$.loader.callbacks = [];
 	}
-	
+
 };

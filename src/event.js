@@ -4,27 +4,40 @@
 
  /*
 $._eventCache = {
-	'event_1': {
-		'uid_1': [
+	'uid_1': {
+		'event_1': [
 			fn1: 1,
 			fn2: 1,
 			...
 		],
-		'uid_2': [
+		'event_2': [
 			fn1: 1,
 			fn2: 1,
 			...
 		],
-
-		'tA': [
-			fn1: 1,
-			fn2: 1,
-			...
-		]
-
+		...
 	},
-	'event_2': {
-		'uid_1':[
+	'uid_2': {
+		'event_1': [
+			fn1: 1,
+			fn2: 1,
+			...
+		],
+		'event_2': [
+			fn1: 1,
+			fn2: 1,
+			...
+		],
+		...
+	},
+	...,
+	'tA': {
+		'event_1': [
+			fn1: 1,
+			fn2: 1,
+			...
+		],
+		'event_2': [
 			fn1: 1,
 			fn2: 1,
 			...
@@ -146,7 +159,21 @@ $._eventType = {
 	 * @const
 	 * @type {string}
 	 */
-	delegated: '|click|mouseover|mouseout|mousemove|focus|blur|touchstart|touchmove|touchend|touchcancel',
+	delegated: '|click|mouseover|mouseout|mousemove|focus|blur|focusin|focusout|touchstart|touchmove|touchend|touchcancel' + (('onsubmit' in DOC) ? '|submit' : ''),
+
+	/**
+	 * IE使用focusin/focusout替换focus/blur来实现focus和blur的冒泡
+	  * @type {Object=}
+	 */
+	bubblesFix: null,
+
+	/**
+	  * @type {Object}
+	 */
+	bubblesFixTemplate: {
+		'focus': 'focusin',
+		'blur': 'focusout'
+	},
 
 	/**
 	 * @const
@@ -165,27 +192,63 @@ $._eventType = {
 $.addEvent = DOC.addEventListener ? function(type, element, fn, capture) {
 	element.addEventListener(type, fn, capture);
 } : function(type, element, fn, capture) {
-	element.attachEvent('on' + type, fn);
+	element.attachEvent('on' + type, function() {
+		fn.apply(element, arguments);
+	});
 };
 
+/**
+ * 生成特定DOM对象的eventCache
+ * @param {string} type
+ * @param {Number} uid
+ * @param {Element} element
+ * @param {function($.event=)} fn
+ */
 $._addEventData = function(type, uid, element, fn) {
-	var eventData = $._eventCache[type] || ($._eventCache[type] = {}),
-		elemData = eventData[uid] || (eventData[uid] = []),
-		capture = (-1 !== $._eventType.captured.indexOf(type));
+	var elemData = $._eventCache[uid] || ($._eventCache[uid] = {}),
+		shouldAddEvent = false;
+
+	if (ENABLE_IE_SUPPORT) {
+		//IE使用focusin/focusout替换focus/blur来实现focus和blur的冒泡
+		if (null === $._eventType.bubblesFix) {
+			if ('onfocusin' in DOC) {
+				$._eventType.bubblesFix = $._eventType.bubblesFixTemplate;
+			} else {
+				$._eventType.bubblesFix = {};
+			}
+		}
+		type = $._eventType.bubblesFix[type] || type;
+	}
 
 	/*
 	 * 在第一次给某个DOM对象添加事件的时候绑定$.dispatchEvent()方法，
 	 * 后续添加的方法推入elemData数组在$.dispatchEvent()中调用
 	 */
-	if (elemData.length < 1) {
+	if (!(type in elemData)) {
+
+		shouldAddEvent = true;
 
 		/* 把需要委托的事件绑定在document上面 */
-		if (-1 < $._eventType.delegated.indexOf(type)) {
+		if ((-1 < $._eventType.delegated.indexOf(type)) && (element != DOC) && !$.isWindow(element)) {
 			element = DOC;
-		}
+			uid = $.guid(element);
+			var docData = $._eventCache[uid] || ($._eventCache[uid] = {});
+
+			if (type in docData) {
+				shouldAddEvent = false;
+			} else {
+				docData[type] = [];
+			}
+		} 
+	}
+
+	if (shouldAddEvent) {
+		var capture =  (-1 < $._eventType.captured.indexOf(type));
 		$.addEvent(type, element, $.dispatchEvent, capture);
 	}
-	elemData.push(fn);
+
+	var elemEventData = elemData[type] || (elemData[type] = []);
+	elemEventData.push(fn);
 };
 
 $.addTagEvent = function(type, tagName, fn) {
@@ -203,14 +266,12 @@ $.dispatchEvent = function(evt) {
 		/** @type {$.event} */
 		e = new $.event(evt),
 		type = e.type,
-		elCur = e.target,
-		eventData = $._eventCache[type] || {};
+		elCur = $.isWindow(element) ? element : e.target;
 
 	/*
 	 * 在触屏浏览器中，只执行在touchend中合成的click事件
 	 * 在触屏浏览（合成的时候给event对象添加了自定义的isSimulated属性）
 	 */
-
 	if ('click' === type && UseTouchClick && !e.originalEvent.isSimulated) {
 		e.preventDefault();
 		return;
@@ -218,15 +279,17 @@ $.dispatchEvent = function(evt) {
 
 	while(elCur) {
 		var uid = elCur['__ruid'] || '0',
-		elemData = eventData[uid] || [],
-		result = true,
-		tagEvents = eventData['t' + elCur.nodeName];
+			elemData = $._eventCache[uid] || {},
+			elemEventData = elemData[type] || [],
+			result = true,
+			tagData= $._eventCache['t' + elCur.nodeName] || {},
+			tagEventData = tagData[type];
 
-		if (tagEvents) {
-			elemData = elemData.concat(tagEvents);
+		if (tagEventData) {
+			elemEventData = elemEventData.concat(tagEventData);
 		}
 
-		for (var i = 0, l = elemData.length; i < l; i++) {
+		for (var i = 0, l = elemEventData.length; i < l; i++) {
 
 			/* 把冒泡过程中当前的DOM对象保存在Event的currentTarget属性中 */
 			e.currentTarget = elCur;
@@ -236,7 +299,7 @@ $.dispatchEvent = function(evt) {
 			 * 在方法中的this指针默认指向冒泡过程中当前的DOM对象（和currentTarget属性一样）
 			 * 可以使用Function的bind方法改变this指针指向的对象
 			 */
-			var re = elemData[i].apply(elCur, [e]);
+			var re = elemEventData[i].apply(elCur, [e]);
 
 			/* 有任一方法返回false的话标记result为false */
 			if (false === re) {
@@ -259,8 +322,8 @@ $.dispatchEvent = function(evt) {
 /**
  * 给DOM集合绑定事件
  * @function
- * @param {String} type 事件类型
- * @param {Function} fn 绑定的事件
+ * @param {string} type 事件类型
+ * @param {function($.event=)} fn 绑定的事件
  * @return {$}
  */
 $.prototype.on = function(type, fn) {
@@ -270,6 +333,7 @@ $.prototype.on = function(type, fn) {
 		}
 		return this;
 	}
+
 	return this.each(function(index, element) {
 		var uid = $.guid(element);
 		$._addEventData(type, uid, element, fn);
@@ -283,19 +347,37 @@ $.prototype.on = function(type, fn) {
  * @param {*=} data 传给Event对象的自定义数据，可以在事件传播过程中传递
  * @return {$}
  */
-$.prototype.trigger = function(type, data) {
-	var theEvent = DOC.createEvent('MouseEvents');
-	theEvent.initEvent(type, true, true);
-	theEvent.data = data;
-	theEvent.isSimulated = true;
+$.prototype.trigger = DOC.createEventObject && ENABLE_IE_SUPPORT ? 
+	function(type, data) {
+		/*var theEvent = DOC.createEventObject();
+		theEvent.data = data;
+		theEvent.isSimulated = true;*/
 
-	return this.each(function(index, element) {
-		element.dispatchEvent && element.dispatchEvent(theEvent);
-		if (!theEvent.defaultPrevented && (-1 < 'submit|focus|blur'.indexOf(type))) {
-			element[type]();
-		}
-	});
-};
+		return this.each(function(index, element) {
+			if (type in element) {
+				element[type]();
+			} else {
+				//自定义方法
+				//...
+			}
+		});
+	} : 
+
+	function(type, data) {
+
+		var theEvent = DOC.createEvent('MouseEvents');
+		theEvent.initEvent(type, true, true);
+		theEvent.data = data;
+		theEvent.isSimulated = true;
+
+		return this.each(function(index, element) {
+			if (type in element) {
+				element[type]();
+			} else {
+				element.dispatchEvent && element.dispatchEvent(theEvent);
+			}
+		});
+	};
 
 /**
  * 实现触屏的点击事件委托
@@ -315,6 +397,12 @@ $.touchEvent = {
 	 * @type {boolean}
 	 */
 	hasTouchStart: false,
+
+	/**
+	 * 在触屏设备上取消DOM的高亮状态之前保留一个延时，使用户可以觉察到状态的改变，
+	 * 在桌面浏览器中端不需要这个延时
+	 */
+	clearHighlightTimeout: IsTouch ? 200 : 0,
 
 	/**
 	 * @const
@@ -346,8 +434,7 @@ $.touchEvent = {
 	onTouchStart: function(e) {
 		var e = new $.event(e),
 			event = e.originalEvent,
-			elCur = e.target,
-			eventData = $._eventCache['click'] || {};
+			elCur = e.target;
 
 		$.touchEvent.clearHighlight();
 
@@ -359,14 +446,14 @@ $.touchEvent = {
 		/* 事件触发点相对于窗口的坐标 */
 		$.touchEvent.startPoint = [event.screenX * ScreenSizeCorrect, event.screenY * ScreenSizeCorrect];
 
-
 		$.touchEvent.targets = [];
 		while(elCur) {
 			var uid = $.guid(elCur),
-				elemData = eventData[uid];
+				elemData = $._eventCache[uid] || {},
+				elemEventData = elemData['click'];
 
 			/* 为绑定了事件或者特定DOM对象添加高亮样式 */
-			if (elemData || ['A', 'INPUT', 'BUTTON'].indexOf(elCur.nodeName) > -1) {
+			if (elemEventData || ['A', 'INPUT', 'BUTTON'].indexOf(elCur.nodeName) > -1) {
 				$.touchEvent.targets.push($(elCur).addClass($.touchEvent.activeCls));
 			}
 			elCur = elCur.parentNode;
@@ -390,13 +477,13 @@ $.touchEvent = {
 
 	onTouchEnd: function() {
 		if ($.touchEvent.hasTouchStart) {
-			var theEvent = DOC.createEvent('MouseEvents'),
-				target = $.touchEvent.elTarget;
-
 			/* 先做清除工作，再触发合成事件 */
 			$.touchEvent.onTouchCancel();
 
 			if (UseTouchClick) {
+				var theEvent = DOC.createEvent('MouseEvents'),
+					target = $.touchEvent.elTarget;
+
 				/* 初始化冒泡的事件 */
 				theEvent.initEvent('click', true, true);
 
@@ -416,7 +503,7 @@ $.touchEvent = {
 		$.touchEvent.elTarget = null;
 
 		/* 取消DOM的高亮状态之前保留一个延时，使用户可以觉察到状态的改变 */
-		setTimeout($.touchEvent.clearHighlight, 200);
+		setTimeout($.touchEvent.clearHighlight, $.touchEvent.clearHighlightTimeout);
 	},
 
 	clearHighlight: function() {

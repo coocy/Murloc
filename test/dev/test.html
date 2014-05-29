@@ -17,6 +17,10 @@
 			color: #fff;
 			padding:1em 2em;
 			border:0;
+			cursor: pointer;
+		}
+		button.active{
+			background: #27b169;
 		}
 		iframe{
 			border:0;
@@ -24,21 +28,52 @@
 		p{
 			padding:0 0 .5em;
 		}
+		div{
+			padding:.5em;
+			background: #eee;
+			margin:0 0 .5em;
+		}
+		.abc{
+			background: #066;
+		}
+		.box,.box_1,.box_2{
+			width:0;
+			height: 0;
+			border:10px solid #f00;
+			padding:12px;
+			margin-bottom:10px;
+		}
+		.box_1,.box_2{
+			width:50px;
+		}
+		.box_1{
+			-webkit-box-sizing: border-box;
+			-moz-box-sizing: border-box;
+			box-sizing: border-box;
+		}
+		.box_2{
+			margin:20px;
+		}
 	</style>
 </head>
 <body id="body">
 
+<a href="#clicked" id="link">Link</a>
+
 	<div id="nothiddendiv"><span>Text</span> content</div>
+
+	<div class="box"></div>
+	<div class="box_1"></div>
+	<div class="box_2"></div>
 
 	<div>
 		<p id="a">
-			<a id="groups"></a>
+			<a id="groups">Link</a>
 		</p>
 	</div>
 
 	<section>
 
-		<div id="log"></div>
 
 		<textarea>text</textarea>
 
@@ -51,29 +86,18 @@
 		<input type="checkbox" name="check" value="1"  />
 		<input type="checkbox" name="check" value="2" checked />
 
-		<p><button class="button_2">Button 2</button></p>
-		<p><button class="button_3">Button 3</button></p>
 		<p><button class="button_1">Button 1</button></p>
+		<p><button class="button_2">Button 2</button></p>
 
 		<div id="test"></div>
-		<div></div>
-		<div></div>
-		<div></div>
-		<div></div>
-		<div></div>
-		<div></div>
-		<div></div>
-		<div></div>
-		<div></div>
-		<div></div>
-		<div></div>
-		<div></div>
-		<div></div>
-		<div></div>
-		<div></div>
-		<div></div>
-		<div></div>
-		<div></div>
+		<div><span>1</span></div>
+		<div>1</div>
+		<div>1</div>
+
+		<form><input type="submit" name="" value="Submit" /></form>
+
+
+		<div id="log"></div>
 
 	</section>
 

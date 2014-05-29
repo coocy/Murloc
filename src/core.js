@@ -93,6 +93,23 @@ var
 	_toString = _obj.toString,
 	_hasOwnProperty = _obj.hasOwnProperty;
 
+try {
+	_concat.apply([], DOC.getElementsByTagName('a'));
+} catch(e) {
+	_concat = {
+		apply: function(array1, array2) {
+			var element,
+				i = 0;
+
+			while (element = array2[i++]) {
+				array1.push(element);
+			}
+
+			return array1;
+		}
+	};
+}
+
 /**
  * 如果浏览器不支持String原生trim的方法，模拟一个
  */
@@ -140,7 +157,7 @@ if (!Function.prototype.hasOwnProperty('bind')) {
 	 */
 	Function.prototype.bind = function(context) {
 		var fn = this,
-			args = arguments.length > 1 ? _fnSlice.call(arguments, 1) : null;
+			args = arguments.length > 1 ? _slice.call(arguments, 1) : [];
 		return function() {
 			return fn.apply(context || this, args);
 		};
@@ -213,7 +230,6 @@ var $ = function(selector, context) {
 			var result = [];
 
 			if (context) {
-
 				var length = context.length,
 					i = 0;
 
@@ -236,12 +252,6 @@ var $ = function(selector, context) {
 
 	if (selector.length) { //数组或者类数组
 		this.context = _concat.apply([], selector);
-		/*this.context = function(selector) {
-			for (var elements = [], i = 0, l = selector.length; i < l; i++) {
-				elements.push(selector[i]);
-			}
-			return elements;
-		}(selector);*/
 		this.length = this.context.length;
 	}
 
@@ -283,8 +293,10 @@ $.selectorAll = function(selector, context) {
 				return [els];
 			}
 			return [];
-		} else if (_hasGetElementsByClassName && '.' == selector.charAt(0)) {
-			return context.getElementsByClassName(_s);
+		} else if ('.' == selector.charAt(0)) {
+			if (_hasGetElementsByClassName) {
+				return context.getElementsByClassName(_s);
+			}
 		} else {
 			return context.getElementsByTagName(selector);
 		}
@@ -368,16 +380,33 @@ $.isObject = function(obj) {
 };
 
 /**
+ * 判断一个对象是否是window对象
+ * @param {*} element
+ * @return {boolean}
+ */
+$.isWindow = function(element) {
+	return element == element['window'];
+};
+
+/**
  * 迭代一个数组或者Object对象，对其中的每个子元素执行一个方法
  * @param {(Array|Object)} collection
  * @param {function(number=, Element=)} fn
  */
 $.each = function(collection, fn) {
-	for (var i in collection) {
-		var element = collection[i],
-			result = fn.call(element, i, element);
-		if (false === result) {
-			break;
+	if (collection instanceof Array) {
+		for (var i = 0, l = collection.length; i < l; i++) {
+			var element = collection[i];
+			if (false === fn.call(element, i, element)) {
+				break;
+			}
+		}
+	} else {
+		for (var i in collection) {
+			var element = collection[i];
+			if (false === fn.call(element, i, element)) {
+				break;
+			}
 		}
 	}
 };
@@ -392,7 +421,7 @@ $.extend = function(dest, source) {
 	var property, item;
 	for (var property in source) {
 		item = source[property];
-		dest[property] = $.isObject(item) ? $.extend({}, item) : item;
+		dest[property] = $.isObject(item) ? $.extend({}, item) : $.copy(item);
 	}
 	return dest;
 };
@@ -426,5 +455,49 @@ $.camelCase = function(string){
 	return string.replace(/-+(.)?/g, function(match, chr){
 		return chr ? chr.toUpperCase() : '';
 	});
+};
+
+/**
+ * 改变一个函数的this指针。这个方法只是为了兼容jQuery，请尽量使用function的bind方法
+ * @param {Function} fn
+ * @param {Object} context
+ * @return {!Function}
+ */
+$.proxy = function(fn, context){
+	return fn.bind(context);
+};
+
+/**
+ * @param {Array} elements
+ * @param {Function} fn
+ * @param {*} args
+ * @return {Array}
+ */
+$.map = function(elements, fn, args) {
+	var value,
+		i = 0,
+		j = elements.length,
+		result = [];
+
+	if (('string' !== typeof elements) && !isNaN(elements.length)) {
+		for (; i < j; i++) {
+			value = fn(elements[i], i, args);
+
+			if (value != null) {
+				result.push(value);
+			}
+		}
+
+	} else {
+		for (i in elements) {
+			value = fn(elements[i], i, args);
+
+			if (value != null) {
+				result.push(value);
+			}
+		}
+	}
+
+	return result;
 };
 

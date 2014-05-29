@@ -1,7 +1,7 @@
 
 /**
  * @requires ../../../src/Murloc.js
- * @rrequires ../../speed/libs/jquery-1.10.2.js
+ * @equires ../../speed/libs/jquery-1.10.2.js
  */
 
 //$('#log').html($.is(document.body, 'body'));
@@ -10,26 +10,27 @@
 $("p").click(function(e) {
 	//$("textarea").focus();
 });*/
+if (typeof console === 'undefined') {
+	console = {
+		log: function(msg) {
+			$('#log').html($('#log').html() + '<br>' + msg);
+		}
+	};
+}
 
+$('#link').on('click', function() {
+	console.log('click: ' + this.nodeName);
+	return false;
+}).trigger('click');
 
-$("textarea").val('').attr('placeholder', 'Text').focus(function(e) {
-	console.log('focus');
-}).blur(function(e) {
-	console.log('blur');
-});
+var a = $('textarea').on('focus', function() {
+	console.log('focus: ' + this.nodeName);
+}).trigger('focus');
 
-$('span').click(function(e) {
-	console.log(this.__ruid);
-});
+var a = $('form').on('submit', function(e) {
+	console.log('submit: ' + this.nodeName);
+	e.preventDefault();
+	return false;
+})/*.trigger('submit')*/;
 
-$("p").append($('span'));
-
-
-
-//$.is($('<div foo="bar">').get(0), '[foo]');
-//$.is(document.getElementById('nothiddendiv'), '#body #nothiddendiv');
-
-//console.log($("<div foo='bar'></div>").closest("[foo]").length);
-
-//$("body").closest("div");
 

@@ -21,18 +21,18 @@
 			}
 			return r;
 		};
-	
+
 		test = function(codes, round){
 			round = round || 10;
 			var start = new Date().getTime();
 			try {
-				
+
 				var testFn = new Function(codes), result;
-				
+
 				for (var i = 0; i < round; i++) {
 					result = testFn();
 				}
-				
+
 				var end = (new Date().getTime() - start);
 				return {'time': Math.round(end), result: result};
 			} catch(err){
@@ -40,16 +40,16 @@
 			}
 
 		};
-	
+
 	</script>
-	
+
 </head>
 
 <body id="body">
 
 	<!-- Test HTML -->
 	<!-- this iframe is outside the #qunit-fixture so it won't reload constantly wasting time, but it means the tests must be "safe" and clean up after themselves -->
-	<iframe id="loadediframe" name="loadediframe" style="display:none;" src="../scripts/iframe.html"></iframe>
+	<iframe id="loadediframe" name="loadediframe" style="display:none;" src="../tests/iframe.html"></iframe>
 	<dl id="dl" style="position:absolute;top:-32767px;left:-32767px;width:1px;">
 	<div id="qunit-fixture">
 		<p id="firstp">See <a id="simon1" href="http://simon.incutio.com/archive/2003/03/25/#getElementsBySelector" rel="bookmark">this blog entry</a> for more information.</p>
@@ -71,7 +71,9 @@
 		</div>
 		<span id="name+value"></span>
 		<p id="first">Try them out:</p>
-		<ul id="firstUL"></ul>
+		<ul id="firstUL"><li></li><li></li></ul>
+		<ul id="secondUL"><li></li><li></li></ul>
+		<ul id="thirdUL"><li></li><li></li></ul>
 		<ol id="empty"></ol>
 		<form id="form" action="formaction">
 			<label for="action" id="label-for">Action:</label>

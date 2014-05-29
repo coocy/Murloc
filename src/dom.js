@@ -1,17 +1,15 @@
 
-
+/**
+ * 把DOM集合转换为数组，由elem.querySelector()得到的DOM集合为动态集合，有时候需要转化为常规数组
+ * @param {(Array.<(Element)>|{length: number})} elements 数组或者类似数组的DOM集合
+ * @return {Array} DOM数组
+ */
 $.toArray = function(elements) {
-	var result,
-		element,
-		i = 0;
-
+	var result;
 	try {
 		result = _slice.call(elements);
 	} catch (e) {
-		result = [];
-		while (element = elements[i++]) {
-			result.push(element);
-		}
+		result = _concat.apply([], elements);
 	}
 	return result;
 };
@@ -22,13 +20,24 @@ $.toArray = function(elements) {
  * @return {$}
  */
 $.prototype.each = function(fn) {
-	for (var i = 0, l = this.length, element; i < l; i++) {
+	for (var i = 0, l = this.context.length, element; i < l; i++) {
 		element = this.context[i];
 		var result = fn.call(element, i, element);
 		if (false === result) {
 			break;
 		}
 	}
+	return this;
+};
+
+/**
+ * 在现有的DOM集合中加入新的集合并返回
+ * @param {(Element|$|String)} selector
+ * @return {$}
+ */
+$.prototype.add = function(selector) {
+	this.context = _concat.apply(this.context, $(selector).context);
+	this.length = this.context.length;
 	return this;
 };
 
@@ -119,8 +128,6 @@ $.is = function(element, selector) {
 		element.mozMatchesSelector ||
 		element.oMatchesSelector ||
 		element.matchesSelector;
-
-		//alert(element + ' ' + element.parentNode);
 
 	if (matchesSelector) {
 		return matchesSelector.call(element, selector);

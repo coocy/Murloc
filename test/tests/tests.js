@@ -48,8 +48,10 @@ function t( a, b, c ) {
  * @requires ../../src/Murloc.js
  * @requires core.js
  * @requires dom.js
+ * @requires dom.styles.js
  * @requires dom.attributes.js
  * @requires dom.class_name.js
  * @requires dom.nodes.js
  * @requires dom.data.js
+ * @requires dom.ready.js
  */

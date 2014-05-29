@@ -20,6 +20,46 @@ $.prototype.remove = function() {
 	return this;
 };
 
+var wrapMap = {
+	'option': ['<select multiple>', '', 1],
+	'optgroup': ['<select multiple>', '', 1],
+	'td': ['<table><tr>', '</tr></table>', 3],
+	'tr': ['<table>', '</table>', 2],
+	'-': ['']
+};
+
+wrapMap['tbody'] = wrapMap['tfoot'] = wrapMap['colgroup'] = wrapMap['caption'] = wrapMap['thead'] = wrapMap['tr'];
+wrapMap['th'] = wrapMap['td'];
+
+$._buildFragment = function(html) {
+	var result = [];
+	if (!ENABLE_IE_SUPPORT || /<|&#?\w+;/.test(html)) {
+		var containter = DOC.createElement('div');
+
+		var tagName = (/<([\w:]+)/.exec(html) || ['', ''])[1].toLowerCase(),
+			wrap = '',
+			deep = 0;
+
+		if (tagName) {
+			wrap = wrapMap[tagName] || wrapMap['-'];
+			html = wrap[0] + html + (wrap[1] || '');
+			deep =  wrap[2] || 0;
+		}
+
+		containter.innerHTML = html;
+		while (deep--) {
+			containter = containter.lastChild;
+		}
+
+		result = containter.childNodes;
+
+	} else {
+		//在IE下，使用innerHTML设置纯文本内容会导致丢失空格，所以文本使用创建文本节点的方式
+		result.push(DOC.createTextNode(html));
+	}
+	return result;
+};
+
 /**
  * 把传入的$对象或者数组递归合并成1个数组
  * @param {(Element|$|String|Number|Array.<(Element|$)>)} elements 单个DOM对象或者包含DOM集合的数组
@@ -48,22 +88,14 @@ $._getPlainArray = function(elements) {
 			}
 
 		} else {
-			
 			//按字符串处理，创建HTML片段或者纯文本节点
-			elements += '';
-			if (!ENABLE_IE_SUPPORT || /<|&#?\w+;/.test(elements)) {
-				var containter = DOC.createElement('div');
-				containter.innerHTML = elements;
-				result = _concat.apply(result, containter.childNodes);
-			} else {
-				//在IE下，使用innerHTML设置纯文本内容会导致丢失空格，所以文本使用创建文本节点的方式
-				result.push(DOC.createTextNode(elements));
-			}
+			result = _concat.apply(result, $._buildFragment(elements + ''));
 		}
 
 		return result;
 	}
 };
+
 
 /**
  * 在父对象集合中插入DOM对象集合

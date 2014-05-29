@@ -36,7 +36,7 @@ $.prototype.each = function(fn) {
  * @return {$}
  */
 $.prototype.add = function(selector) {
-	this.context = _concat.apply(this.context, $(selector).context);
+	this.context = _concat.apply($.toArray(this.context), $(selector).context);
 	this.length = this.context.length;
 	return this;
 };

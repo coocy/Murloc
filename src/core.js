@@ -16,7 +16,7 @@ var ENABLE_IE_SUPPORT = true;
 
 /* 保存常用DOM的全局变量（变量名可以被压缩） */
 var
-	 /**  @type {Document} */
+	/**  @type {Document} */
 	DOC = document,
 
 	/**  @type {Window} */

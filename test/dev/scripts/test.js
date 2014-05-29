@@ -18,6 +18,9 @@ if (typeof console === 'undefined') {
 	};
 }
 
+var el = $('select').append('<option value="4">4</option>').children().last();
+console.log(el.attr('value'));
+
 $('#link').on('click', function() {
 	console.log('click: ' + this.nodeName);
 	return false;

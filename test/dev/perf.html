@@ -15,7 +15,9 @@
 			['$(\'div p\')', ''],
 			['$(\'div > p\')', ''],
 			['$(\'.title\')', ''],
+			['$(\'div.title\')', ''],
 			['$(\'#title\')', ''],
+			['$(\'div#title\')', ''],
 			['$(\'body #title\')', ''],
 			['$(\'#title span\')', ''],
 			['$(\'div\').hasClass(\'foo\')', ''],
@@ -29,7 +31,7 @@
 			'$[(\'div\').append(\'<span><b></b></span>\') '']'*/
 		];
 	</script>
-	<link rel="stylesheet" type="text/css" href="${www_root}test/styles/styles.css" />
+	<link rel="stylesheet" type="text/css" href="styles/styles.css" />
 	<style type="text/css">
 		body{
 			padding:1em;
@@ -86,7 +88,7 @@
 	</div>
 
 
-	<script type="text/javascript" src="${www_root}test/dev/scripts/perf.js"></script>
+	<script type="text/javascript" src="scripts/perf.js"></script>
 
 		
 	</div>

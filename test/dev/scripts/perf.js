@@ -1,9 +1,9 @@
 
 var jsTools = {
-	'Murloc': '../src/Murloc.js',
-	'jQuery 1.10.2': 'scripts/lib/jquery-1.10.2.js',
-	'jQuery 2.0.3': 'scripts/lib/jquery-2.0.3.js',
-	'Zepto 1.1.2': 'scripts/lib/zepto.js'
+	'Murloc': '../../src/Murloc.js',
+	'jQuery 1.10.2': '../speed/libs/jquery-1.10.2.js',
+	'jQuery 2.0.3': '../speed/libs/jquery-2.0.3.js',
+	'Zepto 1.1.2': '../speed/libs/zepto-1.1.3.js'
 };
 
 var codeTable = document.getElementById('code_table'),
@@ -25,7 +25,7 @@ for (jsToolName in jsTools) {
 		elRow.appendChild(elCell);
 		
 		elFrame = document.createElement('iframe');
-		elFrame.src = 'test/test_page.php?js=' + encodeURIComponent(jsTools[jsToolName]);
+		elFrame.src = 'test_page.php?js=' + encodeURIComponent(jsTools[jsToolName]);
 		elFrame.style.display = 'none';
 		elFrame.name = jsToolName;
 		document.body.appendChild(elFrame);

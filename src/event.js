@@ -365,9 +365,10 @@ $.prototype.trigger = DOC.createEventObject && ENABLE_IE_SUPPORT ?
 
 	function(type, data) {
 
+		/** @type {Event} */
 		var theEvent = DOC.createEvent('MouseEvents');
 		theEvent.initEvent(type, true, true);
-		theEvent.data = data;
+		//theEvent.data = data;
 		theEvent.isSimulated = true;
 
 		return this.each(function(index, element) {

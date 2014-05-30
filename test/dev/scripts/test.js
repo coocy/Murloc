@@ -18,8 +18,8 @@ if (typeof console === 'undefined') {
 	};
 }
 
-var el = $('select').append('<option value="4">4</option>').children().last();
-console.log(el.attr('value'));
+var el = $('select').append($('<option>4</option>'));
+
 
 $('#link').on('click', function() {
 	console.log('click: ' + this.nodeName);
@@ -27,13 +27,29 @@ $('#link').on('click', function() {
 }).trigger('click');
 
 var a = $('textarea').on('focus', function() {
-	console.log('focus: ' + this.nodeName);
+	//console.log('focus: ' + this.nodeName);
 }).trigger('focus');
 
 var a = $('form').on('submit', function(e) {
-	console.log('submit: ' + this.nodeName);
+	//console.log('submit: ' + this.nodeName);
 	e.preventDefault();
 	return false;
 })/*.trigger('submit')*/;
 
+tmp = " &lt;div&gt;hello1&lt;/div&gt; ";
 
+var div = document.createElement('div');
+div.innerHTML = tmp;
+
+//console.log(_rHTML.test(tmp));
+
+//var div = $('div').html( tmp );
+
+
+actual = []; expected = []; tmp = {};
+$("#nonnodes").contents().html( "<b>bold</b>").each(function() {
+		var html = $( this ).html();
+		tmp[ this.nodeType ] = true;
+		expected.push( this.nodeType === 1 ? "<b>bold</b>" : undefined );
+		actual.push( html ? html.toLowerCase() : html );
+	});

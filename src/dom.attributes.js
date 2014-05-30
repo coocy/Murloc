@@ -12,19 +12,34 @@ $.prototype.html =  function(html) {
 
 		/* 把html转换为字符串 */
 		html += '';
-		/* 简单检测是否是纯文本的内容 */
-		var isText = true;
-		if (html.indexOf('<') > -1 && html.indexOf('>') > -1) {
-			isText = false;
-		}
-		return this.each(function(index, element) {
-			if (element && ('innerHTML' in element)) {
-				element.innerHTML = html;
-				if (!isText) {
-					Notification.fire('DOM.html', element);
+
+		if (ENABLE_IE_SUPPORT && IsIE) {
+
+			//IE下使用创建HTML片段的方式设置html（为了修正<option>和表格子对象的问题）
+			var children = $._buildFragment(html),
+				childrenLength = children.length,
+				child,
+				elemLength = this.context.length;
+			
+			return this.each(function(index, element) {
+				if (element && (1 === element.nodeType)) {
+					element.innerHTML = '';
+					for (var i = 0; i < childrenLength; i++) {
+						child = children[i];
+						child = (index < elemLength - 1) ? child.cloneNode(true) : child;
+						element.appendChild(child);
+					}
 				}
-			}
-		});
+			});
+		} else {
+
+			return this.each(function(index, element) {
+				if (element && (1 === element.nodeType)) {
+					element.innerHTML = html;
+				}
+			});
+		}
+
 	} else {
 		var element = this.context[0];
 		return element && element.innerHTML;

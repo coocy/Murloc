@@ -20,38 +20,70 @@ $.prototype.remove = function() {
 	return this;
 };
 
-var wrapMap = {
-	'option': ['<select multiple>', '', 1],
-	'optgroup': ['<select multiple>', '', 1],
-	'td': ['<table><tr>', '</tr></table>', 3],
-	'tr': ['<table>', '</table>', 2],
-	'-': ['']
-};
+var fragmentWrapMap, 
+	fragmentContainter;
 
-wrapMap['tbody'] = wrapMap['tfoot'] = wrapMap['colgroup'] = wrapMap['caption'] = wrapMap['thead'] = wrapMap['tr'];
-wrapMap['th'] = wrapMap['td'];
-
+/**
+ * 使用HTML创建片段并用数组形式返回其中的DOM对象
+ * @param {string} html
+ * @return {Array.<(Element)>}
+ */
 $._buildFragment = function(html) {
 	var result = [];
-	if (!ENABLE_IE_SUPPORT || /<|&#?\w+;/.test(html)) {
-		var containter = DOC.createElement('div');
+	if (!ENABLE_IE_SUPPORT || _rHTML.test(html)) {
+		var tempContainter;
 
-		var tagName = (/<([\w:]+)/.exec(html) || ['', ''])[1].toLowerCase(),
-			wrap = '',
-			deep = 0;
+		//在第一次调用的时候创建容器对象（按需创建）
+		if (!fragmentContainter) {
+			fragmentContainter = DOC.createElement('div');
 
-		if (tagName) {
-			wrap = wrapMap[tagName] || wrapMap['-'];
-			html = wrap[0] + html + (wrap[1] || '');
-			deep =  wrap[2] || 0;
+			//在IE下创建特定类型的DOM对象的时候，需要在特定的父对象中创建
+			if (ENABLE_IE_SUPPORT) {
+				fragmentWrapMap = {
+					'option': ['<select multiple>', '', 1],
+					'optgroup': ['<select multiple>', '', 1],
+					'tr': ['<table>', '</table>', 2],
+					'td': ['<table><tr>', '</tr></table>', 3],
+					'col': ['<table><colgroup>', '</colgroup></table>', 3],
+					'*': ['']
+				};
+
+				fragmentWrapMap['tbody'] = fragmentWrapMap['tfoot'] = 
+				fragmentWrapMap['colgroup'] = fragmentWrapMap['caption'] = 
+				fragmentWrapMap['thead'] = fragmentWrapMap['tr'];
+
+				fragmentWrapMap['th'] = fragmentWrapMap['td'];
+				fragmentWrapMap['optgroup'] = fragmentWrapMap['optgroup'];
+			}
 		}
 
-		containter.innerHTML = html;
-		while (deep--) {
-			containter = containter.lastChild;
+		html = html.replace(/<(?!area|br|col|embed|hr|img|input|link|meta|param)(([\w:]+)[^>]*)\/>/gi,
+				'<$1></$2>');
+
+		tempContainter = fragmentContainter;
+
+		if (ENABLE_IE_SUPPORT && IsIE) {
+			var tagName = (/<([\w:]+)/.exec(html) || ['', ''])[1].toLowerCase(),
+				wrap = '',
+				deep = 0;
+
+			if (tagName) {
+				wrap = fragmentWrapMap[tagName] || fragmentWrapMap['*'];
+				html = wrap[0] + html + (wrap[1] || '');
+				deep =  wrap[2] || 0;
+			}
+
+			tempContainter.innerHTML = html;
+			while (deep--) {
+				tempContainter = tempContainter.lastChild;
+			}
+
+		} else {
+			tempContainter.innerHTML = html;
 		}
 
-		result = containter.childNodes;
+		result = $.toArray(tempContainter.childNodes); //把结果集转为常规数组，不然会有引用传递的问题
+		tempContainter = null;
 
 	} else {
 		//在IE下，使用innerHTML设置纯文本内容会导致丢失空格，所以文本使用创建文本节点的方式

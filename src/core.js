@@ -86,6 +86,7 @@ var
 	_hasGetElementsByClassName = DOC.getElementsByClassName,
 	_kSelectorTest = [',', '+', '~', '[', '>', '#', '.', ' '],
 	_kSelectorTestLength = _kSelectorTest.length,
+	_rHTML = /<|&#?\w+;/,
 	_array = [],
 	_concat = _array.concat,
 	_slice = _array.slice,
@@ -202,18 +203,11 @@ var $ = function(selector, context) {
 
 	//字符串选择符
 	if ('string' === typeof selector) {
-		var selectorLength = selector.length;
 
 		//HTML片段
-		if ('<' === selector.charAt(0) && selectorLength > 2 && '>' === selector.charAt(selectorLength - 1)) {
-			selector = selector.replace(/<(?!area|br|col|embed|hr|img|input|link|meta|param)(([\w:]+)[^>]*)\/>/gi,
-				'<$1></$2>');
-			var containter = DOC.createElement('div');
-			containter.innerHTML = selector;
-			for (var i = 0, l = containter.childNodes.length; i < l; i++) {
-				this.context.push(containter.removeChild(containter.childNodes[0]));
-			}
-			containter = null;
+		if (_rHTML.test(selector)) {
+			this.context = $._buildFragment(selector);
+			
 		} else {
 			//CSS选择符
 			if ('string' === typeof context) {
@@ -394,15 +388,15 @@ $.isWindow = function(element) {
  * @param {function(number=, Element=)} fn
  */
 $.each = function(collection, fn) {
-	if (collection instanceof Array) {
-		for (var i = 0, l = collection.length; i < l; i++) {
+	if ($.isObject(collection)) {
+		for (var i in collection) {
 			var element = collection[i];
 			if (false === fn.call(element, i, element)) {
 				break;
 			}
 		}
 	} else {
-		for (var i in collection) {
+		for (var i = 0, l = collection.length; i < l; i++) {
 			var element = collection[i];
 			if (false === fn.call(element, i, element)) {
 				break;

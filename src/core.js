@@ -206,7 +206,7 @@ var $ = function(selector, context) {
 
 		//HTML片段
 		if (_rHTML.test(selector)) {
-			this.context = $._buildFragment(selector);
+			this.context = $.parseHTML(selector);
 			
 		} else {
 			//CSS选择符

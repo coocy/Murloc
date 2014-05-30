@@ -28,7 +28,7 @@ var fragmentWrapMap,
  * @param {string} html
  * @return {Array.<(Element)>}
  */
-$._buildFragment = function(html) {
+$.parseHTML = function(html) {
 	var result = [];
 	if (!ENABLE_IE_SUPPORT || _rHTML.test(html)) {
 		var tempContainter;
@@ -121,7 +121,7 @@ $._getPlainArray = function(elements) {
 
 		} else {
 			//按字符串处理，创建HTML片段或者纯文本节点
-			result = _concat.apply(result, $._buildFragment(elements + ''));
+			result = _concat.apply(result, $.parseHTML(elements + ''));
 		}
 
 		return result;

@@ -16,7 +16,7 @@ $.prototype.html =  function(html) {
 		if (ENABLE_IE_SUPPORT && IsIE) {
 
 			//IE下使用创建HTML片段的方式设置html（为了修正<option>和表格子对象的问题）
-			var children = $._buildFragment(html),
+			var children = $.parseHTML(html),
 				childrenLength = children.length,
 				child,
 				elemLength = this.context.length;

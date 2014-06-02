@@ -3,7 +3,7 @@ test("$(selector, context)", function() {
 	add('$("#qunit-fixture")', "ID selector");
 	add('$("p")', "tag selector");
 	add('$(".blog")', "class selector");
-	add('$("#ap a")', "Basic selector");
+	add('$("#ap a")', "$(\"#ap a\")");
 	add('$("div p", "#qunit-fixture")', "Basic selector with string as context");
 	add('$("div p", q("qunit-fixture")[0])', "Basic selector with element as context");
 	add('$("div p", $("#qunit-fixture"))', "Basic selector with $ object as context");
@@ -41,6 +41,16 @@ test("DOM", function() {
 
 	add('$("#groups").parents("#en, #sap")', '$(selector).parents()');
 	add('$("#groups").parents("div")', '$(selector).parents(selector)');
+});
+
+test("DOM style", function() {
+	add('$(window).width()', '$(window).width()');
+	add('$(document).width()', '$(document).width()');
+	add('$("ul").width()', '$("ul").width()');
+	add('$("ul").css("width")', '$("ul").css(\'width\')');
+	add('$("ul").css("width", 10)', '$("ul").css(\'width\', 10)');
+	add('$("ul").hide()', '$("ul").hide()');
+	add('$("ul").show()', '$("ul").show()');
 });
 
 test("DOM nodes", function() {

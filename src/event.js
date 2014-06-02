@@ -239,7 +239,7 @@ $._addEventData = function(type, uid, element, fn) {
 			} else {
 				docData[type] = [];
 			}
-		} 
+		}
 	}
 
 	if (shouldAddEvent) {
@@ -347,7 +347,7 @@ $.prototype.on = function(type, fn) {
  * @param {*=} data 传给Event对象的自定义数据，可以在事件传播过程中传递
  * @return {$}
  */
-$.prototype.trigger = DOC.createEventObject && ENABLE_IE_SUPPORT ? 
+$.prototype.trigger = DOC.createEventObject && ENABLE_IE_SUPPORT ?
 	function(type, data) {
 		/*var theEvent = DOC.createEventObject();
 		theEvent.data = data;
@@ -361,7 +361,7 @@ $.prototype.trigger = DOC.createEventObject && ENABLE_IE_SUPPORT ?
 				//...
 			}
 		});
-	} : 
+	} :
 
 	function(type, data) {
 
@@ -478,12 +478,14 @@ $.touchEvent = {
 
 	onTouchEnd: function() {
 		if ($.touchEvent.hasTouchStart) {
+
+			var target = $.touchEvent.elTarget;
+
 			/* 先做清除工作，再触发合成事件 */
 			$.touchEvent.onTouchCancel();
 
 			if (UseTouchClick) {
-				var theEvent = DOC.createEvent('MouseEvents'),
-					target = $.touchEvent.elTarget;
+				var theEvent = DOC.createEvent('MouseEvents');
 
 				/* 初始化冒泡的事件 */
 				theEvent.initEvent('click', true, true);

@@ -101,7 +101,7 @@ $.prototype.val =  function(value) {
 };
 
 $.prototype.prop =  function(name, value) {
-	if (undefined !== value) {
+	if (arguments.length > 1) {
 		return this.each(function(index, element) {
 			element[name] = value;
 		});
@@ -117,8 +117,7 @@ $.prototype.prop =  function(name, value) {
  * @return {($|string)=}
  */
 $.prototype.attr =  function(name, value) {
-
-	if (undefined !== value) {
+	if (arguments.length > 1) {
 		return this.each(function(index, element) {
 			element.setAttribute(name, value);
 		});

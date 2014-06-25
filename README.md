@@ -1,5 +1,7 @@
 # Murloc (两栖怪)
 
+（目前Murloc的web端兼容还在不断开发完善中，在移动端已经可以稳定使用）
+
 ## Murloc是一个轻量化的Javascript框架，以性能最大化为目标，基于以下原则进行开发
 
 1. 代码编写为[Google Closure Compiler高级压缩](https://developers.google.com/closure/compiler/docs/api-tutorial3)优化

@@ -207,7 +207,7 @@ var $ = function(selector, context) {
 		//HTML片段
 		if (_rHTML.test(selector)) {
 			this.context = $.parseHTML(selector);
-			
+
 		} else {
 			//CSS选择符
 			if ('string' === typeof context) {
@@ -446,7 +446,7 @@ $.prototype.copy = $.copy;
  * @return {string}
  */
 $.camelCase = function(string){
-	return string.replace(/-+(.)?/g, function(match, chr){
+	return string.replace(/-+(.)?/g, function(match, chr) {
 		return chr ? chr.toUpperCase() : '';
 	});
 };

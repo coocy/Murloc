@@ -7,12 +7,23 @@
  */
 $.prototype.css =  function(key, value) {
 
+	//读取css
 	if (('string' === typeof key) && (arguments.length < 2)) {
-		var element = this.context[0];
-		key = $.camelCase(key);
-		return element && (element.currentStyle || WIN.getComputedStyle(element, ''))[key];
+		var element = this.context[0],
+			key = $.camelCase(key),
+			ret;
+
+		if (element) {
+			ret = (element.currentStyle || WIN.getComputedStyle(element, ''))[key];
+			if ('' === ret) {
+				ret = element.style[key];
+			}
+		}
+
+		return ret;
 	}
 
+	//设置css
 	return this.each(function(index, element) {
 		if ('string' === typeof key) {
 			var _key = {};
@@ -22,7 +33,7 @@ $.prototype.css =  function(key, value) {
 		for (var k in key) {
 			var _value =  key[k];
 			k = $.camelCase(k);
-			if (k !== 'opacity' && _value !== '' && !isNaN(_value) && _value != 0) {
+			if (_value !== '' && !isNaN(_value) && 'opacity|zIndex|lineHeight|zoom|fontWeight'.indexOf(k) < 0) {
 				_value += 'px';
 			}
 

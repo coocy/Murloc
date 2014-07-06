@@ -22,7 +22,7 @@ var el = $('select').append($('<option>4</option>'));
 
 
 $('#link').on('click', function() {
-	console.log('click: ' + this.nodeName);
+	//console.log('click: ' + this.nodeName);
 	return false;
 }).trigger('click');
 
@@ -36,20 +36,10 @@ var a = $('form').on('submit', function(e) {
 	return false;
 })/*.trigger('submit')*/;
 
-tmp = " &lt;div&gt;hello1&lt;/div&gt; ";
 
-var div = document.createElement('div');
-div.innerHTML = tmp;
+var div = $( "<div/>" ).appendTo(document.body);
+div.css("width", '-1px');
+var width = div.css("width");
 
-//console.log(_rHTML.test(tmp));
+console.log(width);
 
-//var div = $('div').html( tmp );
-
-
-actual = []; expected = []; tmp = {};
-$("#nonnodes").contents().html( "<b>bold</b>").each(function() {
-		var html = $( this ).html();
-		tmp[ this.nodeType ] = true;
-		expected.push( this.nodeType === 1 ? "<b>bold</b>" : undefined );
-		actual.push( html ? html.toLowerCase() : html );
-	});

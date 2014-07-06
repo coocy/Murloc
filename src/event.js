@@ -159,7 +159,13 @@ $._eventType = {
 	 * @const
 	 * @type {string}
 	 */
-	delegated: '|click|mouseover|mouseout|mousemove|focus|blur|focusin|focusout|touchstart|touchmove|touchend|touchcancel' + (('onsubmit' in DOC) ? '|submit' : ''),
+	delegated: '|click|mouseover|mouseout|mousemove|\
+			focus|blur|focusin|focusout|\
+			touchstart|touchmove|touchend|touchcancel|\
+			webkitanimationstart|webkittransitionstart|\
+			webkitanimationend|webkittransitionend' +
+	 		(('onsubmit' in DOC) ? '|submit' : ''),
+
 
 	/**
 	 * IE使用focusin/focusout替换focus/blur来实现focus和blur的冒泡
@@ -229,7 +235,7 @@ $._addEventData = function(type, uid, element, fn) {
 		shouldAddEvent = true;
 
 		/* 把需要委托的事件绑定在document上面 */
-		if ((-1 < $._eventType.delegated.indexOf(type)) && (element != DOC) && !$.isWindow(element)) {
+		if ((-1 < $._eventType.delegated.indexOf(type.toLowerCase())) && (element != DOC) && !$.isWindow(element)) {
 			element = DOC;
 			uid = $.guid(element);
 			var docData = $._eventCache[uid] || ($._eventCache[uid] = {});

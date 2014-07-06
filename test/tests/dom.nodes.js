@@ -644,22 +644,6 @@ test( "insert with .before() on disconnected node first", function() {
 	equal( $("#en").text(), expectedBefore, "Insert String before with disconnected node first" );
 });
 
-test( "insert with .before() on disconnected node last", function() {
-
-  var expectedAfter = "This is a normal link: Yahoobuga";
-
-	$("#yahoo").add("<span/>").after("<b>buga</b>");
-	equal( $("#en").text(), expectedAfter, "Insert String after with disconnected node last" );
-});
-
-test( "insert with .before() on disconnected node last", function() {
-
-  var expectedAfter = "This is a normal link: Yahoobuga";
-
-	$("<span/>").add("#yahoo").after("<b>buga</b>");
-	equal( $("#en").text(), expectedAfter, "Insert String after with disconnected node first" );
-});
-
 test( "insertBefore(String)", function() {
 
 	var expected = "This is a normal link: bugaYahoo";

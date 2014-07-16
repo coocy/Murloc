@@ -325,7 +325,6 @@ $._find = _useQSA ?
  * @return {{length: number}} 返回一个类数组的DOM集合，包含length属性
  * @private
  */
-
 $.find = _useQSA ?
 
 	function(selector, context) {
@@ -494,4 +493,3 @@ $.map = function(elements, fn, args) {
 
 	return result;
 };
-

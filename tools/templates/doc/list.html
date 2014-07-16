@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta http-equiv="content-type" content="text/html; charset=utf-8">
+	<title>Murloc Doc</title>
+	<meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0">
+	<meta content="telephone=no" name="format-detection">
+</head>
+<body>
+	{foreach: docMap, methodName, methodData}
+		<div class="method_item">
+			<h2>{methodName}</h2>
+			{if:methodData.description}
+				<div class="method_detail">
+					{methodData.description}
+				</div>
+			{end:}
+		</div>
+	{end:}
+</body>
+</html>

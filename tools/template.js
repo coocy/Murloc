@@ -46,7 +46,9 @@ var extend = function(dest, source) {
 	return dest;
 };
 
-//注释标签处理方法集合
+/**
+ * 注释标签处理方法集合
+ */
 var TagProcessors = {
 
 	'foreach': function(paramString) {
@@ -79,7 +81,9 @@ var TagProcessors = {
 
 };
 
-// 变量处理方法 {variable|string}
+/**
+ * 变量过滤器方法 {variable|string}
+ */
 var StringModifiors = {
 
 	'lower': function(string) {
@@ -129,7 +133,6 @@ var getObjValueForKeyPath = function(obj, keyPath) {
 		_obj = obj,
 		pathMatch = keyPath.match(/(^\w+|\[[^\]]*\]|\.[^\.\[]+)/g),
 		key;
-
 
 	for (var i = 0, l = pathMatch.length; i < l; i++) {
 

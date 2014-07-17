@@ -7,23 +7,26 @@
 	<meta content="telephone=no" name="format-detection">
 </head>
 <body>
+
+
 	{foreach: docMap, methodName, methodData}
 		<div class="method_item">
 			<h2>{methodName}</h2>
-			{if:methodData.description}
-				<div class="method_detail">
-					{methodData.description}
+			<div class="method_detail">
+				{methodData.description}
+			</div>
 
-					{if:a===b}
-						<div>{a} == {b}</div>
+			{if:methodData.return}
+				<div class="method_meta">
+					{foreach: methodData.return, returnData}
+						{returnData.type}
 					{end:}
-
 				</div>
 			{end:}
 		</div>
 	{end:}
 
-	{foreach: docMap, methodName, methodData}
+	{foreach: docMap, methodData}
 		<div class="method_item">
 			<h2>{methodName}</h2>
 			{if:methodData.description}
@@ -37,5 +40,12 @@
 			{end:}
 		</div>
 	{end:}
+
+
+	{docMap[$.selectorAll].param|join|*}
+
+	{include:"footer.html"}
+
+
 </body>
 </html>

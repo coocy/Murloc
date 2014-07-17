@@ -3,7 +3,7 @@
  */
 
 var fs = require('fs');
-var Template = require('./template.js');
+var template = require('./template.js');
 
 GLOBAL.document = {};
 GLOBAL.window = {
@@ -118,6 +118,8 @@ fs.readFile('../src/core.js', function(err, data) {
 					data.push(commentLineResult);
 				}
 
+				commentResult['description'] = (commentResult['description'] || []).join('\n');
+
 				docMap[methodName] = commentResult;
 			}
 
@@ -125,8 +127,9 @@ fs.readFile('../src/core.js', function(err, data) {
 		};
 		//console.log(JSON.stringify(docMap));
 
-		var tmpl = new Template();
-		tmpl.parse('templates/doc/list.html', docMap);
+		template.parse('templates/doc/list.html', {
+			'docMap': docMap
+		});
 	}
 
 });

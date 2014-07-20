@@ -12,11 +12,18 @@
 	{foreach: docMap, methodName, methodData}
 		<div class="method_item">
 			<h2>{methodName}</h2>
-			<div class="method_detail">
-				{methodData.description}
-			</div>
 
-			{if:methodData.return}
+			{if:methodData.description}
+				<div class="method_detail">
+					{methodData.description}
+				</div>
+
+			{else:}
+
+				<div>***</div>
+			{end:}
+
+			{if:methodData.return[content] !== ''}
 				<div class="method_meta">
 					{foreach: methodData.return, returnData}
 						{returnData.type}
@@ -41,10 +48,8 @@
 		</div>
 	{end:}
 
-
-	{docMap[$.selectorAll].param|join|*}
-
-	{include:"footer.html"}
+	{include: file="_footer.html"}
+	{include: file="_footer.html" title="a \'bc" docMapA=docMap}
 
 
 </body>

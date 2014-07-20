@@ -71,12 +71,48 @@ var TagProcessors = {
 	},
 
 	'if': function(paramString) {
-		var result = 'if (' + paramString+ ') {';
-		return {};
+		var conditionString = paramString.replace(/(\W|^)(\.?\w+[^\s\(]*)/g, function(input, useless, variableName) {
+			if (
+				variableName.match(/^(Function|Number|Array|String|Boolean|Math|window)(\.[^\s]+)?/) ||
+				variableName.match(/new|Date|RegExp|undefined|null|Infinity|NaN|true|false|(\.[0-9]+)?[0-9]+/)
+			) {
+				return variableName;
+			}
+			return 'getObjValueForKeyPath(data, "' + variableName+ '")';
+		});
+
+		var conditionFn = new Function('data', 'getObjValueForKeyPath','return (' + conditionString + ')');
+
+		return {
+			conditionFn: conditionFn
+		};
 	},
 
-	'end': function() {
-		return '}';
+	'include': function(paramString) {
+		var paramsMatch = paramString.match(/\w+\s*=\s*(([\"\'])(([^\'\"]|\\'|\\")*)\2|([^\s]+))/g),
+			params = {},
+			paramName,
+			paramValue;
+
+		//console.log(paramsMatch);
+
+		if (paramsMatch) {
+
+			for (var i = 0, l = paramsMatch.length; i < l; i++) {
+				var item = paramsMatch[i],
+					itemMatch = item.match(/(\w+)\s*=\s*(([\"\'])((?:[^\'\"]|\\'|\\")*)\2|([^\s]+))/);
+					console.log(itemMatch);
+					if (itemMatch) {
+
+					}
+
+			}
+		}
+
+
+		return {
+			data: {}
+		};
 	}
 
 };
@@ -115,7 +151,7 @@ var StringModifiors = {
 
 	'join': function(array, string) {
 		if ((array instanceof Array)) {
-			array = array.join(string);
+			array = array.join(string || ',');
 		}
 		return array;
 	}
@@ -159,8 +195,35 @@ var getObjValueForKeyPath = function(obj, keyPath) {
   tree = [
 	{
 		type:'foreach',
-		param:'a,b',
+		operation: {
+			name: "name",
+			key: "key",
+			value: "value"
+		}
 		block: [
+			{
+				type:'variable',
+				name:'key',
+				value:'123'
+			},
+			...
+		]
+		elseBlock: []
+	},
+	{
+		type:'if',
+		conditionFn: function() {
+			...
+		},
+		block: [
+			{
+				type:'variable',
+				name:'key',
+				value:'123'
+			},
+			...
+		],
+		elseBlock: [
 			{
 				type:'variable',
 				name:'key',
@@ -183,15 +246,19 @@ var parseContentToTree = function(content) {
 	var currentIndex = 0;
 	var currentBlock = blocks;
 	var blockStack = [];
+	var tagBlock;
 
-	content.replace(/\s*\{(foreach|if|end):([^\}]*)\}/ig, function() {
+	/*content.replace(/\s*\{include:([^\}]*)\}/ig, function() {
+
+	};*/
+
+	content.replace(/\s*\{(foreach|if|include|else|end):([^\}]*)\}/ig, function() {
 
 		var string = arguments[0],
 			tagName = arguments[1],
 			paramString = arguments[2],
 			index = arguments[3],
-			preTextContent,
-			tagBlock;
+			preTextContent;
 
 		if (index > currentIndex) {
 			preTextContent = content.slice(currentIndex, index);
@@ -204,20 +271,31 @@ var parseContentToTree = function(content) {
 		currentIndex = index + string.length;
 
 		if ('foreach|if'.indexOf(tagName) > -1) {
-			type = 'start';
+			tagBlock = {
+				type:tagName,
+				operate:  TagProcessors[tagName](paramString),
+				block: [],
+				elseBlock: []
+			};
 
+			//console.log(tagBlock);
+
+			currentBlock.push(tagBlock);
+			blockStack.push(currentBlock);
+			currentBlock = tagBlock.block; // 进入深一层block
+
+		} else if ('include' === tagName) {
 			tagBlock = {
 				type:tagName,
 				operate:  TagProcessors[tagName](paramString),
 				block: []
 			};
-
-			currentBlock.push(tagBlock);
+		} else if ('else' === tagName) {
+			blockStack.pop();
+			currentBlock = tagBlock.elseBlock;
 			blockStack.push(currentBlock);
-			currentBlock = tagBlock.block;
-
 		} else if ('end' === tagName) {
-			currentBlock = blockStack.pop();
+			currentBlock = blockStack.pop(); //返回上一层block
 		}
 
 	});
@@ -233,7 +311,7 @@ var parseContentToTree = function(content) {
 };
 
 /**
- * 替换变量
+ * 替换变量，把模板中的变量名替换成data对象中对应keyPath的值
  */
 var parseVariable = function(content, data) {
 	var _data = data || {};
@@ -300,7 +378,9 @@ var parseTree = function(contentTree, data) {
 			}
 
 		} else if ('if' === item.type) {
-			result.push(parseTree(item.block, data));
+
+			var conditionResult = item.operate.conditionFn(data, getObjValueForKeyPath);
+			result.push(parseTree(conditionResult ? item.block : item.elseBlock, data));
 		}
 	}
 
@@ -338,7 +418,6 @@ var Template = {
 
 			var result = parseContent(fileData.toString(), templateData);
 
-			//console.log(fileContent);
 		});
 	}
 

@@ -51,6 +51,7 @@ var extend = function(dest, source) {
  */
 var TagProcessors = {
 
+	// 解析foreach标签 {foreach: obj, key, value}...{end:}
 	'foreach': function(paramString) {
 		var result = {},
 			params = paramString.split(','),
@@ -70,6 +71,7 @@ var TagProcessors = {
 		};
 	},
 
+	// 解析if标签 {if: varA==varB}...{end:}
 	'if': function(paramString) {
 		var conditionString = paramString.replace(/(\W|^)(\.?\w+[^\s\(]*)/g, function(input, useless, variableName) {
 			if (
@@ -88,26 +90,37 @@ var TagProcessors = {
 		};
 	},
 
+	// 解析包含文件标签 {include: file="_footer.html" title="a \'bc" docMapA=docMap}
 	'include': function(paramString) {
+
 		var paramsMatch = paramString.match(/\w+\s*=\s*(([\"\'])(([^\'\"]|\\'|\\")*)\2|([^\s]+))/g),
 			params = {},
 			paramName,
 			paramValue;
 
-		//console.log(paramsMatch);
 
 		if (paramsMatch) {
 
 			for (var i = 0, l = paramsMatch.length; i < l; i++) {
 				var item = paramsMatch[i],
-					itemMatch = item.match(/(\w+)\s*=\s*(([\"\'])((?:[^\'\"]|\\'|\\")*)\2|([^\s]+))/);
-					console.log(itemMatch);
-					if (itemMatch) {
+					itemMatch = item.match(/(\w+)\s*=\s*(([\"\'])((?:[^\'\"]|\\'|\\")*)\2|([^\s]+))/),
+					key,
+					value;
 
+					//console.log(itemMatch);
+					if (itemMatch) {
+						key = itemMatch[1];
+						value = itemMatch[4]; // String value
+						if (undefined === value) {
+							value = itemMatch[5]; // Variable value
+						}
+
+						params[key] = value;
 					}
 
 			}
 		}
+		console.log(params);
 
 
 		return {

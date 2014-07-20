@@ -16,9 +16,6 @@ GLOBAL.window = {
 var tagProcessor = function(string) {
 	var match = string.match(/^@([^\s]+)\s*\{(.+)\}\s*([^\s]+)?(.*)/);
 	if (match) {
-
-		//console.log(match);
-
 		return {
 			'type': tagProcessors['type'](match[2]),
 			'name': match[3],

@@ -3,6 +3,7 @@
  */
 
 var fs = require('fs');
+var path = require('path');
 
 /**
  * 简单判断一个对象是否是Object结构
@@ -96,23 +97,28 @@ var TagProcessors = {
 		var paramsMatch = paramString.match(/\w+\s*=\s*(([\"\'])(([^\'\"]|\\'|\\")*)\2|([^\s]+))/g),
 			params = {},
 			paramName,
-			paramValue;
-
+			paramValue,
+			block = [];
 
 		if (paramsMatch) {
 
 			for (var i = 0, l = paramsMatch.length; i < l; i++) {
 				var item = paramsMatch[i],
-					itemMatch = item.match(/(\w+)\s*=\s*(([\"\'])((?:[^\'\"]|\\'|\\")*)\2|([^\s]+))/),
+					itemMatch = item.match(/(\w+)\s*=\s*(([\"\'])(([^\'\"]|\\'|\\")*)\3|([^\s]+))/),
 					key,
 					value;
 
-					//console.log(itemMatch);
 					if (itemMatch) {
 						key = itemMatch[1];
 						value = itemMatch[4]; // String value
 						if (undefined === value) {
-							value = itemMatch[5]; // Variable value
+							value = (function(variableName) {
+								return function(data) {
+								    return getObjValueForKeyPath(data, variableName);
+								};
+							})(itemMatch[6]); // Variable value
+						} else {
+							value = value.replace(/\\([\'\"])/, '$1');
 						}
 
 						params[key] = value;
@@ -120,12 +126,29 @@ var TagProcessors = {
 
 			}
 		}
-		console.log(params);
 
+		if ('file' in params) {
 
-		return {
-			data: {}
-		};
+			var currentTemplatesPath = Template.templatesPathStack[Template.templatesPathStack.length - 1],
+				file = path.resolve(path.dirname(currentTemplatesPath), params['file']),
+				fileContent = '';
+
+			delete params.file;
+
+			if (fs.existsSync(file)) {
+
+				fileContent = fs.readFileSync(file);
+				block = parseContentToTree(fileContent.toString());
+
+				return {
+					data: params,
+					block: block
+				};
+			}
+
+		}
+
+		return null;
 	}
 
 };
@@ -291,24 +314,30 @@ var parseContentToTree = function(content) {
 				elseBlock: []
 			};
 
-			//console.log(tagBlock);
-
 			currentBlock.push(tagBlock);
 			blockStack.push(currentBlock);
 			currentBlock = tagBlock.block; // 进入深一层block
 
 		} else if ('include' === tagName) {
-			tagBlock = {
-				type:tagName,
-				operate:  TagProcessors[tagName](paramString),
-				block: []
-			};
+			var includeData = TagProcessors[tagName](paramString);
+			if (includeData) {
+
+				var includeBlock = {
+					type:tagName,
+					data:  includeData.data,
+					block: includeData.block
+				};
+
+				currentBlock.push(includeBlock);
+			}
+
 		} else if ('else' === tagName) {
 			blockStack.pop();
 			currentBlock = tagBlock.elseBlock;
 			blockStack.push(currentBlock);
+
 		} else if ('end' === tagName) {
-			currentBlock = blockStack.pop(); //返回上一层block
+			currentBlock = blockStack.pop(); // 返回上一层block
 		}
 
 	});
@@ -394,6 +423,19 @@ var parseTree = function(contentTree, data) {
 
 			var conditionResult = item.operate.conditionFn(data, getObjValueForKeyPath);
 			result.push(parseTree(conditionResult ? item.block : item.elseBlock, data));
+
+		} else if ('include' === item.type) {
+			var itemData = {};
+			for (var key in item.data) {
+				var itemValue = item.data[key];
+				if ('function' === typeof itemValue) {
+					itemData[key] = itemValue(data);
+				} else {
+					itemData[key] = itemValue;
+				}
+			}
+
+			result.push(parseTree(item.block, extend(data, itemData)));
 		}
 	}
 
@@ -407,7 +449,7 @@ var parseContent = function(content, data) {
 	var contentTree = parseContentToTree(content);
 	var result = parseTree(contentTree, data);
 
-	//console.log(JSON.stringify(contentTree));
+	console.log(JSON.stringify(contentTree));
 
 	console.log(result);
 	return result;
@@ -419,9 +461,13 @@ var Template = {
 
 	},
 
+	templatesPathStack: [],
+
 	parse: function(templatePath, data) {
 
 		var templateData = data;
+
+		Template.templatesPathStack.push(templatePath);
 
 		fs.readFile(templatePath, function(err, fileData) {
 			if (err) {

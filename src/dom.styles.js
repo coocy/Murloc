@@ -1,4 +1,22 @@
 
+var cssCorrection = {
+	'float': null
+};
+
+var correctCssKey = function(key, element) {
+	var _key = key;
+	if (_key in cssCorrection) {
+		_key = cssCorrection[_key];
+		if (null === _key) {
+			if ('float' === key) {
+				_key = ('cssFloat' in element.style) ? 'cssFloat' : 'styleFloat'
+			}
+			cssCorrection[key] = _key;
+		}
+	}
+	return _key;
+};
+
 /**
  * 设置DOM对象集合的css或者读取集合中第一个DOM对象的css
  * @param {(string|Object)} key
@@ -11,16 +29,31 @@ $.prototype.css =  function(key, value) {
 	if (('string' === typeof key) && (arguments.length < 2)) {
 		var element = this.context[0],
 			key = $.camelCase(key),
-			ret;
+			result;
 
 		if (element) {
-			ret = (element.currentStyle || WIN.getComputedStyle(element, ''))[key];
-			if ('' === ret) {
-				ret = element.style[key];
+
+			key = correctCssKey(key, element);
+
+			result = (element.currentStyle || WIN.getComputedStyle(element, ''))[key];
+			if ('' === result) {
+				result = element.style[key];
+			}
+
+			if (undefined !== result) {
+				result += '';
+			}
+
+			//IE浏览器下如果css中的font-size单位不是象素的话，需要转换一下
+			if (/^-?(\d*\.)?\d+[^\d\.]+/.test(result) && !/px$/i.test(result)) {
+				var left = element.style.left;
+				element.style.left = ('fontSize' === key)  ? '1em' : (result || 0);
+				result = element.style.pixelLeft + 'px';
+				element.style.left = left;
 			}
 		}
 
-		return ret;
+		return result;
 	}
 
 	//设置css
@@ -33,6 +66,7 @@ $.prototype.css =  function(key, value) {
 		for (var k in key) {
 			var _value =  key[k];
 			k = $.camelCase(k);
+			k = correctCssKey(k, element);
 			if (_value !== '' && !isNaN(_value) && 'opacity|zIndex|lineHeight|zoom|fontWeight'.indexOf(k) < 0) {
 				_value += 'px';
 			}

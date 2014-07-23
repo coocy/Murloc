@@ -137,3 +137,7 @@ section { background:#f0f; display:block; }
 #span-14824 { display: block; }
 
 #display { display: list-item !important; }
+object{
+	height:0;
+	vertical-align:middle;
+}

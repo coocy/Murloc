@@ -71,7 +71,10 @@ $.prototype.css =  function(key, value) {
 				_value += 'px';
 			}
 
-			element.style[k] = _value;
+			//IE下，设置不支持的css属性会出错
+			try {
+				element.style[k] = _value;
+			} catch (e) {}
 		}
 	});
 };

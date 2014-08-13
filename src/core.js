@@ -157,10 +157,9 @@ if (!Function.prototype.hasOwnProperty('bind')) {
 	 * @suppress {duplicate}
 	 */
 	Function.prototype.bind = function(context) {
-		var fn = this,
-			args = arguments.length > 1 ? _slice.call(arguments, 1) : [];
+		var fn = this;
 		return function() {
-			return fn.apply(context || this, args);
+			return fn.apply(context || this, arguments);
 		};
 	}
 }

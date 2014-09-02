@@ -159,11 +159,11 @@ $._eventType = {
 	 * @const
 	 * @type {string}
 	 */
-	delegated: '|click|mouseover|mouseout|mousemove|\
-			focus|blur|focusin|focusout|\
-			touchstart|touchmove|touchend|touchcancel|\
-			webkitanimationstart|webkittransitionstart|\
-			webkitanimationend|webkittransitionend' +
+	delegated: '|click|mouseover|mouseout|mousemove|' +
+			'focus|blur|focusin|focusout|' +
+			'touchstart|touchmove|touchend|touchcancel|' +
+			'webkitanimationstart|webkittransitionstart|' +
+			'webkitanimationend|webkittransitionend' +
 	 		(('onsubmit' in DOC) ? '|submit' : ''),
 
 
@@ -278,7 +278,10 @@ $.dispatchEvent = function(evt) {
 	 * 在触屏浏览器中，只执行在touchend中合成的click事件
 	 * 在触屏浏览（合成的时候给event对象添加了自定义的isSimulated属性）
 	 */
-	if ('click' === type && UseTouchClick && !e.originalEvent.isSimulated) {
+	if ('click' === type && UseTouchClick && !e.originalEvent.isSimulated &&
+			!('INPUT' == elCur.nodeName && 'file' == elCur.type) &&
+			'external' != elCur.getAttribute('rel')
+		) {
 		e.preventDefault();
 		return;
 	}
@@ -491,6 +494,11 @@ $.touchEvent = {
 			$.touchEvent.onTouchCancel();
 
 			if (UseTouchClick) {
+
+				if ('external' == target.getAttribute('rel') || ('INPUT' == target.nodeName && 'file' == target.type)) {
+					return;
+				}
+
 				var theEvent = DOC.createEvent('MouseEvents');
 
 				/* 初始化冒泡的事件 */

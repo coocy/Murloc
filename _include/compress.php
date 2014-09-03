@@ -104,7 +104,7 @@ function compress_js($file_path, $return_content = false, $formatting = false) {
 		$parm_array[] = $v;
 	}
 
-	$compiler_command = 'java -jar '.INCLUDE_PATH.'cmd/compiler.jar '.join(' ', $parm_array);
+	$compiler_command = 'java -jar '.ROOT_PATH.'tools/bin/closure-compiler/compiler.jar '.join(' ', $parm_array);
 
 	$tunnels=array(
 		0 => array('pipe','r'), // Process std input

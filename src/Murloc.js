@@ -6,6 +6,13 @@
  * http://sizzlejs.com/
  *
  * Date: @DATE
+ *
+ * ==ClosureCompiler==
+ * @compilation_level ADVANCED_OPTIMIZATIONS
+ * @define ENABLE_DEBUG=false
+ * @define ENABLE_IE_SUPPORT=true
+ * ==/ClosureCompiler==
+ *
  */
 /**
  * @requires core.js

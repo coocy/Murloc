@@ -45,7 +45,7 @@ var extend = function(dest, source) {
 	var property, item;
 	for (var property in source) {
 		item = source[property];
-		dest[property] = isObject(item) ? extend({}, item) : copy(item);
+		dest[property] = isObject(item) ? extend( (isObject(dest[property]) ? dest[property] : {} ), item) : copy(item);
 	}
 	return dest;
 };
@@ -110,14 +110,15 @@ Compressor.prototype = {
 
 					//处理压缩参数
 					for (var j = self._compressParams.length; j; j--) {
-						compressParams = extend(compressParams, self._compressParams[j - 1]);
+						var param = self._compressParams[j - 1];
+						compressParams = extend(compressParams, param);
 					}
 
 					for (paramName in compressParams) {
 						paramValue = compressParams[paramName];
-						if (paramValue instanceof Array) {
-							for (var i = 0, j = paramValue.length; i < j; i++) {
-								compressParamsArray.push('--' + paramName + ' ' + paramValue[i]);
+						if (isObject(paramValue)) {
+							for (var _key in paramValue) {
+								compressParamsArray.push('--' + paramName + ' ' + _key + '=' + paramValue[_key]);
 							}
 						} else {
 							compressParamsArray.push('--' + paramName + ' ' + paramValue);
@@ -214,8 +215,12 @@ Compressor.prototype = {
 							if (paramvalue.indexOf('=') < 0) {
 								continue;
 							}
-							var _paramvalue = compressParams[paramName] || [];
-							_paramvalue.push(paramvalue);
+							var _paramvalue = compressParams[paramName] || {},
+								eqPos = paramvalue.indexOf('='),
+								_key = paramvalue.slice(0, eqPos).trim(),
+								_value = paramvalue.slice(eqPos + 1).trim();
+
+							_paramvalue[_key] = _value;
 							paramvalue = _paramvalue;
 						}
 						compressParams[paramName] = paramvalue;

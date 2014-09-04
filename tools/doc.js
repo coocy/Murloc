@@ -56,9 +56,6 @@ var tagProcessors = {
 
 };
 
-
-//var core = require('../src/core.js');
-
 fs.readFile('../src/core.js', function(err, data) {
 	if (err) throw err;
 	var contents = data.toString(),
@@ -85,7 +82,6 @@ fs.readFile('../src/core.js', function(err, data) {
 			//寻找function对应的注释块
 			if (commentMatches = preString.match(/\/\*([^\/]|\\\/)+\s*\*\/\s*$/ig)) {
 				var comment = commentMatches[0].replace(/(\/\*+|^\s*\*+\s*|\**\/$)/gm, '').trim();
-				//console.log('\n', methodName, ':');
 
 				var commentArray = comment.split(/[\r\n]+/),
 					commentResult = {},
@@ -120,13 +116,19 @@ fs.readFile('../src/core.js', function(err, data) {
 				docMap[methodName] = commentResult;
 			}
 
-
 		};
 		//console.log(JSON.stringify(docMap));
 
-		template.parse('templates/doc/list.html', {
-			'docMap': docMap
+		var templateObj = new template({
+			compressHTML: true
 		});
+
+		templateObj.parse('templates/doc/list.html', {
+				'docMap': docMap
+			},
+			function(result) {
+			    	console.log(result);
+			});
 	}
 
 });

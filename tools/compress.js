@@ -6,7 +6,9 @@ var fs = require('fs'),
 	path = require('path'),
 	child = require('child_process'),
 	fileName = GLOBAL.process.mainModule.filename,
-	closureCompilerPath = path.resolve(path.dirname(fileName), 'bin/closure-compiler/compiler.jar');
+	currentFileDir = path.dirname(fileName),
+	closureCompilerPath = path.resolve(currentFileDir, 'bin/closure-compiler/compiler.jar'),
+	tempDir = currentFileDir;
 
 /**
  * 简单判断一个对象是否是Object结构
@@ -50,6 +52,20 @@ var extend = function(dest, source) {
 	return dest;
 };
 
+var getRandomName = function(length) {
+	var string = 'abcdefghijklmnopqrstuvwxyz123456789-_ABCDEFGHIJKLMNOPQRSTUVWXYZ',
+		stringLength = string.length,
+		result = [],
+		i = 0,
+		pos;
+
+	for (;i < length; i++) {
+		pos = Math.floor(Math.random() * stringLength);
+		result.push(string.slice(pos, pos + 1));
+	}
+	return result.join('');
+};
+
 var Compressor = function() {
 	return this;
 };
@@ -57,31 +73,116 @@ var Compressor = function() {
 Compressor.prototype = {
 
 	/**
-	 * 获取文件扩展名
-	 * @param {string} fileName 文件名
-	 * @return {string} 文件扩展名
-	 * @private
+	 * 包含文件的起始目录，默认为当前脚本的目录
+	 * @type {string}
 	 */
-	_getFileExt: function(fileName) {
-		return fileName.slice(fileName.lastIndexOf('.') + 1).toLowerCase();
+	baseDir: currentFileDir,
+
+	setBaseDir: function(baseDir) {
+		this.baseDir = baseDir;
+		return this;
 	},
 
 	/**
 	 * 压缩文件
 	 * @param {string} filePath 文件路径
+	 * @param {string=} outputPath 压缩输出的文件路径
 	 */
-	compress: function(filePath) {
+	compress: function(filePath, outputPath) {
 		var fileExt = this._getFileExt(filePath);
 		if ('js' === fileExt) {
-			this.compressJS(filePath);
+			this.compressJS(filePath, outputPath);
 		}
 	},
 
 	/**
-	 * 压缩js文件
-	 * @param {string} filePath 文件路径
+	 * 压缩一段js代码
+	 * @param {string} content js代码
+	 * @param {Function} callback 回调函数，接收压缩结果
 	 */
-	compressJS: function(filePath) {
+	compressJSContent: function(content, callback) {
+
+		var useBaseDir = false;
+		if (this._filePathStack.length < 1) {
+			this._filePathStack.push(this.baseDir);
+			useBaseDir = true;
+		}
+		content = this._compileComments(content);
+		useBaseDir && this._filePathStack.pop();
+
+		//生成随机文件名作为压缩工具的输入文件
+		var tmpFilePath;
+		do {
+			tmpFilePath = tempDir + '/' + getRandomName(5) + '.tmp.js';
+		} while (fs.existsSync(tmpFilePath));
+
+			//默认压缩参数
+		var compressParams = {
+				'compilation_level': 'SIMPLE_OPTIMIZATIONS',
+				'use_types_for_optimization': '',
+				'output_wrapper': '"(function(){%output%})()"',
+				'js': tmpFilePath
+			},
+			compressParamsArray = [],
+			paramName,
+			paramValue,
+			i = this._compressParams.length;
+
+		//合并从源码中解析得到的压缩参数，合并顺序为按包含的层级从内向外合并（即外层的参数会覆盖内层的参数）
+		while (i--) {
+			var param = this._compressParams[i];
+			compressParams = extend(compressParams, param);
+		}
+
+		this._compressParams = [];
+
+		//用合并后的压缩参数集合生成最终的参数字符串
+		for (paramName in compressParams) {
+			paramValue = compressParams[paramName];
+			if (isObject(paramValue)) {
+				for (var _key in paramValue) {
+					compressParamsArray.push('--' + paramName + ' ' + _key + '=' + paramValue[_key]);
+				}
+			} else {
+				compressParamsArray.push('--' + paramName + ' ' + paramValue);
+			}
+		}
+
+		//写入临时文件，用于压缩
+		fs.writeFile(tmpFilePath, content, function(err) {
+			if (err) {
+				if (callback) {
+					callback(err, null, null);
+				} else {
+					console.log(err);
+				}
+		    } else {
+		    		//调用压缩工具
+				compressCommand = 'java -jar ' + closureCompilerPath + ' ' + compressParamsArray.join(' ');
+				child.exec(compressCommand, function (error, stdout, stderr) {
+					fs.unlink(tmpFilePath);
+					if (callback) {
+						callback(error, stdout, stderr);
+					} else {
+						if (error !== null) {
+							console.log(error);
+						} else {
+							stderr && console.log(stderr);
+							console.log(stdout);
+						}
+					}
+				});
+
+		    }
+		});
+	},
+
+	/**
+	 * 压缩一个js文件
+	 * @param {string} filePath 文件路径
+	 * @param {string=} outputPath 压缩文件保存路径
+	 */
+	compressJS: function(filePath, outputPath) {
 		filePath = path.resolve(filePath);
 
 		var self = this;
@@ -91,64 +192,33 @@ Compressor.prototype = {
 				fs.readFile(filePath, function(err, data) {
 					if (err) throw err;
 
+					if (outputPath) {
+						self._compressParams.push({
+							'js_output_file': path.resolve(path.dirname(filePath), outputPath)
+						});
+					}
+
 					var fileContents  = data.toString();
 
 					self._filePathStack.push(filePath);
-
 					fileContents = self._compileComments(fileContents);
+					self._filePathStack.pop();
 
-					var tmpFile = filePath + '.tmp',
-						compressParams = {
-							'compilation_level': 'SIMPLE_OPTIMIZATIONS',
-							'use_types_for_optimization': '',
-							'output_wrapper': '"(function(){%output%})()"',
-							'js': tmpFile
-						},
-					compressParamsArray = [],
-					paramName,
-					paramValue;
-
-					//处理压缩参数
-					for (var j = self._compressParams.length; j; j--) {
-						var param = self._compressParams[j - 1];
-						compressParams = extend(compressParams, param);
-					}
-
-					for (paramName in compressParams) {
-						paramValue = compressParams[paramName];
-						if (isObject(paramValue)) {
-							for (var _key in paramValue) {
-								compressParamsArray.push('--' + paramName + ' ' + _key + '=' + paramValue[_key]);
-							}
-						} else {
-							compressParamsArray.push('--' + paramName + ' ' + paramValue);
-						}
-					}
-
-					//写入临时文件，用于压缩
-					fs.writeFile(tmpFile, fileContents, function(err) {
-					    if (err) {
-					        console.log(err);
-					    } else {
-
-					    		//调用压缩工具
-							compressCommand = 'java -jar ' + closureCompilerPath + ' ' + compressParamsArray.join(' ');
-							child.exec(compressCommand, function (error, stdout, stderr) {
-								fs.unlink(tmpFile);
-								if (error !== null) {
-									console.log(error);
-								} else {
-									console.log('Compress success!');
-									console.log(stdout);
-								}
-							});
-
-					    }
-					});
+					self.compressJSContent(fileContents);
 
 				});
 			}
 		});
+	},
+
+	/**
+	 * 获取文件扩展名
+	 * @param {string} fileName 文件名
+	 * @return {string} 文件扩展名
+	 * @private
+	 */
+	_getFileExt: function(fileName) {
+		return fileName.slice(fileName.lastIndexOf('.') + 1).toLowerCase();
 	},
 
 	/**
@@ -185,6 +255,7 @@ Compressor.prototype = {
 	/**
 	 * 解析源码的注释
 	 * @param {string} fileContents 文件文本内容
+	 * @return {string} 解析后的文本内容
 	 * @private
 	 */
 	_compileComments: function(fileContents) {

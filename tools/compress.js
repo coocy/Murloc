@@ -1,5 +1,5 @@
 /**
- * JS压缩
+ * JS和css压缩
  */
 
 var fs = require('fs'),
@@ -8,6 +8,7 @@ var fs = require('fs'),
 	fileName = GLOBAL.process.mainModule.filename,
 	currentFileDir = path.dirname(fileName),
 	closureCompilerPath = path.resolve(currentFileDir, 'bin/closure-compiler/compiler.jar'),
+	yuiCompilerPath = path.resolve(currentFileDir, 'bin/yuicompressor/yuicompressor-2.4.6.jar'),
 	tempDir = currentFileDir;
 
 /**
@@ -52,6 +53,23 @@ var extend = function(dest, source) {
 	return dest;
 };
 
+/**
+ * 格式化文件大小数字
+ * @param {Number} size
+ * @return {string}
+ */
+var formatSize = function(size) {
+	var sizeText;
+	if (size >= Math.pow(1024, 2)) {
+		//M或以上的单位
+		sizeText = Math.round(size / 1024 / 1024 * 10) / 10 + 'M';
+	} else {
+		//M以下的单位
+		sizeText = Math.round(size / 1024 * 100) / 100 + 'k';
+	}
+	return sizeText;
+};
+
 var getRandomName = function(length) {
 	var string = 'abcdefghijklmnopqrstuvwxyz123456789-_ABCDEFGHIJKLMNOPQRSTUVWXYZ',
 		stringLength = string.length,
@@ -92,6 +110,8 @@ Compressor.prototype = {
 		var fileExt = this._getFileExt(filePath);
 		if ('js' === fileExt) {
 			this.compressJS(filePath, outputPath);
+		}else if ('css' === fileExt) {
+			this.compressCSS(filePath, outputPath);
 		}
 	},
 
@@ -107,7 +127,7 @@ Compressor.prototype = {
 			this._filePathStack.push(this.baseDir);
 			useBaseDir = true;
 		}
-		content = this._compileComments(content);
+		content = this._compileJSComments(content);
 		useBaseDir && this._filePathStack.pop();
 
 		//生成随机文件名作为压缩工具的输入文件
@@ -118,9 +138,10 @@ Compressor.prototype = {
 
 			//默认压缩参数
 		var compressParams = {
-				'compilation_level': 'SIMPLE_OPTIMIZATIONS',
+				'compilation_level': 'SIMPLE_OPTIMIZATIONS', //[WHITESPACE_ONLY | SIMPLE_OPTIMIZATIONS | ADVANCED_OPTIMIZATIONS]
 				'use_types_for_optimization': '',
 				'output_wrapper': '"(function(){%output%})()"',
+				'tracer_mode': 'ALL',
 				'js': tmpFilePath
 			},
 			compressParamsArray = [],
@@ -157,6 +178,10 @@ Compressor.prototype = {
 					console.log(err);
 				}
 		    } else {
+
+				var fsStats = fs.statSync(tmpFilePath),
+					originalSize = fsStats.size;
+
 		    		//调用压缩工具
 				compressCommand = 'java -jar ' + closureCompilerPath + ' ' + compressParamsArray.join(' ');
 				child.exec(compressCommand, function (error, stdout, stderr) {
@@ -167,8 +192,27 @@ Compressor.prototype = {
 						if (error !== null) {
 							console.log(error);
 						} else {
-							stderr && console.log(stderr);
-							console.log(stdout);
+							stdout = (stdout + '').trim();
+							if ('' != stdout) {
+								console.log(stdout + '\r\n');
+							}
+
+							//文件大小压缩统计
+							if (stderr) {
+								var sizeMatch = stderr.match(/Estimated Size.+?([0-9]+)/i);
+								if (sizeMatch) {
+
+									var compiledSize = parseFloat(sizeMatch[1]),
+										reduction = originalSize  - compiledSize,
+										sizeResult = [
+											'// == Compilation Result ==',
+											'// Original Size: ' + formatSize(originalSize),
+											'// Compiled Size: ' + formatSize(compiledSize) + ' (Saved ' + Math.round(reduction / originalSize * 10000) / 100 + '% off)'
+										].join("\r\n");
+
+									console.log(sizeResult);
+								}
+							}
 						}
 					}
 				});
@@ -201,7 +245,7 @@ Compressor.prototype = {
 					var fileContents  = data.toString();
 
 					self._filePathStack.push(filePath);
-					fileContents = self._compileComments(fileContents);
+					fileContents = self._compileJSComments(fileContents);
 					self._filePathStack.pop();
 
 					self.compressJSContent(fileContents);
@@ -210,6 +254,137 @@ Compressor.prototype = {
 			}
 		});
 	},
+
+	/**
+	 * 压缩一段css代码
+	 * @param {string} content css代码
+	 * @param {Function} callback 回调函数，接收压缩结果
+	 */
+	compressCSSContent: function(content, callback) {
+
+		var useBaseDir = false;
+		if (this._filePathStack.length < 1) {
+			this._filePathStack.push(this.baseDir);
+			useBaseDir = true;
+		}
+		content = this._compileCSSComments(content);
+		useBaseDir && this._filePathStack.pop();
+
+		//生成随机文件名作为压缩工具的输入文件
+		var tmpFilePath;
+		do {
+			tmpFilePath = tempDir + '/' + getRandomName(5) + '.tmp.css';
+		} while (fs.existsSync(tmpFilePath));
+
+			//默认压缩参数
+		var compressParams = {
+			},
+			compressParamsArray = [],
+			paramName,
+			paramValue,
+			i = this._compressParams.length;
+
+		//合并从源码中解析得到的压缩参数，合并顺序为按包含的层级从内向外合并（即外层的参数会覆盖内层的参数）
+		while (i--) {
+			var param = this._compressParams[i];
+			compressParams = extend(compressParams, param);
+		}
+
+		this._compressParams = [];
+
+		//用合并后的压缩参数集合生成最终的参数字符串
+		for (paramName in compressParams) {
+			paramValue = compressParams[paramName];
+			compressParamsArray.push('-' + paramName + ' ' + paramValue);
+		}
+
+		compressParamsArray.push(tmpFilePath);
+
+		//写入临时文件，用于压缩
+		fs.writeFile(tmpFilePath, content, function(err) {
+			if (err) {
+				if (callback) {
+					callback(err, null, null);
+				} else {
+					console.log(err);
+				}
+		    } else {
+
+				var fsStats = fs.statSync(tmpFilePath),
+					originalSize = fsStats.size;
+
+		    		//调用压缩工具
+				compressCommand = 'java -jar ' + yuiCompilerPath + ' ' + compressParamsArray.join(' ');
+				child.exec(compressCommand, function (error, stdout, stderr) {
+					fs.unlink(tmpFilePath);
+					if (callback) {
+						callback(error, stdout, stderr);
+					} else {
+						if (error !== null) {
+							console.log(error);
+						} else {
+							stdout = (stdout + '').trim();
+							if ('' != stdout) {
+								console.log(stdout + '\r\n');
+							}
+
+							if (compressParams['o']) {
+								var fsStats = fs.statSync(compressParams['o']),
+									compiledSize = fsStats.size;
+							}
+
+							//文件大小压缩统计
+							var compiledSize = compiledSize || stdout.length,
+								reduction = originalSize  - compiledSize,
+								sizeResult = [
+									'// == Compilation Result ==',
+									'// Original Size: ' + formatSize(originalSize),
+									'// Compiled Size: ' + formatSize(compiledSize) + ' (Saved ' + Math.round(reduction / originalSize * 10000) / 100 + '% off)'
+								].join("\r\n");
+
+							console.log(sizeResult);
+						}
+					}
+				});
+
+		    }
+		});
+	},
+
+	/**
+	 * 压缩一个css文件
+	 * @param {string} filePath 文件路径
+	 * @param {string=} outputPath 压缩文件保存路径
+	 */
+	compressCSS: function(filePath, outputPath) {
+		filePath = path.resolve(filePath);
+
+		var self = this;
+
+		fs.exists(filePath, function(exists) {
+			if (exists) {
+				fs.readFile(filePath, function(err, data) {
+					if (err) throw err;
+
+					if (outputPath) {
+						self._compressParams.push({
+							'o': path.resolve(path.dirname(filePath), outputPath)
+						});
+					}
+
+					var fileContents  = data.toString();
+
+					self._filePathStack.push(filePath);
+					fileContents = self._compileCSSComments(fileContents);
+					self._filePathStack.pop();
+
+					self.compressCSSContent(fileContents);
+
+				});
+			}
+		});
+	},
+
 
 	/**
 	 * 获取文件扩展名
@@ -253,12 +428,12 @@ Compressor.prototype = {
 	],
 
 	/**
-	 * 解析源码的注释
+	 * 解析js源码的注释
 	 * @param {string} fileContents 文件文本内容
 	 * @return {string} 解析后的文本内容
 	 * @private
 	 */
-	_compileComments: function(fileContents) {
+	_compileJSComments: function(fileContents) {
 
 		var currentFilePath = this._filePathStack[this._filePathStack.length - 1],
 			self  = this;
@@ -321,7 +496,7 @@ Compressor.prototype = {
 					self._filePathStack.push(requiredFilePath);
 
 					var requiredFileContent = fs.readFileSync(requiredFilePath);
-					requiredFileContent = self._compileComments(requiredFileContent.toString());
+					requiredFileContent = self._compileJSComments(requiredFileContent.toString());
 
 					self._filePathStack.pop();
 
@@ -331,6 +506,49 @@ Compressor.prototype = {
 			});
 
 			return comment;
+		});
+
+		return fileContents;
+	},
+
+
+	/**
+	 * 解析css源码的注释
+	 * @param {string} fileContents 文件文本内容
+	 * @return {string} 解析后的文本内容
+	 * @private
+	 */
+	_compileCSSComments: function(fileContents) {
+
+		var currentFilePath = this._filePathStack[this._filePathStack.length - 1],
+			self  = this;
+
+
+		//处理文件包含，得到合并后的文件内容
+		fileContents = fileContents.replace(/@import\s+([^\s]+)/ig, function(input, requiredFile) {
+
+			requiredFile = requiredFile.replace(/^url\(|\)$/ig, '').replace(/^["']|["']$/g, '');
+			var requiredFilePath = path.resolve(path.dirname(currentFilePath), requiredFile);
+
+			if (
+				(self._filePathStack.indexOf(requiredFilePath) > -1) || //对包含文件使用一个路径栈来避免递归包含
+				('css' !==  self._getFileExt(requiredFilePath)) //只能包含css文件
+			) {
+				return '';
+			}
+
+			if (fs.existsSync(requiredFilePath)) {
+
+				self._filePathStack.push(requiredFilePath);
+
+				var requiredFileContent = fs.readFileSync(requiredFilePath);
+				requiredFileContent = self._compileCSSComments(requiredFileContent.toString());
+
+				self._filePathStack.pop();
+
+				return '/* File: ' + requiredFile + '\r\n */\r\n' + requiredFileContent + '\r\n';
+			}
+			return '';
 		});
 
 		return fileContents;

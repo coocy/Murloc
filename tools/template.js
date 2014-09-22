@@ -84,6 +84,13 @@ var StringModifiors = {
 			array = array.join(string || ',');
 		}
 		return array;
+	},
+
+	'print': function(string) {
+		if (isObject(string) || (string instanceof Array)) {
+			string = JSON.stringify(string);
+		}
+		return '<pre style="line-height:1.6;font-size:.8em;font-family:Consolas, \'Liberation Mono\', Menlo, Courier, monospace">' + string + '</pre>';
 	}
 
 };

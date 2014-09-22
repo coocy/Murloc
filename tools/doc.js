@@ -2,8 +2,14 @@
  * 从js源文件输出HTML文档
  */
 
-var fs = require('fs');
-var template = require('./template.js');
+var fs = require('fs'),
+	path = require('path'),
+	template = require('./template.js'),
+	fileName = GLOBAL.process.mainModule.filename,
+	currentFileDir = path.dirname(fileName),
+	sourceFileDir = path.resolve(currentFileDir, '../src/'),
+	outputDir = path.resolve(currentFileDir, '../doc/');
+
 
 GLOBAL.document = {};
 GLOBAL.window = {
@@ -56,79 +62,128 @@ var tagProcessors = {
 
 };
 
-fs.readFile('../src/core.js', function(err, data) {
-	if (err) throw err;
-	var contents = data.toString(),
-		docMap = {};
+var getDocFromFile = function(fileName, callback) {
+	fs.readFile(sourceFileDir + '/' + fileName, function(err, data) {
+		if (err) throw err;
+		var contents = data.toString(),
+			docMap = {};
 
-	if (matches = contents.match(/([^\s]+)\s*[=:][^=;]+?function\s*\([^\)]*\)\s*\{/ig)) {
+		if (matches = contents.match(/([^\s]+)\s*[=:][^=;]+?function\s*\([^\)]*\)\s*\{/ig)) {
 
-		//functions
-		for (var i = 0, l = matches.length; i < l; i++) {
+			//functions
+			for (var i = 0, l = matches.length; i < l; i++) {
 
-			var currentString = matches[i],
-				index = contents.indexOf(currentString), //function代码在当前文件中的位置
-				preString = contents.slice(0, index).trim(), //从当前文件开头到function代码之前的代码
-				commentMatches, //匹配function对应的注释块
-				methodNameMatch, //匹配function名称
-				methodName = ''; //function名称
+				var currentString = matches[i],
+					index = contents.indexOf(currentString), //function代码在当前文件中的位置
+					preString = contents.slice(0, index).trim(), //从当前文件开头到function代码之前的代码
+					commentMatches, //匹配function对应的注释块
+					methodNameMatch, //匹配function名称
+					methodName = ''; //function名称
 
-			//获取function名称
-			methodNameMatch = currentString.match(/^[^\s]+/);
-			if (methodNameMatch) {
-				methodName = methodNameMatch[0];
-			}
-
-			//寻找function对应的注释块
-			if (commentMatches = preString.match(/\/\*([^\/]|\\\/)+\s*\*\/\s*$/ig)) {
-				var comment = commentMatches[0].replace(/(\/\*+|^\s*\*+\s*|\**\/$)/gm, '').trim();
-
-				var commentArray = comment.split(/[\r\n]+/),
-					commentResult = {},
-					currentTag = 'description'; //当前处理的标签名称
-
-				//逐行处理注释，把注释按类型归成数组放到commentResult中
-				for (var j = 0, n = commentArray.length; j < n; j++) {
-					var commentLine = commentArray[j].trim(), //当前行
-						tagMatch, //匹配标签名称
-						commentLineResult; //当前行处理结果
-
-					if (tagMatch = commentLine.match(/^\s*@([^\s]+)/)) {
-						currentTag = tagMatch[1].toLowerCase();
-						if (currentTag in tagProcessors) {
-							commentLineResult = tagProcessors[currentTag](commentLine);
-							if (null === commentLineResult) {
-								continue;
-							}
-						}
-					}
-
-					if ('description' === currentTag) {
-						commentLineResult  = commentLine;
-					}
-
-					var data = commentResult[currentTag] || (commentResult[currentTag] = []);
-					data.push(commentLineResult);
+				//获取function名称
+				methodNameMatch = currentString.match(/^[^\s:]+/);
+				if (methodNameMatch) {
+					methodName = methodNameMatch[0] + '()';
 				}
 
-				commentResult['description'] = (commentResult['description'] || []).join('\n');
+				methodName = methodName.replace(/\$\.prototype\b/i, '');
 
-				docMap[methodName] = commentResult;
-			}
+				//寻找function对应的注释块
+				if (commentMatches = preString.match(/\/\*([^\/]|\\\/)+\s*\*\/\s*$/ig)) {
+					var comment = commentMatches[0].replace(/(\/\*+|^\s*\*+\s*|\**\/$)/gm, '').trim();
 
+					var commentArray = comment.split(/[\r\n]+/),
+						commentResult = {},
+						currentTag = 'description'; //当前处理的标签名称
+
+					//逐行处理注释，把注释按类型归成数组放到commentResult中
+					for (var j = 0, n = commentArray.length; j < n; j++) {
+						var commentLine = commentArray[j].trim(), //当前行
+							tagMatch, //匹配标签名称
+							commentLineResult; //当前行处理结果
+
+						if (tagMatch = commentLine.match(/^\s*@([^\s]+)/)) {
+							currentTag = tagMatch[1].toLowerCase();
+							if (currentTag in tagProcessors) {
+								commentLineResult = tagProcessors[currentTag](commentLine);
+								if (null === commentLineResult) {
+									continue;
+								}
+							}
+						}
+
+						if ('description' === currentTag) {
+							commentLineResult  = commentLine;
+						}
+
+						var data = commentResult[currentTag] || (commentResult[currentTag] = []);
+						data = data || [];
+						data.push && data.push(commentLineResult);
+					}
+
+					commentResult['description'] = (commentResult['description'] || []).join('\n');
+
+					if (!commentResult['private']) {
+						docMap[methodName] = commentResult;
+					}
+				}
+
+			};
+			//console.log(JSON.stringify(docMap));
+		}
+
+		callback(fileName, docMap);
+
+	});
+};
+
+fs.readFile(sourceFileDir + '/Murloc.js', function(err, data) {
+	if (err) throw err;
+
+	var contents = data.toString(),
+		docData = {},
+		fileCount = 0,
+		readFileCount = 0;
+
+	contents.replace(/@requires\s+([^\s]+)/ig, function(input, fileName) {
+		var groupName = fileName
+			.replace(/\.js$/i, '')
+			.replace(/(^|\.|\_)([a-z])/g, function(useless, prefix, character) {
+				return (prefix == '.' ? ' ' : '') + character.toUpperCase();
+			})
+			.replace(/json|url/i, function(input) {
+			    	return input.toUpperCase();
+			});
+		docData[fileName] = {
+			name: groupName,
+			docMap: null
 		};
-		//console.log(JSON.stringify(docMap));
 
-		var templateObj = new template({
-			compressHTML: true
+		fileCount++;
+
+		getDocFromFile(fileName, function(fileName, docMap) {
+			readFileCount++;
+
+			docData[fileName].docMap = docMap;
+
+			if (fileCount === readFileCount) {
+				var templateObj = new template({
+					compressHTML: true
+				});
+
+				console.log(docData);
+
+				templateObj.parse('templates/doc/list.html', {
+					'docData': docData
+				},
+				function(result) {
+					//console.log(result);
+				    	fs.writeFile(outputDir + '/index.html', result);
+				});
+			}
 		});
 
-		templateObj.parse('templates/doc/list.html', {
-				'docMap': docMap
-			},
-			function(result) {
-			    	console.log(result);
-			});
-	}
 
+	});
 });
+

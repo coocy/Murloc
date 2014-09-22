@@ -8,7 +8,7 @@
  * Date: @DATE
  *
  * ==ClosureCompiler==
- * @compilation_level ADVANCED_OPTIMIZATIONS
+ * @js_output_file ../dist/murloc.js
  * @define ENABLE_DEBUG=false
  * @define ENABLE_IE_SUPPORT=true
  * ==/ClosureCompiler==

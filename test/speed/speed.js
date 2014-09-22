@@ -16,7 +16,7 @@ var add;
 window.onload = function() {
 
 	var jsTools = {
-		'Murloc': '../../src/Murloc.js',
+		'Murloc': '../../dist/murloc.js',
 		'jQuery 1.10.2': 'libs/jquery-1.10.2.js',
 		'jQuery 2.0.3': 'libs/jquery-2.0.3.js',
 		'Zepto 1.1.3': 'libs/zepto-1.1.3.js'

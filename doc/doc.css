@@ -162,15 +162,46 @@ select{
 	padding:.5em 0 0;
 	font-size:1.4em;
 }
+.method_item h2 span{
+	font-weight:normal;
+	color:#666;
+	font-size:.8em;
+	font-family:"Menlo","Courier New","Courier",monospace;
+	display:inline-block;
+	vertical-align:middle;
+}
 .method_detail{
 	color:#666;
-	padding:1em 0 0;
+	padding:.5em 0 0;
 }
 .method_param{
 	font-size:.85em;
 }
 .method_param h3{
-	padding-top:.5em;
+	padding:.8em 0 .3em;
+	font-size:1em;
+}
+.method_param p{
+	position:relative;
+	padding-left:1.2em;
+}
+.method_param .param_name{
+	font-family:"Menlo","Courier New","Courier",monospace;
+	margin-right:.3em;
+}
+.method_param .param_type{
+	margin-right:.3em;
+}
+.method_param p:before{
+	content:"";
+	display:block;
+	position:absolute;
+	width:3px;
+	height:3px;
+	background:#666;
+	border-radius:3px;
+	left:.5em;
+	top:.7em;
 }
 .param_type{
 	color:#888;

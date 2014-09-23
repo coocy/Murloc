@@ -5,9 +5,6 @@
 	<title>Murloc Doc</title>
 	<meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0">
 	<meta content="telephone=no" name="format-detection">
-	<script type="text/javascript">
-
-	</script>
 	<link rel="stylesheet" type="text/css" href="doc.css">
 </head>
 <body>
@@ -24,7 +21,7 @@
 				{foreach: docData, docName, docDataItem}
 					<h2>{docDataItem.name}</h2>
 					{foreach: docDataItem.docMap, methodName, methodData}
-						<li><a href="#{methodName}">{methodName}</a></li>
+						<li><a href="#{methodName}">{methodName}{if:methodData.type==="function"}(){end:}</a></li>
 					{end:}
 				{end:}
 			</ul>
@@ -41,7 +38,13 @@
 					{foreach: docDataItem.docMap, methodName, methodData}
 						<a name="{methodName}"></a>
 						<div class="method_item">
-							<h2>{methodName}</h2>
+							<h2>{methodName}{if:methodData.type==="function"}<span>({methodData.params})</span>{end:}</h2>
+
+							{if:methodData.description}
+								<div class="method_detail">
+									{methodData.description}
+								</div>
+							{end:}
 
 							{if:methodData.param}
 								<div class="method_param">
@@ -55,12 +58,18 @@
 									{end:}
 								</div>
 							{end:}
-
-							{if:methodData.description}
-								<div class="method_detail">
-									{methodData.description}
+							{if:methodData.return}
+								<div class="method_param">
+									<h3>返回:</h3>
+									{foreach: methodData.return, methodParams}
+										<p>
+											<span class="param_type">{methodParams.type}</span>
+											{methodParams.comment}
+										</p>
+									{end:}
 								</div>
 							{end:}
+
 						</div>
 					{end:}
 				{end:}

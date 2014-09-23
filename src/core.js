@@ -116,6 +116,7 @@ try {
  */
 if (!String.prototype.hasOwnProperty('trim')) {
 	/**
+	 * 去掉字符串头尾的空白字符
 	 * @this {String|string}
 	 * @return {string}
 	 * @suppress {duplicate}

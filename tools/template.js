@@ -107,6 +107,10 @@ var getObjValueForKeyPath = function(obj, keyPath) {
 		pathMatch = keyPath.match(/(^\w+|\[[^\]]*\]|\.[^\.\[]+)/g),
 		key;
 
+	if (pathMatch == null) {
+		return keyPath;
+	}
+
 	for (var i = 0, l = pathMatch.length; i < l; i++) {
 
 		if (!isObject(obj)) {
@@ -201,9 +205,22 @@ Template.prototype = {
 				) {
 					return variableName;
 				}
-				return 'getObjValueForKeyPath(data, "' + variableName+ '")';
-			});
 
+				var reg = /(===|==|<=|>=|<|>|\!==|\!=)/,
+					variables = variableName.split(reg),
+					item,
+					result = [];
+				for (var i = 0, l = variables.length; i < l; i++) {
+					item = variables[i].trim();
+					if (!item.match(reg) && !item.match(/^(['"])[\s\S]*\1$/)) {
+						result.push('getObjValueForKeyPath(data, "' + item.replace(/\"/g, '\\"') + '")');
+					} else {
+						result.push(item);
+					}
+				}
+
+				return result.join('');
+			});
 			var conditionFn = new Function('data', 'getObjValueForKeyPath','return (' + conditionString + ')');
 
 			return {

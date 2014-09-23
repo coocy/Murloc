@@ -6,13 +6,13 @@
  */
 
 var JSON = WIN.JSON || {
-	
+
 	$specialChars: {'\b': '\\b', '\t': '\\t', '\n': '\\n', '\f': '\\f', '\r': '\\r', '"' : '\\"', '\\': '\\\\'},
-	
+
 	$replaceChars: function(chr){
 		return JSON.$specialChars[chr] || '\\u00' + Math.floor(chr.charCodeAt() / 16).toString(16) + (chr.charCodeAt() % 16).toString(16);
 	},
-	
+
 	/**
 	 * 把一个标准JSON对象序列化成一个字符串
 	 * @static
@@ -47,9 +47,10 @@ var JSON = WIN.JSON || {
 		}
 		return null;
 	},
-	
+
 	/**
 	 * 把一个JSON字符串转换为标准JSON对象
+	 * @static
 	 * @param {string} string JSON字符串
 	 * @return {JSONType} 标准JSON对象
 	 */

@@ -1,4 +1,9 @@
 
+/**
+ * 判断对象是否拥有指定的className
+ * @param {string} value
+ * @return {boolean}
+ */
 $.prototype.hasClass =  function(value) {
 	var classes = (value || '').match(/\S+/g) || [],
 		len = classes.length;
@@ -12,6 +17,11 @@ $.prototype.hasClass =  function(value) {
 	return false;
 };
 
+/**
+ * 给对象添加一个className
+ * @param {string} value 要添加的className
+ * @return {$}
+ */
 $.prototype.addClass =  function(value) {
 	var classes = (value || '').match(/\S+/g) || [],
 		len = classes.length;
@@ -66,6 +76,12 @@ $.prototype.removeClass =  function(value) {
 	});
 };
 
+/**
+ * 移除对象的className
+ * @param {string=} value 要移除的className，如果value为空，移除对象的全部className
+ * @param {boolean=} 如果为TRUE，则执行addClass操作，如果为FALSE，执行removeClass
+ * @return {$}
+ */
 $.prototype.toggleClass =  function(value, condition) {
 	var classes = (value || '').match(/\S+/g) || [],
 		len = classes.length;

@@ -70,6 +70,8 @@ var getDocFromFile = function(fileName, callback) {
 
 		if (matches = contents.match(/([^\s]+)\s*[=:][^=;]+?function\s*\([^\)]*\)\s*\{/ig)) {
 
+			//console.log(matches);
+
 			//functions
 			for (var i = 0, l = matches.length; i < l; i++) {
 
@@ -78,12 +80,25 @@ var getDocFromFile = function(fileName, callback) {
 					preString = contents.slice(0, index).trim(), //从当前文件开头到function代码之前的代码
 					commentMatches, //匹配function对应的注释块
 					methodNameMatch, //匹配function名称
-					methodName = ''; //function名称
+					methodName = '', //function名称
+					className = '';
+
+
+				var classMatches = preString.match(/@class\s+([^\s]+)/g);
+				if (classMatches) {
+					classMatches = classMatches.pop().match(/@class\s+([^\s]+)/);
+					className = classMatches[1];
+				}
+
 
 				//获取function名称
 				methodNameMatch = currentString.match(/^[^\s:]+/);
 				if (methodNameMatch) {
-					methodName = methodNameMatch[0] + '()';
+					methodName = methodNameMatch[0];
+				}
+
+				if (className !== '' && methodName.indexOf(className + '.') < 0) {
+					methodName = className + '.' + methodName;
 				}
 
 				methodName = methodName.replace(/\$\.prototype\b/i, '');
@@ -121,7 +136,29 @@ var getDocFromFile = function(fileName, callback) {
 						data.push && data.push(commentLineResult);
 					}
 
+					//二次处理
 					commentResult['description'] = (commentResult['description'] || []).join('\n');
+
+					//参数字符串
+					commentResult['params'] = '';
+					var prams = [],
+						pramItem,
+						pramName,
+						pramType;
+					if (commentResult['param']) {
+						for (var _i = 0, _l = commentResult['param'].length; _i < _l; _i++) {
+							pramItem = commentResult['param'][_i];
+							pramName = pramItem['name'];
+							pramType = pramItem['type'];
+							if (pramType.match(/=$/)) {
+								pramName = '[' + pramName + ']';
+							}
+							prams.push(pramName);
+						}
+						commentResult['params'] = prams.join(', ');
+					}
+
+					commentResult['type'] = 'function';
 
 					if (!commentResult['private']) {
 						docMap[methodName] = commentResult;
@@ -171,7 +208,7 @@ fs.readFile(sourceFileDir + '/Murloc.js', function(err, data) {
 					compressHTML: true
 				});
 
-				console.log(docData);
+				//console.log(docData);
 
 				templateObj.parse('templates/doc/list.html', {
 					'docData': docData

@@ -140,7 +140,6 @@ Compressor.prototype = {
 		var compressParams = {
 				'compilation_level': 'SIMPLE_OPTIMIZATIONS', //[WHITESPACE_ONLY | SIMPLE_OPTIMIZATIONS | ADVANCED_OPTIMIZATIONS]
 				'use_types_for_optimization': '',
-				'output_wrapper': '"(function(){%output%})()"',
 				'tracer_mode': 'ALL',
 				'js': tmpFilePath
 			},
@@ -153,6 +152,15 @@ Compressor.prototype = {
 		while (i--) {
 			var param = this._compressParams[i];
 			compressParams = extend(compressParams, param);
+		}
+
+		//高级压缩下默认加上output_wrapper
+		if ('ADVANCED_OPTIMIZATIONS' === compressParams['compilation_level'] && !compressParams['output_wrapper']) {
+			compressParams['output_wrapper'] = '"(function(){%output%})()"';
+		}
+
+		if ('' === compressParams['js_output_file']) {
+			delete compressParams['js_output_file'];
 		}
 
 		this._compressParams = [];
@@ -475,6 +483,10 @@ Compressor.prototype = {
 				}
 			}
 
+			if (!compressParams['js_output_file']) {
+				compressParams['js_output_file'] = '';
+			}
+
 			if (paramsLength > 0) {
 				self._compressParams.push(compressParams);
 			}
@@ -555,6 +567,8 @@ Compressor.prototype = {
 	}
 
 };
+
+module.exports = Compressor;
 
 if (process.argv.length > 2) {
 	var fileNames = process.argv.slice(2);

@@ -10,7 +10,7 @@
 <body>
 
 	<div class="titlebar">
-		<h1>Murloc Doc</h1>
+		<h1>Murloc <span>Doc</span></h1>
 	</div>
 
 	<div class="main_wrap">
@@ -23,20 +23,22 @@
 						<li><a href="#Array.prototype.indexOf">Array.prototype.indexOf()</a></li>
 						<li><a href="#Function.prototype.bind">Function.prototype.bind()</a></li>
 						<li><a href="#$.selectorAll">$.selectorAll()</a></li>
+						<li><a href="#$.isArray">$.isArray()</a></li>
+						<li><a href="#$.isFunction">$.isFunction()</a></li>
 						<li><a href="#$.isPlainObject">$.isPlainObject()</a></li>
 						<li><a href="#$.isObject">$.isObject()</a></li>
 						<li><a href="#$.isWindow">$.isWindow()</a></li>
 						<li><a href="#$.each">$.each()</a></li>
 						<li><a href="#$.extend">$.extend()</a></li>
 						<li><a href="#$.copy">$.copy()</a></li>
+						<li><a href="#$.trim">$.trim()</a></li>
 						<li><a href="#$.camelCase">$.camelCase()</a></li>
 						<li><a href="#$.proxy">$.proxy()</a></li>
 						<li><a href="#$.map">$.map()</a></li>
-					<h2>Sizzle</h2>
-						<li><a href="#Sizzle.uniqueSort">Sizzle.uniqueSort()</a></li>
 					<h2>JSON</h2>
 						<li><a href="#JSON.stringify">JSON.stringify()</a></li>
 						<li><a href="#JSON.parse">JSON.parse()</a></li>
+						<li><a href="#$.parseJSON">$.parseJSON()</a></li>
 					<h2>Util</h2>
 						<li><a href="#$.getScript">$.getScript()</a></li>
 					<h2>Localstorge</h2>
@@ -88,7 +90,7 @@
 						<li><a href="#.removeData">.removeData()</a></li>
 					<h2>Dom Ready</h2>
 						<li><a href="#$.ready">$.ready()</a></li>
-						<li><a href="#fire">fire()</a></li>
+						<li><a href="#.ready">.ready()</a></li>
 					<h2>Dom Styles</h2>
 						<li><a href="#.css">.css()</a></li>
 						<li><a href="#.offset">.offset()</a></li>
@@ -110,11 +112,11 @@
 						<li><a href="#$.event">$.event()</a></li>
 						<li><a href="#stopPropagation">stopPropagation()</a></li>
 						<li><a href="#$.addEvent">$.addEvent()</a></li>
-						<li><a href="#$._addEventData">$._addEventData()</a></li>
 						<li><a href="#$.dispatchEvent">$.dispatchEvent()</a></li>
-						<li><a href="#.on">.on()</a></li>
 						<li><a href="#.trigger">.trigger()</a></li>
 						<li><a href="#$.touchEvent">$.touchEvent()</a></li>
+						<li><a href="#$.touchEvent.elTarget">$.touchEvent.elTarget()</a></li>
+						<li><a href="#$.touchEvent.startPoint">$.touchEvent.startPoint()</a></li>
 						<li><a href="#.click">.click()</a></li>
 						<li><a href="#.mousedown">.mousedown()</a></li>
 						<li><a href="#.mouseup">.mouseup()</a></li>
@@ -151,7 +153,9 @@
 			<div class="method_list">
 						<a name="String.prototype.trim"></a>
 						<div class="method_item">
-							<h2>String.prototype.trim<span>()</span></h2>
+							<h2>String.prototype.trim
+									<span>()</span><span class="return_type">  ⇒ string</span>
+							</h2>
 								<div class="method_detail">
 									去掉字符串头尾的空白字符
 								</div>
@@ -166,7 +170,9 @@
 						</div>
 						<a name="Array.prototype.indexOf"></a>
 						<div class="method_item">
-							<h2>Array.prototype.indexOf<span>(element)</span></h2>
+							<h2>Array.prototype.indexOf
+									<span>(element)</span><span class="return_type">  ⇒ number</span>
+							</h2>
 								<div class="method_param">
 									<h3>参数:</h3>
 										<p>
@@ -186,7 +192,9 @@
 						</div>
 						<a name="Function.prototype.bind"></a>
 						<div class="method_item">
-							<h2>Function.prototype.bind<span>(context)</span></h2>
+							<h2>Function.prototype.bind
+									<span>(context)</span><span class="return_type">  ⇒ !Function</span>
+							</h2>
 								<div class="method_param">
 									<h3>参数:</h3>
 										<p>
@@ -206,7 +214,9 @@
 						</div>
 						<a name="$.selectorAll"></a>
 						<div class="method_item">
-							<h2>$.selectorAll<span>(selector, [context])</span></h2>
+							<h2>$.selectorAll
+									<span>(selector, [context])</span><span class="return_type">  ⇒ {length: number}</span>
+							</h2>
 								<div class="method_detail">
 									返回指定选择符的DOM集合
 								</div>
@@ -232,9 +242,61 @@
 								</div>
 
 						</div>
+						<a name="$.isArray"></a>
+						<div class="method_item">
+							<h2>$.isArray
+									<span>(obj)</span><span class="return_type">  ⇒ boolean</span>
+							</h2>
+								<div class="method_detail">
+									判断一个对象是否是数组
+								</div>
+								<div class="method_param">
+									<h3>参数:</h3>
+										<p>
+											<b class="param_name">obj</b>
+											<span class="param_type">*</span>
+											
+										</p>
+								</div>
+								<div class="method_param">
+									<h3>返回:</h3>
+										<p>
+											<span class="param_type">boolean</span>
+											
+										</p>
+								</div>
+
+						</div>
+						<a name="$.isFunction"></a>
+						<div class="method_item">
+							<h2>$.isFunction
+									<span>(obj)</span><span class="return_type">  ⇒ boolean</span>
+							</h2>
+								<div class="method_detail">
+									判断一个对象是否是一个方法
+								</div>
+								<div class="method_param">
+									<h3>参数:</h3>
+										<p>
+											<b class="param_name">obj</b>
+											<span class="param_type">*</span>
+											
+										</p>
+								</div>
+								<div class="method_param">
+									<h3>返回:</h3>
+										<p>
+											<span class="param_type">boolean</span>
+											
+										</p>
+								</div>
+
+						</div>
 						<a name="$.isPlainObject"></a>
 						<div class="method_item">
-							<h2>$.isPlainObject<span>(obj)</span></h2>
+							<h2>$.isPlainObject
+									<span>(obj)</span><span class="return_type">  ⇒ boolean</span>
+							</h2>
 								<div class="method_detail">
 									判断一个对象是否是Object结构
 								</div>
@@ -257,9 +319,11 @@
 						</div>
 						<a name="$.isObject"></a>
 						<div class="method_item">
-							<h2>$.isObject<span>(obj)</span></h2>
+							<h2>$.isObject
+									<span>(obj)</span><span class="return_type">  ⇒ boolean</span>
+							</h2>
 								<div class="method_detail">
-									简单判断一个对象是否是Object结构
+									简单判断一个对象是否是Object结构，比$.isPlainObject()速度快，但是兼容性不如$.isPlainObject()
 								</div>
 								<div class="method_param">
 									<h3>参数:</h3>
@@ -280,7 +344,9 @@
 						</div>
 						<a name="$.isWindow"></a>
 						<div class="method_item">
-							<h2>$.isWindow<span>(element)</span></h2>
+							<h2>$.isWindow
+									<span>(element)</span><span class="return_type">  ⇒ boolean</span>
+							</h2>
 								<div class="method_detail">
 									判断一个对象是否是window对象
 								</div>
@@ -303,7 +369,9 @@
 						</div>
 						<a name="$.each"></a>
 						<div class="method_item">
-							<h2>$.each<span>(collection, fn)</span></h2>
+							<h2>$.each
+									<span>(collection, fn)</span>
+							</h2>
 								<div class="method_detail">
 									迭代一个数组或者Object对象，对其中的每个子元素执行一个方法
 								</div>
@@ -324,7 +392,9 @@
 						</div>
 						<a name="$.extend"></a>
 						<div class="method_item">
-							<h2>$.extend<span>(dest, source)</span></h2>
+							<h2>$.extend
+									<span>(dest, source)</span><span class="return_type">  ⇒ Object</span>
+							</h2>
 								<div class="method_detail">
 									扩展一个Object对象，也可以用来复制一个对象
 								</div>
@@ -345,14 +415,16 @@
 									<h3>返回:</h3>
 										<p>
 											<span class="param_type">Object</span>
-											
+											扩展后的对象
 										</p>
 								</div>
 
 						</div>
 						<a name="$.copy"></a>
 						<div class="method_item">
-							<h2>$.copy<span>(dest)</span></h2>
+							<h2>$.copy
+									<span>(dest)</span><span class="return_type">  ⇒ (Array|Object)</span>
+							</h2>
 								<div class="method_detail">
 									深复制一个数组或者对象
 								</div>
@@ -368,16 +440,18 @@
 									<h3>返回:</h3>
 										<p>
 											<span class="param_type">(Array|Object)</span>
-											
+											复制后的数组或者对象
 										</p>
 								</div>
 
 						</div>
-						<a name="$.camelCase"></a>
+						<a name="$.trim"></a>
 						<div class="method_item">
-							<h2>$.camelCase<span>(string)</span></h2>
+							<h2>$.trim
+									<span>(string)</span><span class="return_type">  ⇒ string</span>
+							</h2>
 								<div class="method_detail">
-									将连字符字符串转化为驼峰形式
+									去掉字符串头尾的空白字符。这个方法只是为了兼容jQuery，建议使用string的trim方法
 								</div>
 								<div class="method_param">
 									<h3>参数:</h3>
@@ -396,11 +470,38 @@
 								</div>
 
 						</div>
+						<a name="$.camelCase"></a>
+						<div class="method_item">
+							<h2>$.camelCase
+									<span>(string)</span><span class="return_type">  ⇒ string</span>
+							</h2>
+								<div class="method_detail">
+									将连字符字符串转化为驼峰形式
+								</div>
+								<div class="method_param">
+									<h3>参数:</h3>
+										<p>
+											<b class="param_name">string</b>
+											<span class="param_type">string</span>
+											
+										</p>
+								</div>
+								<div class="method_param">
+									<h3>返回:</h3>
+										<p>
+											<span class="param_type">string</span>
+											驼峰形式的字符串
+										</p>
+								</div>
+
+						</div>
 						<a name="$.proxy"></a>
 						<div class="method_item">
-							<h2>$.proxy<span>(fn, context)</span></h2>
+							<h2>$.proxy
+									<span>(fn, context)</span><span class="return_type">  ⇒ !Function</span>
+							</h2>
 								<div class="method_detail">
-									改变一个函数的this指针。这个方法只是为了兼容jQuery，请尽量使用function的bind方法
+									改变一个函数的this指针。这个方法只是为了兼容jQuery，建议使用function的bind方法
 								</div>
 								<div class="method_param">
 									<h3>参数:</h3>
@@ -426,7 +527,9 @@
 						</div>
 						<a name="$.map"></a>
 						<div class="method_item">
-							<h2>$.map<span>(elements, fn, args)</span></h2>
+							<h2>$.map
+									<span>(elements, fn, args)</span><span class="return_type">  ⇒ Array</span>
+							</h2>
 								<div class="method_param">
 									<h3>参数:</h3>
 										<p>
@@ -454,27 +557,13 @@
 								</div>
 
 						</div>
-						<a name="Sizzle.uniqueSort"></a>
-						<div class="method_item">
-							<h2>Sizzle.uniqueSort<span>(results)</span></h2>
-								<div class="method_detail">
-									Document sorting and removing duplicates
-								</div>
-								<div class="method_param">
-									<h3>参数:</h3>
-										<p>
-											<b class="param_name">results</b>
-											<span class="param_type">ArrayLike</span>
-											
-										</p>
-								</div>
-
-						</div>
 						<a name="JSON.stringify"></a>
 						<div class="method_item">
-							<h2>JSON.stringify<span>(obj)</span></h2>
+							<h2>JSON.stringify
+									<span>(obj)</span><span class="return_type">  ⇒ string</span>
+							</h2>
 								<div class="method_detail">
-									把一个标准JSON对象序列化成一个字符串
+									把一个标准JSON对象序列化成一个字符串，如果浏览器支持原生的JSON对象，会直接使用原生对象的方法，否则使用自定义实现的方法。
 								</div>
 								<div class="method_param">
 									<h3>参数:</h3>
@@ -495,9 +584,36 @@
 						</div>
 						<a name="JSON.parse"></a>
 						<div class="method_item">
-							<h2>JSON.parse<span>(string)</span></h2>
+							<h2>JSON.parse
+									<span>(string)</span><span class="return_type">  ⇒ JSONType</span>
+							</h2>
 								<div class="method_detail">
-									把一个JSON字符串转换为标准JSON对象
+									把一个JSON字符串转换为标准JSON对象，如果浏览器支持原生的JSON对象，会直接使用原生对象的方法，否则使用自定义实现的方法。
+								</div>
+								<div class="method_param">
+									<h3>参数:</h3>
+										<p>
+											<b class="param_name">string</b>
+											<span class="param_type">string</span>
+											JSON字符串
+										</p>
+								</div>
+								<div class="method_param">
+									<h3>返回:</h3>
+										<p>
+											<span class="param_type">JSONType</span>
+											标准JSON对象
+										</p>
+								</div>
+
+						</div>
+						<a name="$.parseJSON"></a>
+						<div class="method_item">
+							<h2>$.parseJSON
+									<span>(string)</span><span class="return_type">  ⇒ JSONType</span>
+							</h2>
+								<div class="method_detail">
+									JSON.parse()的别名
 								</div>
 								<div class="method_param">
 									<h3>参数:</h3>
@@ -518,7 +634,9 @@
 						</div>
 						<a name="$.getScript"></a>
 						<div class="method_item">
-							<h2>$.getScript<span>()</span></h2>
+							<h2>$.getScript
+									<span>()</span>
+							</h2>
 								<div class="method_detail">
 									工具类
 author binnng
@@ -527,7 +645,9 @@ author binnng
 						</div>
 						<a name="Storage.clear"></a>
 						<div class="method_item">
-							<h2>Storage.clear<span>(prefix)</span></h2>
+							<h2>Storage.clear
+									<span>(prefix)</span>
+							</h2>
 								<div class="method_detail">
 									清除本地存贮数据
 								</div>
@@ -543,7 +663,9 @@ author binnng
 						</div>
 						<a name="Notification.fire"></a>
 						<div class="method_item">
-							<h2>Notification.fire<span>(notificationName, argArray, thisArg)</span></h2>
+							<h2>Notification.fire
+									<span>(notificationName, argArray, thisArg)</span>
+							</h2>
 								<div class="method_detail">
 									触发一个通知，这个函数会遍历执行注册给这个通知名的函数
 								</div>
@@ -569,7 +691,9 @@ author binnng
 						</div>
 						<a name="getQueryString"></a>
 						<div class="method_item">
-							<h2>getQueryString<span>(key, el)</span></h2>
+							<h2>getQueryString
+									<span>(key, el)</span><span class="return_type">  ⇒ ?string</span>
+							</h2>
 								<div class="method_detail">
 									获取当前页面或者指定DOM对象的URL中的指定的GET参数的值
 								</div>
@@ -597,7 +721,9 @@ author binnng
 						</div>
 						<a name="getElSearchString"></a>
 						<div class="method_item">
-							<h2>getElSearchString<span>(el)</span></h2>
+							<h2>getElSearchString
+									<span>(el)</span><span class="return_type">  ⇒ string</span>
+							</h2>
 								<div class="method_detail">
 									获取指定DOM对象的链接地址的queryString
 								</div>
@@ -620,7 +746,9 @@ author binnng
 						</div>
 						<a name="setQueryString"></a>
 						<div class="method_item">
-							<h2>setQueryString<span>(el, data)</span></h2>
+							<h2>setQueryString
+									<span>(el, data)</span>
+							</h2>
 								<div class="method_detail">
 									设置指定DOM对象或者页面的URL中的指定的GET参数的值
 								</div>
@@ -641,7 +769,9 @@ author binnng
 						</div>
 						<a name="objToQueryString"></a>
 						<div class="method_item">
-							<h2>objToQueryString<span>()</span></h2>
+							<h2>objToQueryString
+									<span>()</span>
+							</h2>
 								<div class="method_detail">
 									参数对象转为查询字符串片段
 								</div>
@@ -649,7 +779,9 @@ author binnng
 						</div>
 						<a name="Cookie.get"></a>
 						<div class="method_item">
-							<h2>Cookie.get<span>(name)</span></h2>
+							<h2>Cookie.get
+									<span>(name)</span><span class="return_type">  ⇒ ?string</span>
+							</h2>
 								<div class="method_detail">
 									读取指定的Cookie
 								</div>
@@ -672,7 +804,9 @@ author binnng
 						</div>
 						<a name="Cookie.remove"></a>
 						<div class="method_item">
-							<h2>Cookie.remove<span>(name)</span></h2>
+							<h2>Cookie.remove
+									<span>(name)</span>
+							</h2>
 								<div class="method_detail">
 									删除指定的Cookie
 								</div>
@@ -688,7 +822,9 @@ author binnng
 						</div>
 						<a name="$.toArray"></a>
 						<div class="method_item">
-							<h2>$.toArray<span>(elements)</span></h2>
+							<h2>$.toArray
+									<span>(elements)</span><span class="return_type">  ⇒ Array</span>
+							</h2>
 								<div class="method_detail">
 									把DOM集合转换为数组，由elem.querySelector()得到的DOM集合为动态集合，有时候需要转化为常规数组
 								</div>
@@ -711,7 +847,9 @@ author binnng
 						</div>
 						<a name=".each"></a>
 						<div class="method_item">
-							<h2>.each<span>(fn)</span></h2>
+							<h2>.each
+									<span>(fn)</span><span class="return_type">  ⇒ $</span>
+							</h2>
 								<div class="method_detail">
 									迭代一个{$}对象，对其中的每个子元素执行一个方法
 								</div>
@@ -734,7 +872,9 @@ author binnng
 						</div>
 						<a name=".add"></a>
 						<div class="method_item">
-							<h2>.add<span>(selector)</span></h2>
+							<h2>.add
+									<span>(selector)</span><span class="return_type">  ⇒ $</span>
+							</h2>
 								<div class="method_detail">
 									在现有的DOM集合中加入新的集合并返回
 								</div>
@@ -757,7 +897,9 @@ author binnng
 						</div>
 						<a name=".slice"></a>
 						<div class="method_item">
-							<h2>.slice<span>(start, [end])</span></h2>
+							<h2>.slice
+									<span>(start, [end])</span><span class="return_type">  ⇒ $</span>
+							</h2>
 								<div class="method_detail">
 									使用指定的开始和结束位置创建一个新的DOM集合
 								</div>
@@ -785,7 +927,9 @@ author binnng
 						</div>
 						<a name=".first"></a>
 						<div class="method_item">
-							<h2>.first<span>()</span></h2>
+							<h2>.first
+									<span>()</span><span class="return_type">  ⇒ $</span>
+							</h2>
 								<div class="method_detail">
 									返回DOM集合中的第一个对象
 								</div>
@@ -800,7 +944,9 @@ author binnng
 						</div>
 						<a name=".last"></a>
 						<div class="method_item">
-							<h2>.last<span>()</span></h2>
+							<h2>.last
+									<span>()</span><span class="return_type">  ⇒ $</span>
+							</h2>
 								<div class="method_detail">
 									返回DOM集合中的最后一个对象
 								</div>
@@ -815,7 +961,9 @@ author binnng
 						</div>
 						<a name=".eq"></a>
 						<div class="method_item">
-							<h2>.eq<span>(index)</span></h2>
+							<h2>.eq
+									<span>(index)</span><span class="return_type">  ⇒ $</span>
+							</h2>
 								<div class="method_detail">
 									返回DOM集合中的最后一个对象
 								</div>
@@ -838,7 +986,9 @@ author binnng
 						</div>
 						<a name=".get"></a>
 						<div class="method_item">
-							<h2>.get<span>([index])</span></h2>
+							<h2>.get
+									<span>([index])</span><span class="return_type">  ⇒ (Element|Array.<Element>|{length: number})</span>
+							</h2>
 								<div class="method_detail">
 									返回一个或者多个$对象中的原生DOM对象
 								</div>
@@ -861,7 +1011,9 @@ author binnng
 						</div>
 						<a name="$.is"></a>
 						<div class="method_item">
-							<h2>$.is<span>(element, selector)</span></h2>
+							<h2>$.is
+									<span>(element, selector)</span><span class="return_type">  ⇒ boolean</span>
+							</h2>
 								<div class="method_detail">
 									检查一个DOM节点是否符合指定的选择符
 								</div>
@@ -889,7 +1041,9 @@ author binnng
 						</div>
 						<a name=".is"></a>
 						<div class="method_item">
-							<h2>.is<span>(selector)</span></h2>
+							<h2>.is
+									<span>(selector)</span><span class="return_type">  ⇒ boolean</span>
+							</h2>
 								<div class="method_detail">
 									检查当前集合中的每个DOM节点是否符合指定的选择符，如果至少有一个符合，则返回true
 								</div>
@@ -912,7 +1066,9 @@ author binnng
 						</div>
 						<a name=".filter"></a>
 						<div class="method_item">
-							<h2>.filter<span>(selector)</span></h2>
+							<h2>.filter
+									<span>(selector)</span><span class="return_type">  ⇒ $</span>
+							</h2>
 								<div class="method_detail">
 									使用选择符过滤当前DOM集合，并返回一个新的集合
 								</div>
@@ -935,7 +1091,9 @@ author binnng
 						</div>
 						<a name=".closest"></a>
 						<div class="method_item">
-							<h2>.closest<span>([selector], [context])</span></h2>
+							<h2>.closest
+									<span>([selector], [context])</span><span class="return_type">  ⇒ $</span>
+							</h2>
 								<div class="method_detail">
 									对当前DOM集合中的每个DOM对象沿DOM树向上查找，将第一个符合筛选的对象（含当前对象）放入返回的结果集中
 								</div>
@@ -963,7 +1121,9 @@ author binnng
 						</div>
 						<a name=".parent"></a>
 						<div class="method_item">
-							<h2>.parent<span>([selector])</span></h2>
+							<h2>.parent
+									<span>([selector])</span><span class="return_type">  ⇒ $</span>
+							</h2>
 								<div class="method_detail">
 									当前DOM集合中的每个DOM对象的直接父节点的集合
 								</div>
@@ -986,7 +1146,9 @@ author binnng
 						</div>
 						<a name=".parents"></a>
 						<div class="method_item">
-							<h2>.parents<span>([selector])</span></h2>
+							<h2>.parents
+									<span>([selector])</span><span class="return_type">  ⇒ $</span>
+							</h2>
 								<div class="method_detail">
 									当前DOM集合中的每个DOM对象的所有父节点的集合
 								</div>
@@ -1009,7 +1171,9 @@ author binnng
 						</div>
 						<a name=".children"></a>
 						<div class="method_item">
-							<h2>.children<span>([selector])</span></h2>
+							<h2>.children
+									<span>([selector])</span><span class="return_type">  ⇒ $</span>
+							</h2>
 								<div class="method_detail">
 									当前DOM集合中的每个DOM对象的直接子节点的集合
 								</div>
@@ -1032,7 +1196,9 @@ author binnng
 						</div>
 						<a name=".contents"></a>
 						<div class="method_item">
-							<h2>.contents<span>()</span></h2>
+							<h2>.contents
+									<span>()</span><span class="return_type">  ⇒ $</span>
+							</h2>
 								<div class="method_detail">
 									当前DOM集合中的每个DOM对象的直接子节点的集合，包含文本和注释节点
 								</div>
@@ -1047,7 +1213,9 @@ author binnng
 						</div>
 						<a name=".find"></a>
 						<div class="method_item">
-							<h2>.find<span>(selector)</span></h2>
+							<h2>.find
+									<span>(selector)</span><span class="return_type">  ⇒ $</span>
+							</h2>
 								<div class="method_detail">
 									使用选择符对当前DOM结果集进行筛选，返回一个新的DOM集合，如果selector为空的话返回结果为空
 								</div>
@@ -1070,7 +1238,9 @@ author binnng
 						</div>
 						<a name="$.guid"></a>
 						<div class="method_item">
-							<h2>$.guid<span>()</span></h2>
+							<h2>$.guid
+									<span>()</span><span class="return_type">  ⇒ number</span>
+							</h2>
 								<div class="method_param">
 									<h3>返回:</h3>
 										<p>
@@ -1082,7 +1252,9 @@ author binnng
 						</div>
 						<a name=".remove"></a>
 						<div class="method_item">
-							<h2>.remove<span>()</span></h2>
+							<h2>.remove
+									<span>()</span><span class="return_type">  ⇒ $</span>
+							</h2>
 								<div class="method_detail">
 									移除DOM对象
 								</div>
@@ -1097,7 +1269,9 @@ author binnng
 						</div>
 						<a name="$.parseHTML"></a>
 						<div class="method_item">
-							<h2>$.parseHTML<span>(html)</span></h2>
+							<h2>$.parseHTML
+									<span>(html)</span><span class="return_type">  ⇒ Array.<(Element)></span>
+							</h2>
 								<div class="method_detail">
 									使用HTML创建片段并用数组形式返回其中的DOM对象
 								</div>
@@ -1120,7 +1294,9 @@ author binnng
 						</div>
 						<a name=".prepend"></a>
 						<div class="method_item">
-							<h2>.prepend<span>(childElement)</span></h2>
+							<h2>.prepend
+									<span>(childElement)</span><span class="return_type">  ⇒ $</span>
+							</h2>
 								<div class="method_detail">
 									在指定的父对象中前置插入DOM对象
 								</div>
@@ -1143,7 +1319,9 @@ author binnng
 						</div>
 						<a name=".prependTo"></a>
 						<div class="method_item">
-							<h2>.prependTo<span>(targetElement)</span></h2>
+							<h2>.prependTo
+									<span>(targetElement)</span><span class="return_type">  ⇒ $</span>
+							</h2>
 								<div class="method_detail">
 									把DOM对象前置插入到指定的父对象中
 								</div>
@@ -1166,7 +1344,9 @@ author binnng
 						</div>
 						<a name=".append"></a>
 						<div class="method_item">
-							<h2>.append<span>(childElement)</span></h2>
+							<h2>.append
+									<span>(childElement)</span><span class="return_type">  ⇒ $</span>
+							</h2>
 								<div class="method_detail">
 									在指定的父对象中插入一个DOM对象
 								</div>
@@ -1189,7 +1369,9 @@ author binnng
 						</div>
 						<a name=".appendTo"></a>
 						<div class="method_item">
-							<h2>.appendTo<span>(targetElement)</span></h2>
+							<h2>.appendTo
+									<span>(targetElement)</span><span class="return_type">  ⇒ $</span>
+							</h2>
 								<div class="method_detail">
 									把DOM对象插入到指定的父对象中
 								</div>
@@ -1212,7 +1394,9 @@ author binnng
 						</div>
 						<a name=".before"></a>
 						<div class="method_item">
-							<h2>.before<span>(targetElement)</span></h2>
+							<h2>.before
+									<span>(targetElement)</span><span class="return_type">  ⇒ $</span>
+							</h2>
 								<div class="method_detail">
 									在指定的对象前插入DOM对象
 								</div>
@@ -1235,7 +1419,9 @@ author binnng
 						</div>
 						<a name=".insertBefore"></a>
 						<div class="method_item">
-							<h2>.insertBefore<span>(targetElement)</span></h2>
+							<h2>.insertBefore
+									<span>(targetElement)</span><span class="return_type">  ⇒ $</span>
+							</h2>
 								<div class="method_detail">
 									把DOM对象插入到指定的对象前面
 								</div>
@@ -1258,7 +1444,9 @@ author binnng
 						</div>
 						<a name=".after"></a>
 						<div class="method_item">
-							<h2>.after<span>(targetElement)</span></h2>
+							<h2>.after
+									<span>(targetElement)</span><span class="return_type">  ⇒ $</span>
+							</h2>
 								<div class="method_detail">
 									在指定的对象后面插入DOM对象
 								</div>
@@ -1281,7 +1469,9 @@ author binnng
 						</div>
 						<a name=".insertAfter"></a>
 						<div class="method_item">
-							<h2>.insertAfter<span>(targetElement)</span></h2>
+							<h2>.insertAfter
+									<span>(targetElement)</span><span class="return_type">  ⇒ $</span>
+							</h2>
 								<div class="method_detail">
 									把DOM对象插入到指定的对象后面
 								</div>
@@ -1304,7 +1494,9 @@ author binnng
 						</div>
 						<a name="$.clone"></a>
 						<div class="method_item">
-							<h2>$.clone<span>(element, [cloneDataAndEvents])</span></h2>
+							<h2>$.clone
+									<span>(element, [cloneDataAndEvents])</span><span class="return_type">  ⇒ Element</span>
+							</h2>
 								<div class="method_detail">
 									复制一个DOM对象，返回复制后的新集合
 								</div>
@@ -1332,7 +1524,9 @@ author binnng
 						</div>
 						<a name=".clone"></a>
 						<div class="method_item">
-							<h2>.clone<span>([cloneDataAndEvents])</span></h2>
+							<h2>.clone
+									<span>([cloneDataAndEvents])</span><span class="return_type">  ⇒ $</span>
+							</h2>
 								<div class="method_detail">
 									复制一个DOM集合，返回复制后的新集合
 								</div>
@@ -1355,7 +1549,9 @@ author binnng
 						</div>
 						<a name=".data"></a>
 						<div class="method_item">
-							<h2>.data<span>([key], [value])</span></h2>
+							<h2>.data
+									<span>([key], [value])</span><span class="return_type">  ⇒ *</span>
+							</h2>
 								<div class="method_detail">
 									给DOM对象添加数据
 								</div>
@@ -1383,7 +1579,9 @@ author binnng
 						</div>
 						<a name=".removeData"></a>
 						<div class="method_item">
-							<h2>.removeData<span>([key])</span></h2>
+							<h2>.removeData
+									<span>([key])</span><span class="return_type">  ⇒ $</span>
+							</h2>
 								<div class="method_detail">
 									移除DOM对象上的数据
 								</div>
@@ -1406,7 +1604,9 @@ author binnng
 						</div>
 						<a name="$.ready"></a>
 						<div class="method_item">
-							<h2>$.ready<span>(fn)</span></h2>
+							<h2>$.ready
+									<span>(fn)</span><span class="return_type">  ⇒ $</span>
+							</h2>
 								<div class="method_param">
 									<h3>参数:</h3>
 										<p>
@@ -1424,17 +1624,33 @@ author binnng
 								</div>
 
 						</div>
-						<a name="fire"></a>
+						<a name=".ready"></a>
 						<div class="method_item">
-							<h2>fire<span>()</span></h2>
-								<div class="method_detail">
-									触发初始化函数
+							<h2>.ready
+									<span>(fn)</span><span class="return_type">  ⇒ $</span>
+							</h2>
+								<div class="method_param">
+									<h3>参数:</h3>
+										<p>
+											<b class="param_name">fn</b>
+											<span class="param_type">Function</span>
+											
+										</p>
+								</div>
+								<div class="method_param">
+									<h3>返回:</h3>
+										<p>
+											<span class="param_type">$</span>
+											
+										</p>
 								</div>
 
 						</div>
 						<a name=".css"></a>
 						<div class="method_item">
-							<h2>.css<span>(key, [value])</span></h2>
+							<h2>.css
+									<span>(key, [value])</span><span class="return_type">  ⇒ $</span>
+							</h2>
 								<div class="method_detail">
 									设置DOM对象集合的css或者读取集合中第一个DOM对象的css
 								</div>
@@ -1462,7 +1678,9 @@ author binnng
 						</div>
 						<a name=".offset"></a>
 						<div class="method_item">
-							<h2>.offset<span>()</span></h2>
+							<h2>.offset
+									<span>()</span><span class="return_type">  ⇒ {left:number, top:number}</span>
+							</h2>
 								<div class="method_detail">
 									返回DOM对象相对于文档左上角的偏移
 								</div>
@@ -1477,7 +1695,9 @@ author binnng
 						</div>
 						<a name=".html"></a>
 						<div class="method_item">
-							<h2>.html<span>([html])</span></h2>
+							<h2>.html
+									<span>([html])</span><span class="return_type">  ⇒ ($|string)=</span>
+							</h2>
 								<div class="method_detail">
 									获取DOM对象集合中第一个对象的innerHTML或者设置DOM对象集合的innerHTML
 								</div>
@@ -1500,7 +1720,9 @@ author binnng
 						</div>
 						<a name=".empty"></a>
 						<div class="method_item">
-							<h2>.empty<span>()</span></h2>
+							<h2>.empty
+									<span>()</span><span class="return_type">  ⇒ $</span>
+							</h2>
 								<div class="method_detail">
 									移除DOM对象集合中对象的子对象
 								</div>
@@ -1515,7 +1737,9 @@ author binnng
 						</div>
 						<a name=".val"></a>
 						<div class="method_item">
-							<h2>.val<span>([value])</span></h2>
+							<h2>.val
+									<span>([value])</span><span class="return_type">  ⇒ ($|string)=</span>
+							</h2>
 								<div class="method_detail">
 									设置DOM对象集合的value或者读取集合中第一个DOM对象的value
 								</div>
@@ -1538,7 +1762,9 @@ author binnng
 						</div>
 						<a name=".attr"></a>
 						<div class="method_item">
-							<h2>.attr<span>(name, [value])</span></h2>
+							<h2>.attr
+									<span>(name, [value])</span><span class="return_type">  ⇒ ($|string)=</span>
+							</h2>
 								<div class="method_param">
 									<h3>参数:</h3>
 										<p>
@@ -1563,7 +1789,9 @@ author binnng
 						</div>
 						<a name=".removeAttr"></a>
 						<div class="method_item">
-							<h2>.removeAttr<span>(name)</span></h2>
+							<h2>.removeAttr
+									<span>(name)</span><span class="return_type">  ⇒ $</span>
+							</h2>
 								<div class="method_param">
 									<h3>参数:</h3>
 										<p>
@@ -1583,7 +1811,9 @@ author binnng
 						</div>
 						<a name=".hasClass"></a>
 						<div class="method_item">
-							<h2>.hasClass<span>(value)</span></h2>
+							<h2>.hasClass
+									<span>(value)</span><span class="return_type">  ⇒ boolean</span>
+							</h2>
 								<div class="method_detail">
 									判断对象是否拥有指定的className
 								</div>
@@ -1606,7 +1836,9 @@ author binnng
 						</div>
 						<a name=".addClass"></a>
 						<div class="method_item">
-							<h2>.addClass<span>(value)</span></h2>
+							<h2>.addClass
+									<span>(value)</span><span class="return_type">  ⇒ $</span>
+							</h2>
 								<div class="method_detail">
 									给对象添加一个className
 								</div>
@@ -1629,7 +1861,9 @@ author binnng
 						</div>
 						<a name=".removeClass"></a>
 						<div class="method_item">
-							<h2>.removeClass<span>([value])</span></h2>
+							<h2>.removeClass
+									<span>([value])</span><span class="return_type">  ⇒ $</span>
+							</h2>
 								<div class="method_detail">
 									移除对象的className
 								</div>
@@ -1652,7 +1886,9 @@ author binnng
 						</div>
 						<a name=".toggleClass"></a>
 						<div class="method_item">
-							<h2>.toggleClass<span>([value], [如果为TRUE，则执行addClass操作，如果为FALSE，执行removeClass])</span></h2>
+							<h2>.toggleClass
+									<span>([value], [如果为TRUE，则执行addClass操作，如果为FALSE，执行removeClass])</span><span class="return_type">  ⇒ $</span>
+							</h2>
 								<div class="method_detail">
 									移除对象的className
 								</div>
@@ -1680,7 +1916,9 @@ author binnng
 						</div>
 						<a name=".serialize"></a>
 						<div class="method_item">
-							<h2>.serialize<span>(returnObject)</span></h2>
+							<h2>.serialize
+									<span>(returnObject)</span><span class="return_type">  ⇒ (string|Object)</span>
+							</h2>
 								<div class="method_detail">
 									序列化一个表单对象
 								</div>
@@ -1703,7 +1941,9 @@ author binnng
 						</div>
 						<a name=".showFormTip"></a>
 						<div class="method_item">
-							<h2>.showFormTip<span>()</span></h2>
+							<h2>.showFormTip
+									<span>()</span>
+							</h2>
 								<div class="method_detail">
 									在表单中显示一条提示
 								</div>
@@ -1711,7 +1951,9 @@ author binnng
 						</div>
 						<a name="$.event"></a>
 						<div class="method_item">
-							<h2>$.event<span>(e)</span></h2>
+							<h2>$.event
+									<span>(e)</span><span class="return_type">  ⇒ $.event</span>
+							</h2>
 								<div class="method_param">
 									<h3>参数:</h3>
 										<p>
@@ -1731,12 +1973,16 @@ author binnng
 						</div>
 						<a name="stopPropagation"></a>
 						<div class="method_item">
-							<h2>stopPropagation<span>()</span></h2>
+							<h2>stopPropagation
+									<span>()</span>
+							</h2>
 
 						</div>
 						<a name="$.addEvent"></a>
 						<div class="method_item">
-							<h2>$.addEvent<span>(type, element, fn, capture)</span></h2>
+							<h2>$.addEvent
+									<span>(type, element, fn, capture)</span>
+							</h2>
 								<div class="method_detail">
 									给DOM对象绑定事件
 								</div>
@@ -1765,40 +2011,11 @@ author binnng
 								</div>
 
 						</div>
-						<a name="$._addEventData"></a>
-						<div class="method_item">
-							<h2>$._addEventData<span>(type, uid, element, fn)</span></h2>
-								<div class="method_detail">
-									生成特定DOM对象的eventCache
-								</div>
-								<div class="method_param">
-									<h3>参数:</h3>
-										<p>
-											<b class="param_name">type</b>
-											<span class="param_type">string</span>
-											
-										</p>
-										<p>
-											<b class="param_name">uid</b>
-											<span class="param_type">Number</span>
-											
-										</p>
-										<p>
-											<b class="param_name">element</b>
-											<span class="param_type">Element</span>
-											
-										</p>
-										<p>
-											<b class="param_name">fn</b>
-											<span class="param_type">function($.event=)</span>
-											
-										</p>
-								</div>
-
-						</div>
 						<a name="$.dispatchEvent"></a>
 						<div class="method_item">
-							<h2>$.dispatchEvent<span>(evt)</span></h2>
+							<h2>$.dispatchEvent
+									<span>(evt)</span>
+							</h2>
 								<div class="method_param">
 									<h3>参数:</h3>
 										<p>
@@ -1809,37 +2026,11 @@ author binnng
 								</div>
 
 						</div>
-						<a name=".on"></a>
-						<div class="method_item">
-							<h2>.on<span>(type, fn)</span></h2>
-								<div class="method_detail">
-									给DOM集合绑定事件
-								</div>
-								<div class="method_param">
-									<h3>参数:</h3>
-										<p>
-											<b class="param_name">type</b>
-											<span class="param_type">string</span>
-											事件类型
-										</p>
-										<p>
-											<b class="param_name">fn</b>
-											<span class="param_type">function($.event=)</span>
-											绑定的事件
-										</p>
-								</div>
-								<div class="method_param">
-									<h3>返回:</h3>
-										<p>
-											<span class="param_type">$</span>
-											
-										</p>
-								</div>
-
-						</div>
 						<a name=".trigger"></a>
 						<div class="method_item">
-							<h2>.trigger<span>(type, [data])</span></h2>
+							<h2>.trigger
+									<span>(type, [data])</span><span class="return_type">  ⇒ $</span>
+							</h2>
 								<div class="method_detail">
 									触发DOM集合的制定事件
 								</div>
@@ -1867,7 +2058,9 @@ author binnng
 						</div>
 						<a name="$.touchEvent"></a>
 						<div class="method_item">
-							<h2>$.touchEvent<span>()</span></h2>
+							<h2>$.touchEvent
+									<span>()</span>
+							</h2>
 								<div class="method_detail">
 									实现触屏的点击事件委托
 它做的事情：
@@ -1876,9 +2069,31 @@ author binnng
 								</div>
 
 						</div>
+						<a name="$.touchEvent.elTarget"></a>
+						<div class="method_item">
+							<h2>$.touchEvent.elTarget
+									<span>()</span>
+							</h2>
+								<div class="method_detail">
+									保留一个target引用，在touchend中分配点击事件给这个target
+								</div>
+
+						</div>
+						<a name="$.touchEvent.startPoint"></a>
+						<div class="method_item">
+							<h2>$.touchEvent.startPoint
+									<span>()</span>
+							</h2>
+								<div class="method_detail">
+									事件触发点相对于窗口的坐标
+								</div>
+
+						</div>
 						<a name=".click"></a>
 						<div class="method_item">
-							<h2>.click<span>(fn)</span></h2>
+							<h2>.click
+									<span>(fn)</span><span class="return_type">  ⇒ $</span>
+							</h2>
 								<div class="method_detail">
 									给DOM集合绑定点击事件或者触发点击事件
 								</div>
@@ -1901,7 +2116,9 @@ author binnng
 						</div>
 						<a name=".mousedown"></a>
 						<div class="method_item">
-							<h2>.mousedown<span>(fn)</span></h2>
+							<h2>.mousedown
+									<span>(fn)</span><span class="return_type">  ⇒ $</span>
+							</h2>
 								<div class="method_detail">
 									给DOM集合绑定mousedown事件或者触发mousedown事件
 								</div>
@@ -1924,7 +2141,9 @@ author binnng
 						</div>
 						<a name=".mouseup"></a>
 						<div class="method_item">
-							<h2>.mouseup<span>(fn)</span></h2>
+							<h2>.mouseup
+									<span>(fn)</span><span class="return_type">  ⇒ $</span>
+							</h2>
 								<div class="method_detail">
 									给DOM集合绑定mouseup事件或者触发mouseup事件
 								</div>
@@ -1947,7 +2166,9 @@ author binnng
 						</div>
 						<a name=".mousemove"></a>
 						<div class="method_item">
-							<h2>.mousemove<span>(fn)</span></h2>
+							<h2>.mousemove
+									<span>(fn)</span><span class="return_type">  ⇒ $</span>
+							</h2>
 								<div class="method_detail">
 									给DOM集合绑定mousemove事件或者触发mousemove事件
 								</div>
@@ -1970,7 +2191,9 @@ author binnng
 						</div>
 						<a name=".mouseover"></a>
 						<div class="method_item">
-							<h2>.mouseover<span>(fn)</span></h2>
+							<h2>.mouseover
+									<span>(fn)</span><span class="return_type">  ⇒ $</span>
+							</h2>
 								<div class="method_detail">
 									给DOM集合绑定mouseover事件或者触发mouseover事件
 								</div>
@@ -1993,7 +2216,9 @@ author binnng
 						</div>
 						<a name=".mouseout"></a>
 						<div class="method_item">
-							<h2>.mouseout<span>(fn)</span></h2>
+							<h2>.mouseout
+									<span>(fn)</span><span class="return_type">  ⇒ $</span>
+							</h2>
 								<div class="method_detail">
 									给DOM集合绑定mouseout事件或者触发mouseout事件
 								</div>
@@ -2016,7 +2241,9 @@ author binnng
 						</div>
 						<a name=".blur"></a>
 						<div class="method_item">
-							<h2>.blur<span>(fn)</span></h2>
+							<h2>.blur
+									<span>(fn)</span><span class="return_type">  ⇒ $</span>
+							</h2>
 								<div class="method_detail">
 									给DOM集合绑定失焦事件或者触发失焦事件
 								</div>
@@ -2039,7 +2266,9 @@ author binnng
 						</div>
 						<a name=".focus"></a>
 						<div class="method_item">
-							<h2>.focus<span>(fn)</span></h2>
+							<h2>.focus
+									<span>(fn)</span><span class="return_type">  ⇒ $</span>
+							</h2>
 								<div class="method_detail">
 									给DOM集合绑定聚焦事件或者触发聚焦事件
 								</div>
@@ -2062,7 +2291,9 @@ author binnng
 						</div>
 						<a name=".unload"></a>
 						<div class="method_item">
-							<h2>.unload<span>(fn)</span></h2>
+							<h2>.unload
+									<span>(fn)</span><span class="return_type">  ⇒ $</span>
+							</h2>
 								<div class="method_detail">
 									给DOM集合绑定unload事件或者触发unload事件
 								</div>
@@ -2085,7 +2316,9 @@ author binnng
 						</div>
 						<a name=".change"></a>
 						<div class="method_item">
-							<h2>.change<span>(fn)</span></h2>
+							<h2>.change
+									<span>(fn)</span><span class="return_type">  ⇒ $</span>
+							</h2>
 								<div class="method_detail">
 									给DOM集合绑定change事件或者触发change事件
 								</div>
@@ -2108,7 +2341,9 @@ author binnng
 						</div>
 						<a name=".select"></a>
 						<div class="method_item">
-							<h2>.select<span>(fn)</span></h2>
+							<h2>.select
+									<span>(fn)</span><span class="return_type">  ⇒ $</span>
+							</h2>
 								<div class="method_detail">
 									给DOM集合绑定select事件或者触发select事件
 								</div>
@@ -2131,7 +2366,9 @@ author binnng
 						</div>
 						<a name=".submit"></a>
 						<div class="method_item">
-							<h2>.submit<span>(fn)</span></h2>
+							<h2>.submit
+									<span>(fn)</span><span class="return_type">  ⇒ $</span>
+							</h2>
 								<div class="method_detail">
 									给DOM集合绑定submit事件或者触发submit事件
 								</div>
@@ -2154,7 +2391,9 @@ author binnng
 						</div>
 						<a name=".keydown"></a>
 						<div class="method_item">
-							<h2>.keydown<span>(fn)</span></h2>
+							<h2>.keydown
+									<span>(fn)</span><span class="return_type">  ⇒ $</span>
+							</h2>
 								<div class="method_detail">
 									给DOM集合绑定keydown事件或者触发keydown事件
 								</div>
@@ -2177,7 +2416,9 @@ author binnng
 						</div>
 						<a name=".keypress"></a>
 						<div class="method_item">
-							<h2>.keypress<span>(fn)</span></h2>
+							<h2>.keypress
+									<span>(fn)</span><span class="return_type">  ⇒ $</span>
+							</h2>
 								<div class="method_detail">
 									给DOM集合绑定keypress事件或者触发keypress事件
 								</div>
@@ -2200,7 +2441,9 @@ author binnng
 						</div>
 						<a name=".keyup"></a>
 						<div class="method_item">
-							<h2>.keyup<span>(fn)</span></h2>
+							<h2>.keyup
+									<span>(fn)</span><span class="return_type">  ⇒ $</span>
+							</h2>
 								<div class="method_detail">
 									给DOM集合绑定keyup事件或者触发keyup事件
 								</div>
@@ -2223,7 +2466,9 @@ author binnng
 						</div>
 						<a name=".error"></a>
 						<div class="method_item">
-							<h2>.error<span>(fn)</span></h2>
+							<h2>.error
+									<span>(fn)</span><span class="return_type">  ⇒ $</span>
+							</h2>
 								<div class="method_detail">
 									给DOM集合绑定error事件或者触发error事件
 								</div>
@@ -2246,7 +2491,9 @@ author binnng
 						</div>
 						<a name=".contextmenu"></a>
 						<div class="method_item">
-							<h2>.contextmenu<span>(fn)</span></h2>
+							<h2>.contextmenu
+									<span>(fn)</span><span class="return_type">  ⇒ $</span>
+							</h2>
 								<div class="method_detail">
 									给DOM集合绑定contextmenu事件或者触发keyup事件
 								</div>
@@ -2269,7 +2516,9 @@ author binnng
 						</div>
 						<a name=".scroll"></a>
 						<div class="method_item">
-							<h2>.scroll<span>(fn)</span></h2>
+							<h2>.scroll
+									<span>(fn)</span><span class="return_type">  ⇒ $</span>
+							</h2>
 								<div class="method_detail">
 									给DOM集合绑定scroll事件
 								</div>
@@ -2292,7 +2541,9 @@ author binnng
 						</div>
 						<a name="send"></a>
 						<div class="method_item">
-							<h2>send<span>()</span></h2>
+							<h2>send
+									<span>()</span>
+							</h2>
 								<div class="method_detail">
 									发送一个请求
 								</div>
@@ -2300,7 +2551,9 @@ author binnng
 						</div>
 						<a name="xmlhttp.onerror"></a>
 						<div class="method_item">
-							<h2>xmlhttp.onerror<span>()</span></h2>
+							<h2>xmlhttp.onerror
+									<span>()</span>
+							</h2>
 								<div class="method_detail">
 									没有网络连接
 								</div>
@@ -2308,7 +2561,9 @@ author binnng
 						</div>
 						<a name="$.ajax"></a>
 						<div class="method_item">
-							<h2>$.ajax<span>()</span></h2>
+							<h2>$.ajax
+									<span>()</span><span class="return_type">  ⇒ ajaxObj</span>
+							</h2>
 								<div class="method_param">
 									<h3>返回:</h3>
 										<p>
@@ -2320,7 +2575,9 @@ author binnng
 						</div>
 						<a name="$.get"></a>
 						<div class="method_item">
-							<h2>$.get<span>()</span></h2>
+							<h2>$.get
+									<span>()</span><span class="return_type">  ⇒ ajaxObj</span>
+							</h2>
 								<div class="method_param">
 									<h3>返回:</h3>
 										<p>
@@ -2332,7 +2589,9 @@ author binnng
 						</div>
 						<a name="$.post"></a>
 						<div class="method_item">
-							<h2>$.post<span>()</span></h2>
+							<h2>$.post
+									<span>()</span><span class="return_type">  ⇒ ajaxObj</span>
+							</h2>
 								<div class="method_param">
 									<h3>返回:</h3>
 										<p>

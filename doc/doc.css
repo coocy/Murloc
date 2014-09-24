@@ -99,13 +99,11 @@ select{
 	padding:5px 6px;
 	padding-right:26px;
 	font-size:.8em;
-	background:#fff url(/up/dj-mobile/welfare/pic/select_bg@2x.png) 100% 0 no-repeat;
 	background-size:21px 30px;
 }
 .titlebar{
 	background:#fff;
 	border-bottom:1px solid #ddd;
-	padding:1em;
 }
 .main_wrap{
 	padding:1em 0;
@@ -114,6 +112,18 @@ select{
 .titlebar h1{
 	width:960px;
 	margin:0 auto;
+}
+.titlebar h1{
+	padding:.5em 0;
+	background:url(logo@2x.png) 0 50% no-repeat;
+	background-size:auto 40px;
+	text-indent:2em;
+	color:#8A2809;
+	font-family:'League Gothic',Impact;
+	font-weight:normal;
+}
+.titlebar h1 span{
+	color:#aaa;
 }
 .sidebar{
 	float:left;
@@ -157,6 +167,11 @@ select{
 .method_item:first-of-type{
 	border-top-color:#ddd;
 }
+.method_item:hover{
+	border-color:#d3d3d3;
+	position:relative;
+	background:#F9F9F9;
+}
 .method_item h2{
 	color:#A00E0E;
 	padding:.5em 0 0;
@@ -169,6 +184,10 @@ select{
 	font-family:"Menlo","Courier New","Courier",monospace;
 	display:inline-block;
 	vertical-align:middle;
+}
+.method_item h2 .return_type{
+	color:#aaa;
+	font-size:.7em;
 }
 .method_detail{
 	color:#666;

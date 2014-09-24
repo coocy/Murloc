@@ -68,7 +68,7 @@ var getDocFromFile = function(fileName, callback) {
 		var contents = data.toString(),
 			docMap = {};
 
-		if (matches = contents.match(/([^\s]+)\s*[=:][^=;]+?function\s*\([^\)]*\)\s*\{/ig)) {
+		if (matches = contents.match(/(([^\s]+)\s*[=:][^=;]+?function\s*\([^\)]*\)\s*\{)|(?:\$\.[^\s]+\s*=[^;]+)/ig)) {
 
 			//console.log(matches);
 
@@ -97,7 +97,7 @@ var getDocFromFile = function(fileName, callback) {
 					methodName = methodNameMatch[0];
 				}
 
-				if (className !== '' && methodName.indexOf(className + '.') < 0) {
+				if (className !== '' && methodName.indexOf(className + '.') < 0 && methodName.indexOf('$.') < 0) {
 					methodName = className + '.' + methodName;
 				}
 
@@ -183,6 +183,10 @@ fs.readFile(sourceFileDir + '/Murloc.js', function(err, data) {
 		readFileCount = 0;
 
 	contents.replace(/@requires\s+([^\s]+)/ig, function(input, fileName) {
+		if ('sizzle.js' === fileName) {
+			return;
+		}
+
 		var groupName = fileName
 			.replace(/\.js$/i, '')
 			.replace(/(^|\.|\_)([a-z])/g, function(useless, prefix, character) {
@@ -191,6 +195,7 @@ fs.readFile(sourceFileDir + '/Murloc.js', function(err, data) {
 			.replace(/json|url/i, function(input) {
 			    	return input.toUpperCase();
 			});
+
 		docData[fileName] = {
 			name: groupName,
 			docMap: null
@@ -207,8 +212,6 @@ fs.readFile(sourceFileDir + '/Murloc.js', function(err, data) {
 				var templateObj = new template({
 					compressHTML: true
 				});
-
-				//console.log(docData);
 
 				templateObj.parse('templates/doc/list.html', {
 					'docData': docData

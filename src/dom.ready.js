@@ -15,6 +15,11 @@ $.ready = function(fn) {
 
 	return this;
 };
+
+/**
+ * @param {Function} fn
+ * @return {$}
+ */
 $.prototype.ready = $.ready;
 
 $.loader = {
@@ -50,6 +55,7 @@ $.loader = {
 	 * 因为页面中引用的Javascript文件是异步加载的，因此加载完Javascript文件后需要判断HTML页面是否加载完全:
 	 * 1. 如果document.readyState的值不为"loading", 则马上执行初始化函数
 	 * 2. 如果document.readyState的值为"loading", 则把初始化函数放入DOMContentLoaded中执行
+	 * @private
 	 */
 	init: function() {
 
@@ -100,6 +106,10 @@ $.loader = {
 		}
 	},
 
+	/**
+	 * 加载完成
+	 * @private
+	 */
 	loaded: function() {
 		if (false === $.loader.isLoaded) {
 			$.loader.isLoaded = true;
@@ -109,6 +119,7 @@ $.loader = {
 
 	/**
 	 * 触发初始化函数
+	 * @private
 	 */
 	fire: function() {
 

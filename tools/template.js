@@ -113,13 +113,15 @@ var getObjValueForKeyPath = function(obj, keyPath) {
 
 	for (var i = 0, l = pathMatch.length; i < l; i++) {
 
-		if (!isObject(obj)) {
+		if (!isObject(obj) && !(obj instanceof Array)) {
 			return undefined;
 		}
 
 		key = pathMatch[i].trim().replace(/^[\.\[][\'\"]?|[\'\"]?\]$/g, '').trim();
 
-		if (key in obj) {
+		if (key.match(/^\d+$/) && (obj instanceof Array)) {
+			obj = obj[key];
+		} else if (key in obj) {
 			obj = obj[key];
 		} else {
 			return undefined;

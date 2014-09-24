@@ -7,14 +7,14 @@
 
 var JSON = WIN.JSON || {
 
-	$specialChars: {'\b': '\\b', '\t': '\\t', '\n': '\\n', '\f': '\\f', '\r': '\\r', '"' : '\\"', '\\': '\\\\'},
+	_specialChars: {'\b': '\\b', '\t': '\\t', '\n': '\\n', '\f': '\\f', '\r': '\\r', '"' : '\\"', '\\': '\\\\'},
 
-	$replaceChars: function(chr){
-		return JSON.$specialChars[chr] || '\\u00' + Math.floor(chr.charCodeAt() / 16).toString(16) + (chr.charCodeAt() % 16).toString(16);
+	_replaceChars: function(chr){
+		return JSON._specialChars[chr] || '\\u00' + Math.floor(chr.charCodeAt() / 16).toString(16) + (chr.charCodeAt() % 16).toString(16);
 	},
 
 	/**
-	 * 把一个标准JSON对象序列化成一个字符串
+	 * 把一个标准JSON对象序列化成一个字符串，如果浏览器支持原生的JSON对象，会直接使用原生对象的方法，否则使用自定义实现的方法。
 	 * @static
 	 * @param {JSONType} obj JSON对象
 	 * @return {string} 序列化成后的字符串
@@ -27,7 +27,7 @@ var JSON = WIN.JSON || {
 		}
 		switch (type){
 			case 'string':
-				return '"' + obj.replace(/[\x00-\x1f\\"]/g, JSON.$replaceChars) + '"';
+				return '"' + obj.replace(/[\x00-\x1f\\"]/g, JSON._replaceChars) + '"';
 			case 'array':
 				var string = [];
 				for (var i = 0, l = obj.length; i < l; i++) {
@@ -49,7 +49,7 @@ var JSON = WIN.JSON || {
 	},
 
 	/**
-	 * 把一个JSON字符串转换为标准JSON对象
+	 * 把一个JSON字符串转换为标准JSON对象，如果浏览器支持原生的JSON对象，会直接使用原生对象的方法，否则使用自定义实现的方法。
 	 * @static
 	 * @param {string} string JSON字符串
 	 * @return {JSONType} 标准JSON对象
@@ -58,3 +58,11 @@ var JSON = WIN.JSON || {
 		return eval('(' + string + ')');
 	}
 };
+
+/**
+ * JSON.parse()的别名
+ * @static
+ * @param {string} string JSON字符串
+ * @return {JSONType} 标准JSON对象
+ */
+$.parseJSON = JSON.parse;

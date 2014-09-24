@@ -10,7 +10,7 @@
 <body>
 
 	<div class="titlebar">
-		<h1>Murloc Doc</h1>
+		<h1>Murloc <span>Doc</span></h1>
 	</div>
 
 	<div class="main_wrap">
@@ -38,7 +38,12 @@
 					{foreach: docDataItem.docMap, methodName, methodData}
 						<a name="{methodName}"></a>
 						<div class="method_item">
-							<h2>{methodName}{if:methodData.type==="function"}<span>({methodData.params})</span>{end:}</h2>
+							<h2>{methodName}
+								{if:methodData.type==="function"}
+									<span>({methodData.params})</span>
+									{if:methodData.return}<span class="return_type">  ⇒ {methodData.return[0].type}</span>{end:}
+								{end:}
+							</h2>
 
 							{if:methodData.description}
 								<div class="method_detail">

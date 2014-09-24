@@ -255,6 +255,7 @@ var $ = function(selector, context) {
 /**
  * 唯一ID，用作缓存对象的Key
  * @type {number}
+ * @private
  */
 $.uid = 1;
 
@@ -345,6 +346,25 @@ $.find = _useQSA ?
 
 	$._find;
 
+
+/**
+ * 判断一个对象是否是数组
+ * @param {*} obj
+ * @return {boolean}
+ */
+$.isArray = function(obj) {
+	return obj instanceof Array;
+};
+
+/**
+ * 判断一个对象是否是一个方法
+ * @param {*} obj
+ * @return {boolean}
+ */
+$.isFunction = function(obj) {
+	return _toString.call(obj) === '[object Function]';
+};
+
 /**
  * 判断一个对象是否是Object结构
  * @param {*} obj
@@ -364,7 +384,7 @@ $.isPlainObject = function(obj) {
 };
 
 /**
- * 简单判断一个对象是否是Object结构
+ * 简单判断一个对象是否是Object结构，比$.isPlainObject()速度快，但是兼容性不如$.isPlainObject()
  * @param {*} obj
  * @return {boolean}
  */
@@ -408,7 +428,7 @@ $.each = function(collection, fn) {
  * 扩展一个Object对象，也可以用来复制一个对象
  * @param {Object} dest
  * @param {Object} source
- * @return {Object}
+ * @return {Object} 扩展后的对象
  */
 $.extend = function(dest, source) {
 	var property, item;
@@ -423,7 +443,7 @@ $.prototype.extend = $.extend;
 /**
  * 深复制一个数组或者对象
  * @param {(Array|Object)} dest
- * @return {(Array|Object)}
+ * @return {(Array|Object)} 复制后的数组或者对象
  */
 $.copy = function(dest) {
 	if (dest instanceof Array) {
@@ -440,9 +460,18 @@ $.copy = function(dest) {
 $.prototype.copy = $.copy;
 
 /**
- * 将连字符字符串转化为驼峰形式
+ * 去掉字符串头尾的空白字符。这个方法只是为了兼容jQuery，建议使用string的trim方法
  * @param {string} string
  * @return {string}
+ */
+$.trim = function(string) {
+	return (string + '').trim();
+};
+
+/**
+ * 将连字符字符串转化为驼峰形式
+ * @param {string} string
+ * @return {string} 驼峰形式的字符串
  */
 $.camelCase = function(string){
 	return string.replace(/-+(.)?/g, function(match, chr) {
@@ -451,7 +480,7 @@ $.camelCase = function(string){
 };
 
 /**
- * 改变一个函数的this指针。这个方法只是为了兼容jQuery，请尽量使用function的bind方法
+ * 改变一个函数的this指针。这个方法只是为了兼容jQuery，建议使用function的bind方法
  * @param {Function} fn
  * @param {Object} context
  * @return {!Function}

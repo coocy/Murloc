@@ -41,6 +41,7 @@
 						<li><a href="#$.parseJSON">$.parseJSON()</a></li>
 					<h2>Util</h2>
 						<li><a href="#$.getScript">$.getScript()</a></li>
+						<li><a href="#$.getCSS">$.getCSS()</a></li>
 					<h2>Localstorge</h2>
 						<li><a href="#Storage.clear">Storage.clear()</a></li>
 					<h2>Notification</h2>
@@ -708,12 +709,48 @@ jQuery的$().html()方法支持传入String和Function类型的参数，但是Mu
 						<a name="$.getScript"></a>
 						<div class="method_item">
 							<h2>$.getScript
-									<span>()</span>
+									<span>(url, callback, opts)</span>
 							</h2>
 								<div class="method_detail">
-									<p>工具类
-author binnng</p>
+									<p>加载js</p>
 
+								</div>
+								<div class="method_param">
+									<h3>参数:</h3>
+										<p>
+											<b class="param_name">url</b>
+											<span class="param_type">String</span>
+											js文件路径
+										</p>
+										<p>
+											<b class="param_name">callback</b>
+											<span class="param_type">Function</span>
+											加载完成后的回调
+										</p>
+										<p>
+											<b class="param_name">opts</b>
+											<span class="param_type">Array</span>
+											传给回调的参数
+										</p>
+								</div>
+
+						</div>
+						<a name="$.getCSS"></a>
+						<div class="method_item">
+							<h2>$.getCSS
+									<span>(url)</span>
+							</h2>
+								<div class="method_detail">
+									<p>加载css</p>
+
+								</div>
+								<div class="method_param">
+									<h3>参数:</h3>
+										<p>
+											<b class="param_name">url</b>
+											<span class="param_type">String</span>
+											css文件路径
+										</p>
 								</div>
 
 						</div>

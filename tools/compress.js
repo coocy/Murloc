@@ -21,6 +21,15 @@ var isObject = function(obj) {
 };
 
 /**
+ * 判断一个对象是否是一个方法
+ * @param {*} obj
+ * @return {boolean}
+ */
+var isFunction = function(obj) {
+	return ({}.toString).call(obj) === '[object Function]';
+};
+
+/**
  * 深复制一个数组或者对象
  * @param {(Array|Object)} dest
  * @return {(Array|Object)}
@@ -106,7 +115,19 @@ Compressor.prototype = {
 	 * @param {string} filePath 文件路径
 	 * @param {string=} outputPath 压缩输出的文件路径
 	 */
-	compress: function(filePath, outputPath) {
+	compress: function(filePath, outputPath, options) {
+
+		options = options || {};
+
+		if (isObject(outputPath)) {
+			options = outputPath;
+			outputPath = null;
+		} else if (outputPath) {
+			options['js_output_file'] = outputPath;
+		}
+
+		this.options = options;
+
 		var fileExt = this._getFileExt(filePath);
 		if ('js' === fileExt) {
 			this.compressJS(filePath, outputPath);
@@ -163,6 +184,9 @@ Compressor.prototype = {
 			delete compressParams['js_output_file'];
 		}
 
+		//合并调用方法时候传入的压缩参数
+		compressParams = extend(compressParams, this.options);
+
 		this._compressParams = [];
 
 		//用合并后的压缩参数集合生成最终的参数字符串
@@ -207,15 +231,19 @@ Compressor.prototype = {
 
 							//文件大小压缩统计
 							if (stderr) {
-								var sizeMatch = stderr.match(/Estimated Size.+?([0-9]+)/i);
+								var sizeMatch = stderr.match(/Estimated Size.+?([0-9]+)/i),
+									gzSizeMatch = stderr.match(/Estimated GzSize.+?([0-9]+)/i);
+
 								if (sizeMatch) {
 
 									var compiledSize = parseFloat(sizeMatch[1]),
+										gzSize = parseFloat(gzSizeMatch[1]),
 										reduction = originalSize  - compiledSize,
 										sizeResult = [
 											'// == Compilation Result ==',
 											'// Original Size: ' + formatSize(originalSize),
-											'// Compiled Size: ' + formatSize(compiledSize) + ' (Saved ' + Math.round(reduction / originalSize * 10000) / 100 + '% off)'
+											'// Compiled Size: ' + formatSize(compiledSize) + ' (Saved ' + Math.round(reduction / originalSize * 10000) / 100 + '% off)',
+											'// GZipped Size: ' + formatSize(gzSize)
 										].join("\r\n");
 
 									console.log(sizeResult);
@@ -226,6 +254,47 @@ Compressor.prototype = {
 				});
 
 		    }
+		});
+	},
+
+	/**
+	 * 合并js文件（把js文件中的@requires替换为文件内容）
+	 * @param {string} filePath 文件路径
+	 * @param {string=} outputPath 压缩文件保存路径
+	 */
+	combineJS: function(filePath, outputPath, callback) {
+		filePath = path.resolve(filePath);
+
+		if (isFunction(outputPath)) {
+			callback = outputPath;
+			outputPath = null;
+		}
+
+		var self = this;
+
+		fs.exists(filePath, function(exists) {
+			if (exists) {
+				fs.readFile(filePath, function(err, data) {
+					if (err) throw err;
+
+					var fileContents  = data.toString();
+
+					self._filePathStack.push(filePath);
+					fileContents = self._compileJSComments(fileContents);
+					self._filePathStack.pop();
+
+					if (outputPath) {
+						fs.writeFile(outputPath, fileContents);
+					} else {
+						if (callback) {
+							callback(fileContents);
+						} else {
+							console.log(fileContents);
+						}
+					}
+
+				});
+			}
 		});
 	},
 
@@ -450,23 +519,40 @@ Compressor.prototype = {
 
 			//处理压缩指令
 			var commentArray = comment.split(/[\r\n]+/),
+				result = [],
 				compressParams = {},
-				paramsLength = 0;
+				paramsLength = 0,
+				blankLineCount = 0;
 
 			//逐行处理注释，得到压缩指令
 			for (var j = 0, n = commentArray.length; j < n; j++) {
-				var commentLine = commentArray[j].replace(/(\/\*+|^\s*\*+\s*|^\s*\/{2,}\s*|\**\/$)/gm, '').trim(), //当前行
+				var commentLine = commentArray[j],
+					commentContent = commentLine.replace(/(\/\*+|^\s*\*+\s*|^\s*\/{2,}\s*|\*+\/$)/gm, '').trim(), //当前行
 					paramMatch,
 					paramName,
 					paramvalue;
 
-				if (paramMatch = commentLine.match(/@([^\s]+)\s*([^@\s]*)/)) {
+				//多个重复的空行只保留一个空行
+				if (commentLine.match(/^\s*\**\s*$/)) {
+					blankLineCount++;
+				}
+				if (blankLineCount > 1) {
+					blankLineCount = 0;
+					continue;
+				}
+
+				if (commentContent.match(/ClosureCompiler/i)) {
+					continue;
+				}
+
+				if (paramMatch = commentContent.match(/@([^\s]+)\s*([^@\s]*)/)) {
 					paramName = paramMatch[1].trim().toLowerCase();
 					paramvalue = paramMatch[2].trim();
 
 					if (self._compressParamsKeys.indexOf(paramName) > -1) {
 						if ('define' == paramName) {
 							if (paramvalue.indexOf('=') < 0) {
+								result.push(commentLine);
 								continue;
 							}
 							var _paramvalue = compressParams[paramName] || {},
@@ -479,7 +565,11 @@ Compressor.prototype = {
 						}
 						compressParams[paramName] = paramvalue;
 						paramsLength++;
+					} else {
+						result.push(commentLine);
 					}
+				} else {
+					result.push(commentLine);
 				}
 			}
 
@@ -490,6 +580,8 @@ Compressor.prototype = {
 			if (paramsLength > 0) {
 				self._compressParams.push(compressParams);
 			}
+
+			comment = result.join('\r\n');
 
 			//处理文件包含，得到合并后的文件内容
 			comment = comment.replace(/@requires\s+([^\s]+)/ig, function(input, requiredFile) {
@@ -512,7 +604,7 @@ Compressor.prototype = {
 
 					self._filePathStack.pop();
 
-					return 'File: ' + requiredFile + '\r\n */\r\n' + requiredFileContent + '\r\n/**';
+					return 'File: ' + requiredFile + '\r\n */\r\n\r\n' + requiredFileContent + '\r\n/**';
 				}
 				return '';
 			});

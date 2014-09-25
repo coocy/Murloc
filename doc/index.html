@@ -47,10 +47,10 @@
 					<h2>Notification</h2>
 						<li><a href="#Notification.fire">Notification.fire()</a></li>
 					<h2>URL</h2>
-						<li><a href="#getQueryString">getQueryString()</a></li>
 						<li><a href="#getElSearchString">getElSearchString()</a></li>
 						<li><a href="#setQueryString">setQueryString()</a></li>
-						<li><a href="#objToQueryString">objToQueryString()</a></li>
+						<li><a href="#$.param">$.param()</a></li>
+						<li><a href="#$.paramData">$.paramData()</a></li>
 					<h2>Cookie</h2>
 						<li><a href="#Cookie.get">Cookie.get()</a></li>
 						<li><a href="#Cookie.remove">Cookie.remove()</a></li>
@@ -802,37 +802,6 @@ jQuery的$().html()方法支持传入String和Function类型的参数，但是Mu
 								</div>
 
 						</div>
-						<a name="getQueryString"></a>
-						<div class="method_item">
-							<h2>getQueryString
-									<span>(key, el)</span><span class="return_type">  ⇒ ?string</span>
-							</h2>
-								<div class="method_detail">
-									<p>获取当前页面或者指定DOM对象的URL中的指定的GET参数的值</p>
-
-								</div>
-								<div class="method_param">
-									<h3>参数:</h3>
-										<p>
-											<b class="param_name">key</b>
-											<span class="param_type">string</span>
-											要获取的GET参数的键
-										</p>
-										<p>
-											<b class="param_name">el</b>
-											<span class="param_type">Element</span>
-											如此传递此参数，则获取这个DOM对象的url，如果不传则获取当前页面的url
-										</p>
-								</div>
-								<div class="method_param">
-									<h3>返回:</h3>
-										<p>
-											<span class="param_type">?string</span>
-											
-										</p>
-								</div>
-
-						</div>
 						<a name="getElSearchString"></a>
 						<div class="method_item">
 							<h2>getElSearchString
@@ -883,14 +852,55 @@ jQuery的$().html()方法支持传入String和Function类型的参数，但是Mu
 								</div>
 
 						</div>
-						<a name="objToQueryString"></a>
+						<a name="$.param"></a>
 						<div class="method_item">
-							<h2>objToQueryString
-									<span>()</span>
+							<h2>$.param
+									<span>(obj)</span><span class="return_type">  ⇒ string</span>
 							</h2>
 								<div class="method_detail">
-									<p>参数对象转为查询字符串片段</p>
+									<p>把一个Object对象序列化成查询字符串形式</p>
 
+								</div>
+								<div class="method_param">
+									<h3>参数:</h3>
+										<p>
+											<b class="param_name">obj</b>
+											<span class="param_type">Object</span>
+											需要序列化的Object
+										</p>
+								</div>
+								<div class="method_param">
+									<h3>返回:</h3>
+										<p>
+											<span class="param_type">string</span>
+											序列化的查询字符串
+										</p>
+								</div>
+
+						</div>
+						<a name="$.paramData"></a>
+						<div class="method_item">
+							<h2>$.paramData
+									<span>(queryString)</span><span class="return_type">  ⇒ Object</span>
+							</h2>
+								<div class="method_detail">
+									<p>把查询字符串转换为Object对象</p>
+
+								</div>
+								<div class="method_param">
+									<h3>参数:</h3>
+										<p>
+											<b class="param_name">queryString</b>
+											<span class="param_type">string</span>
+											查询字符串
+										</p>
+								</div>
+								<div class="method_param">
+									<h3>返回:</h3>
+										<p>
+											<span class="param_type">Object</span>
+											Object对象
+										</p>
 								</div>
 
 						</div>

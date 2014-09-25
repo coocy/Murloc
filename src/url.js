@@ -5,35 +5,6 @@
 var URL = {
 
 	/**
-	 * 根据传入的query字符串返回键值对形式的对象
-	 * @param {string} queryString query字符串
-	 * @return {Object}
-	 */
-	getQueryData: function(queryString) {
-		
-		/* 去掉字符串前面的"?"，并把&amp;转换为& */
-		queryString = queryString.replace(/^\?+/, '').replace(/&amp;/, '&');
-		var querys = queryString.split('&'),
-			i = querys.length,
-			_URLParms = {},
-			item;
-		
-		while (i--) {
-			item = querys[i].split('=');
-			if (item[0]) {
-				var value = item[1] || '';
-				try {
-					value = decodeURIComponent(value);
-				} catch(e) {
-					value = unescape(value);
-				}
-				_URLParms[decodeURIComponent(item[0])] =  value;
-			}
-		}
-		return _URLParms;
-	},
-
-	/**
 	 * 获取当前页面或者指定DOM对象的URL中的指定的GET参数的值
 	 * @param {string} key 要获取的GET参数的键
 	 * @param {Element} el 如此传递此参数，则获取这个DOM对象的url，如果不传则获取当前页面的url
@@ -43,7 +14,7 @@ var URL = {
 		var parms,
 			queryString = el ? URL.getElSearchString(el) : WIN.location.search.substring(1);
 
-		parms = URL.getQueryData(queryString);
+		parms = $.paramData(queryString);
 		return (key in parms) ? parms[key] : null;
 	},
 
@@ -58,7 +29,7 @@ var URL = {
 			searchString = el.search || '';
 		if (!searchString) {
 			var hrefString = ('FORM' == el.nodeName ? el.getAttribute('action') : el.getAttribute('href')),
-				pos = hrefString.indexOf('?');	
+				pos = hrefString.indexOf('?');
 			if (-1 !== pos) {
 				searchString = hrefString.slice(pos);
 			}
@@ -79,7 +50,7 @@ var URL = {
 			_key,
 			_value,
 			hrefString = '';
-			
+
 		/* 非<A>对象没有search属性 */
 		if (!elSearch) {
 			/** @type {string} */
@@ -116,53 +87,81 @@ var URL = {
 				_searchString = hrefString.slice(startPos + 1, endPos);
 			}
 		}
-		
-		var URLParms = URL.getQueryData(_searchString), /* 获取对象原有的GET参数 */
+
+		var URLParms = $.paramData(_searchString), /* 获取对象原有的GET参数 */
 			_result = [];
 
 		/* 把新参数和对象原有的GET参数合并 */
 		for (_key in data) {
 			URLParms[_key] = data[_key];
 		}
-		
+
 		for (_key in URLParms) {
 			_value = URLParms[_key];
 			_result.push(_key + (_value ? ('=' + encodeURIComponent(_value)) : ''));
 		}
 		if (_result.length < 1) return;
-		
+
 		var newSearchString = '?' + _result.join('&');
-	
+
 		if (elSearch) {
 			elTag.search = newSearchString;
 		} else {
 			var attri = ('FORM' == nodeName) ? 'action' : 'href';
 			el.attr(attri, hrefString.slice(0, startPos) + newSearchString + hrefString.slice(endPos));
 		}
-	},
-
-	/**
-	 * 参数对象转为查询字符串片段
-	 */
-	objToQueryString: function(obj) {
-		var result = [], key, value, i;
-		for (key in obj) {
-			value = obj[key];
-			if (value instanceof Array) {
-				for (i = value.length; i--;) {
-					result.push(key + '[]=' + encodeURIComponent(value[i]));
-				}
-			} else {
-				result.push(key + '=' + encodeURIComponent('undefined' === typeof value ? '' : value));
-			}
-		}
-		return result.join('&');
 	}
 };
 
+/**
+ * 把一个Object对象序列化成查询字符串形式
+ * @param {Object} obj 需要序列化的Object
+ * @return {string} 序列化的查询字符串
+ */
 $.param = function(obj) {
-	return URL.objToQueryString(obj);
-}
+	var result = [], key, value, i;
+	for (key in obj) {
+		value = obj[key];
+		if (value instanceof Array) {
+			for (i = value.length; i--;) {
+				result.push(key + '[]=' + encodeURIComponent(value[i]));
+			}
+		} else {
+			result.push(key + '=' + encodeURIComponent(undefined === value ? '' : value));
+		}
+	}
+	return result.join('&');
+};
+
+/**
+ * 把查询字符串转换为Object对象
+ * @param {string} queryString 查询字符串
+ * @return {Object} Object对象
+ */
+$.paramData = function(queryString) {
+
+	//去掉字符串前面的"?"，并把&amp;转换为&
+	queryString = queryString.replace(/^\?+/, '').replace(/&amp;/, '&');
+	var querys = queryString.split('&'),
+		i = querys.length,
+		parms = {},
+		item;
+
+	while (i--) {
+		item = querys[i].split('=');
+		if (item[0]) {
+			var value = item[1] || '';
+			try {
+				value = decodeURIComponent(value);
+			} catch(e) {
+				value = unescape(value);
+			}
+			parms[decodeURIComponent(item[0])] =  value;
+		}
+	}
+	return parms;
+};
+
 
 $.getUrlParam = function(key, el) {
 	return URL.getQueryString(key, el);

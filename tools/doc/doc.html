@@ -34,6 +34,14 @@
 
 		<div class="content_wrap">
 			<div class="method_list">
+
+				<div class="method_item">
+						<div class="text_content">
+							{include file="../../README.md"}
+						</div>
+				</div>
+
+
 				{foreach: docData, docName, docDataItem}
 					{foreach: docDataItem.docMap, methodName, methodData}
 						<a name="{methodName}"></a>
@@ -47,7 +55,7 @@
 
 							{if:methodData.description}
 								<div class="method_detail">
-									{methodData.description}
+									{methodData.description|md}
 								</div>
 							{end:}
 

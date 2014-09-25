@@ -10,7 +10,6 @@ var fs = require('fs'),
 	sourceFileDir = path.resolve(currentFileDir, '../src/'),
 	outputDir = path.resolve(currentFileDir, '../doc/');
 
-
 GLOBAL.document = {};
 GLOBAL.window = {
 	navigator: {
@@ -213,7 +212,7 @@ fs.readFile(sourceFileDir + '/Murloc.js', function(err, data) {
 					compressHTML: true
 				});
 
-				templateObj.parse('templates/doc/list.html', {
+				templateObj.parse('doc/doc.html', {
 					'docData': docData
 				},
 				function(result) {

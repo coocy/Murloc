@@ -1,5 +1,5 @@
 
-div,p,dl,dd,a,b,em,input,textarea,button,select,form,section,label,span,td,li,nav,footer,body,ul,i,h1,h2,h3,h4{
+div,p,dl,dd,a,b,em,input,textarea,button,select,form,section,label,span,td,nav,footer,body,ul,i,h1,h2,h3,h4{
 	-webkit-tap-highlight-color:rgba(0,0,0,0);
 	word-wrap:break-word;
 	word-break:break-all;
@@ -239,4 +239,20 @@ select{
 	}
 }
 
+code{
+	font:.85em Consolas, "Liberation Mono", Menlo, Courier, monospace;
+	display:block;
+	background:#f3f3f3;
+	padding:1em;
+	line-height:1.5;
+}
 
+.text_content{
+	padding:1em;
+	color:#333;
+	line-height:1.7;
+}
+.text_content h3{
+	padding:.5em 0;
+	color:#000;
+}

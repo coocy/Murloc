@@ -3,7 +3,8 @@
  */
 
 var fs = require('fs'),
-	path = require('path');
+	path = require('path'),
+	markdown = require('./marked.js');
 
 /**
  * 简单判断一个对象是否是Object结构
@@ -46,6 +47,16 @@ var extend = function(dest, source) {
 	}
 	return dest;
 };
+
+/**
+ * 获取文件扩展名
+ * @param {string} fileName 文件名
+ * @return {string} 文件扩展名
+ */
+var getFileExt = function(fileName) {
+	return fileName.slice(fileName.lastIndexOf('.') + 1).toLowerCase();
+};
+
 
 /**
  * 变量过滤器方法 {variable|string}
@@ -91,6 +102,11 @@ var StringModifiors = {
 			string = JSON.stringify(string);
 		}
 		return '<pre style="line-height:1.6;font-size:.8em;font-family:Consolas, \'Liberation Mono\', Menlo, Courier, monospace">' + string + '</pre>';
+	},
+
+	//markdown
+	'md': function(string) {
+		return markdown(string);
 	}
 
 };
@@ -283,8 +299,13 @@ Template.prototype = {
 
 					this._templatesPathStack.push(file);
 
-					fileContent = fs.readFileSync(file);
-					block = this._parseContentToTree(fileContent.toString());
+					fileContent = fs.readFileSync(file).toString();
+
+					if ('md' === getFileExt(file)) {
+						fileContent = markdown(fileContent);
+					}
+
+					block = this._parseContentToTree(fileContent);
 
 					this._templatesPathStack.pop();
 

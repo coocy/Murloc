@@ -5,20 +5,6 @@
 var URL = {
 
 	/**
-	 * 获取当前页面或者指定DOM对象的URL中的指定的GET参数的值
-	 * @param {string} key 要获取的GET参数的键
-	 * @param {Element} el 如此传递此参数，则获取这个DOM对象的url，如果不传则获取当前页面的url
-	 * @return {?string}
-	 */
-	getQueryString: function(key, el) {
-		var parms,
-			queryString = el ? URL.getElSearchString(el) : WIN.location.search.substring(1);
-
-		parms = $.paramData(queryString);
-		return (key in parms) ? parms[key] : null;
-	},
-
-	/**
 	 * 获取指定DOM对象的链接地址的queryString
 	 * @param {Element} el 要获取参数的DOM对象
 	 * @return {string}
@@ -162,6 +148,29 @@ $.paramData = function(queryString) {
 	return parms;
 };
 
+/**
+ * 获取或者设置当前页面的查询字符串中指定的key的值
+ * @param {string=} key
+ * @param {string=} value
+ * @return {string=} 指定的key的value；
+ * 1. 如果不传入key和value，则返回完整的查询字符串；
+ * 2. 如果只传了key，则返回查询字符串中对应的key的值
+ * 3. 如果传了key和value，则设置查询字符串中对应的key值为value，无返回值
+ */
+$.query = function(key, value) {
+	var queryString = WIN.location.search.substring(1),
+		argLength = arguments.length;
+	if (argLength < 1) {
+		return queryString;
+	} else {
+		var paramData = $.paramData(queryString);
+		if (argLength < 2) {
+			return paramData[key];
+		} else {
+			paramData[key] = value;
+		}
+	}
+};
 
 $.getUrlParam = function(key, el) {
 	return URL.getQueryString(key, el);

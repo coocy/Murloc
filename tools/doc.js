@@ -108,12 +108,14 @@ var getDocFromFile = function(fileName, callback) {
 
 					var commentArray = comment.split(/[\r\n]+/),
 						commentResult = {},
-						currentTag = 'description'; //当前处理的标签名称
+						currentTag = 'description', //当前处理的标签名称
+						lastTag = currentTag;
 
 					//逐行处理注释，把注释按类型归成数组放到commentResult中
 					for (var j = 0, n = commentArray.length; j < n; j++) {
 						var commentLine = commentArray[j].trim(), //当前行
 							tagMatch, //匹配标签名称
+							commentText = null,
 							commentLineResult; //当前行处理结果
 
 						if (tagMatch = commentLine.match(/^\s*@([^\s]+)/)) {
@@ -124,6 +126,8 @@ var getDocFromFile = function(fileName, callback) {
 									continue;
 								}
 							}
+						} else {
+							commentText = commentLine;
 						}
 
 						if ('description' === currentTag) {
@@ -132,7 +136,17 @@ var getDocFromFile = function(fileName, callback) {
 
 						var data = commentResult[currentTag] || (commentResult[currentTag] = []);
 						data = data || [];
-						data.push && data.push(commentLineResult);
+						var dataLength = data.length;
+						if (null !== commentText) {
+							if (dataLength > 0) {
+								var lastDataItem = data[data.length - 1];
+								if ('comment' in lastDataItem) {
+									lastDataItem['comment'] += '\r\n' + commentText;
+								}
+						}
+						} else {
+							data.push && data.push(commentLineResult);
+						}
 					}
 
 					//二次处理

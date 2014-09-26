@@ -63,11 +63,15 @@
 								<div class="method_param">
 									<h3>参数:</h3>
 									{foreach: methodData.param, methodParams}
-										<p>
+										<div class="param_item">
 											<b class="param_name">{methodParams.name}</b>
 											<span class="param_type">{methodParams.type}</span>
-											{methodParams.comment}
-										</p>
+											{if:methodParams.comment}
+												<div class="text_content param_comment">
+													{methodParams.comment|md}
+												</div>
+											{end:}
+										</div>
 									{end:}
 								</div>
 							{end:}
@@ -75,10 +79,14 @@
 								<div class="method_param">
 									<h3>返回:</h3>
 									{foreach: methodData.return, methodParams}
-										<p>
+										<div class="param_item">
 											<span class="param_type">{methodParams.type}</span>
-											{methodParams.comment}
-										</p>
+											{if:methodParams.comment}
+												<div class="text_content param_comment">
+													{methodParams.comment|md}
+												</div>
+											{end:}
+										</div>
 									{end:}
 								</div>
 							{end:}

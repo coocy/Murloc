@@ -106,7 +106,7 @@ var StringModifiors = {
 
 	//markdown
 	'md': function(string) {
-		return markdown(string);
+		return markdown((string || '').trim());
 	}
 
 };

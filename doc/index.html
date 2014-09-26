@@ -47,10 +47,10 @@
 					<h2>Notification</h2>
 						<li><a href="#Notification.fire">Notification.fire()</a></li>
 					<h2>URL</h2>
-						<li><a href="#getElSearchString">getElSearchString()</a></li>
 						<li><a href="#setQueryString">setQueryString()</a></li>
 						<li><a href="#$.param">$.param()</a></li>
 						<li><a href="#$.paramData">$.paramData()</a></li>
+						<li><a href="#$.query">$.query()</a></li>
 					<h2>Cookie</h2>
 						<li><a href="#Cookie.get">Cookie.get()</a></li>
 						<li><a href="#Cookie.remove">Cookie.remove()</a></li>
@@ -214,16 +214,11 @@ jQuery的$().html()方法支持传入String和Function类型的参数，但是Mu
 							<h2>String.prototype.trim
 									<span>()</span><span class="return_type">  ⇒ string</span>
 							</h2>
-								<div class="method_detail">
-									<p>去掉字符串头尾的空白字符</p>
-
-								</div>
 								<div class="method_param">
 									<h3>返回:</h3>
-										<p>
+										<div class="param_item">
 											<span class="param_type">string</span>
-											
-										</p>
+										</div>
 								</div>
 
 						</div>
@@ -234,18 +229,16 @@ jQuery的$().html()方法支持传入String和Function类型的参数，但是Mu
 							</h2>
 								<div class="method_param">
 									<h3>参数:</h3>
-										<p>
+										<div class="param_item">
 											<b class="param_name">element</b>
 											<span class="param_type">*</span>
-											
-										</p>
+										</div>
 								</div>
 								<div class="method_param">
 									<h3>返回:</h3>
-										<p>
+										<div class="param_item">
 											<span class="param_type">number</span>
-											
-										</p>
+										</div>
 								</div>
 
 						</div>
@@ -256,18 +249,16 @@ jQuery的$().html()方法支持传入String和Function类型的参数，但是Mu
 							</h2>
 								<div class="method_param">
 									<h3>参数:</h3>
-										<p>
+										<div class="param_item">
 											<b class="param_name">context</b>
 											<span class="param_type">Object</span>
-											
-										</p>
+										</div>
 								</div>
 								<div class="method_param">
 									<h3>返回:</h3>
-										<p>
+										<div class="param_item">
 											<span class="param_type">!Function</span>
-											
-										</p>
+										</div>
 								</div>
 
 						</div>
@@ -276,29 +267,34 @@ jQuery的$().html()方法支持传入String和Function类型的参数，但是Mu
 							<h2>$.selectorAll
 									<span>(selector, [context])</span><span class="return_type">  ⇒ {length: number}</span>
 							</h2>
-								<div class="method_detail">
-									<p>返回指定选择符的DOM集合</p>
-
-								</div>
 								<div class="method_param">
 									<h3>参数:</h3>
-										<p>
+										<div class="param_item">
 											<b class="param_name">selector</b>
 											<span class="param_type">string</span>
-											CSS选择符
-										</p>
-										<p>
+												<div class="text_content param_comment">
+													<p>CSS选择符</p>
+
+												</div>
+										</div>
+										<div class="param_item">
 											<b class="param_name">context</b>
 											<span class="param_type">Element=</span>
-											(可选)
-										</p>
+												<div class="text_content param_comment">
+													<p>(可选)</p>
+
+												</div>
+										</div>
 								</div>
 								<div class="method_param">
 									<h3>返回:</h3>
-										<p>
+										<div class="param_item">
 											<span class="param_type">{length: number}</span>
-											类似Array的DOM集合(只有length属性)
-										</p>
+												<div class="text_content param_comment">
+													<p>类似Array的DOM集合(只有length属性)</p>
+
+												</div>
+										</div>
 								</div>
 
 						</div>
@@ -307,24 +303,18 @@ jQuery的$().html()方法支持传入String和Function类型的参数，但是Mu
 							<h2>$.isArray
 									<span>(obj)</span><span class="return_type">  ⇒ boolean</span>
 							</h2>
-								<div class="method_detail">
-									<p>判断一个对象是否是数组</p>
-
-								</div>
 								<div class="method_param">
 									<h3>参数:</h3>
-										<p>
+										<div class="param_item">
 											<b class="param_name">obj</b>
 											<span class="param_type">*</span>
-											
-										</p>
+										</div>
 								</div>
 								<div class="method_param">
 									<h3>返回:</h3>
-										<p>
+										<div class="param_item">
 											<span class="param_type">boolean</span>
-											
-										</p>
+										</div>
 								</div>
 
 						</div>
@@ -333,24 +323,18 @@ jQuery的$().html()方法支持传入String和Function类型的参数，但是Mu
 							<h2>$.isFunction
 									<span>(obj)</span><span class="return_type">  ⇒ boolean</span>
 							</h2>
-								<div class="method_detail">
-									<p>判断一个对象是否是一个方法</p>
-
-								</div>
 								<div class="method_param">
 									<h3>参数:</h3>
-										<p>
+										<div class="param_item">
 											<b class="param_name">obj</b>
 											<span class="param_type">*</span>
-											
-										</p>
+										</div>
 								</div>
 								<div class="method_param">
 									<h3>返回:</h3>
-										<p>
+										<div class="param_item">
 											<span class="param_type">boolean</span>
-											
-										</p>
+										</div>
 								</div>
 
 						</div>
@@ -359,24 +343,18 @@ jQuery的$().html()方法支持传入String和Function类型的参数，但是Mu
 							<h2>$.isPlainObject
 									<span>(obj)</span><span class="return_type">  ⇒ boolean</span>
 							</h2>
-								<div class="method_detail">
-									<p>判断一个对象是否是Object结构</p>
-
-								</div>
 								<div class="method_param">
 									<h3>参数:</h3>
-										<p>
+										<div class="param_item">
 											<b class="param_name">obj</b>
 											<span class="param_type">*</span>
-											
-										</p>
+										</div>
 								</div>
 								<div class="method_param">
 									<h3>返回:</h3>
-										<p>
+										<div class="param_item">
 											<span class="param_type">boolean</span>
-											
-										</p>
+										</div>
 								</div>
 
 						</div>
@@ -385,24 +363,18 @@ jQuery的$().html()方法支持传入String和Function类型的参数，但是Mu
 							<h2>$.isObject
 									<span>(obj)</span><span class="return_type">  ⇒ boolean</span>
 							</h2>
-								<div class="method_detail">
-									<p>简单判断一个对象是否是Object结构，比$.isPlainObject()速度快，但是兼容性不如$.isPlainObject()</p>
-
-								</div>
 								<div class="method_param">
 									<h3>参数:</h3>
-										<p>
+										<div class="param_item">
 											<b class="param_name">obj</b>
 											<span class="param_type">*</span>
-											
-										</p>
+										</div>
 								</div>
 								<div class="method_param">
 									<h3>返回:</h3>
-										<p>
+										<div class="param_item">
 											<span class="param_type">boolean</span>
-											
-										</p>
+										</div>
 								</div>
 
 						</div>
@@ -411,24 +383,18 @@ jQuery的$().html()方法支持传入String和Function类型的参数，但是Mu
 							<h2>$.isWindow
 									<span>(element)</span><span class="return_type">  ⇒ boolean</span>
 							</h2>
-								<div class="method_detail">
-									<p>判断一个对象是否是window对象</p>
-
-								</div>
 								<div class="method_param">
 									<h3>参数:</h3>
-										<p>
+										<div class="param_item">
 											<b class="param_name">element</b>
 											<span class="param_type">*</span>
-											
-										</p>
+										</div>
 								</div>
 								<div class="method_param">
 									<h3>返回:</h3>
-										<p>
+										<div class="param_item">
 											<span class="param_type">boolean</span>
-											
-										</p>
+										</div>
 								</div>
 
 						</div>
@@ -437,22 +403,16 @@ jQuery的$().html()方法支持传入String和Function类型的参数，但是Mu
 							<h2>$.each
 									<span>(collection, fn)</span>
 							</h2>
-								<div class="method_detail">
-									<p>迭代一个数组或者Object对象，对其中的每个子元素执行一个方法</p>
-
-								</div>
 								<div class="method_param">
 									<h3>参数:</h3>
-										<p>
+										<div class="param_item">
 											<b class="param_name">collection</b>
 											<span class="param_type">(Array|Object)</span>
-											
-										</p>
-										<p>
+										</div>
+										<div class="param_item">
 											<b class="param_name">fn</b>
 											<span class="param_type">function(number=, Element=)</span>
-											
-										</p>
+										</div>
 								</div>
 
 						</div>
@@ -461,29 +421,26 @@ jQuery的$().html()方法支持传入String和Function类型的参数，但是Mu
 							<h2>$.extend
 									<span>(dest, source)</span><span class="return_type">  ⇒ Object</span>
 							</h2>
-								<div class="method_detail">
-									<p>扩展一个Object对象，也可以用来复制一个对象</p>
-
-								</div>
 								<div class="method_param">
 									<h3>参数:</h3>
-										<p>
+										<div class="param_item">
 											<b class="param_name">dest</b>
 											<span class="param_type">Object</span>
-											
-										</p>
-										<p>
+										</div>
+										<div class="param_item">
 											<b class="param_name">source</b>
 											<span class="param_type">Object</span>
-											
-										</p>
+										</div>
 								</div>
 								<div class="method_param">
 									<h3>返回:</h3>
-										<p>
+										<div class="param_item">
 											<span class="param_type">Object</span>
-											扩展后的对象
-										</p>
+												<div class="text_content param_comment">
+													<p>扩展后的对象</p>
+
+												</div>
+										</div>
 								</div>
 
 						</div>
@@ -492,24 +449,22 @@ jQuery的$().html()方法支持传入String和Function类型的参数，但是Mu
 							<h2>$.copy
 									<span>(dest)</span><span class="return_type">  ⇒ (Array|Object)</span>
 							</h2>
-								<div class="method_detail">
-									<p>深复制一个数组或者对象</p>
-
-								</div>
 								<div class="method_param">
 									<h3>参数:</h3>
-										<p>
+										<div class="param_item">
 											<b class="param_name">dest</b>
 											<span class="param_type">(Array|Object)</span>
-											
-										</p>
+										</div>
 								</div>
 								<div class="method_param">
 									<h3>返回:</h3>
-										<p>
+										<div class="param_item">
 											<span class="param_type">(Array|Object)</span>
-											复制后的数组或者对象
-										</p>
+												<div class="text_content param_comment">
+													<p>复制后的数组或者对象</p>
+
+												</div>
+										</div>
 								</div>
 
 						</div>
@@ -518,24 +473,18 @@ jQuery的$().html()方法支持传入String和Function类型的参数，但是Mu
 							<h2>$.trim
 									<span>(string)</span><span class="return_type">  ⇒ string</span>
 							</h2>
-								<div class="method_detail">
-									<p>去掉字符串头尾的空白字符。这个方法只是为了兼容jQuery，建议使用string的trim方法</p>
-
-								</div>
 								<div class="method_param">
 									<h3>参数:</h3>
-										<p>
+										<div class="param_item">
 											<b class="param_name">string</b>
 											<span class="param_type">string</span>
-											
-										</p>
+										</div>
 								</div>
 								<div class="method_param">
 									<h3>返回:</h3>
-										<p>
+										<div class="param_item">
 											<span class="param_type">string</span>
-											
-										</p>
+										</div>
 								</div>
 
 						</div>
@@ -544,24 +493,22 @@ jQuery的$().html()方法支持传入String和Function类型的参数，但是Mu
 							<h2>$.camelCase
 									<span>(string)</span><span class="return_type">  ⇒ string</span>
 							</h2>
-								<div class="method_detail">
-									<p>将连字符字符串转化为驼峰形式</p>
-
-								</div>
 								<div class="method_param">
 									<h3>参数:</h3>
-										<p>
+										<div class="param_item">
 											<b class="param_name">string</b>
 											<span class="param_type">string</span>
-											
-										</p>
+										</div>
 								</div>
 								<div class="method_param">
 									<h3>返回:</h3>
-										<p>
+										<div class="param_item">
 											<span class="param_type">string</span>
-											驼峰形式的字符串
-										</p>
+												<div class="text_content param_comment">
+													<p>驼峰形式的字符串</p>
+
+												</div>
+										</div>
 								</div>
 
 						</div>
@@ -570,29 +517,22 @@ jQuery的$().html()方法支持传入String和Function类型的参数，但是Mu
 							<h2>$.proxy
 									<span>(fn, context)</span><span class="return_type">  ⇒ !Function</span>
 							</h2>
-								<div class="method_detail">
-									<p>改变一个函数的this指针。这个方法只是为了兼容jQuery，建议使用function的bind方法</p>
-
-								</div>
 								<div class="method_param">
 									<h3>参数:</h3>
-										<p>
+										<div class="param_item">
 											<b class="param_name">fn</b>
 											<span class="param_type">Function</span>
-											
-										</p>
-										<p>
+										</div>
+										<div class="param_item">
 											<b class="param_name">context</b>
 											<span class="param_type">Object</span>
-											
-										</p>
+										</div>
 								</div>
 								<div class="method_param">
 									<h3>返回:</h3>
-										<p>
+										<div class="param_item">
 											<span class="param_type">!Function</span>
-											
-										</p>
+										</div>
 								</div>
 
 						</div>
@@ -603,28 +543,24 @@ jQuery的$().html()方法支持传入String和Function类型的参数，但是Mu
 							</h2>
 								<div class="method_param">
 									<h3>参数:</h3>
-										<p>
+										<div class="param_item">
 											<b class="param_name">elements</b>
 											<span class="param_type">Array</span>
-											
-										</p>
-										<p>
+										</div>
+										<div class="param_item">
 											<b class="param_name">fn</b>
 											<span class="param_type">Function</span>
-											
-										</p>
-										<p>
+										</div>
+										<div class="param_item">
 											<b class="param_name">args</b>
 											<span class="param_type">*</span>
-											
-										</p>
+										</div>
 								</div>
 								<div class="method_param">
 									<h3>返回:</h3>
-										<p>
+										<div class="param_item">
 											<span class="param_type">Array</span>
-											
-										</p>
+										</div>
 								</div>
 
 						</div>
@@ -633,24 +569,26 @@ jQuery的$().html()方法支持传入String和Function类型的参数，但是Mu
 							<h2>JSON.stringify
 									<span>(obj)</span><span class="return_type">  ⇒ string</span>
 							</h2>
-								<div class="method_detail">
-									<p>把一个标准JSON对象序列化成一个字符串，如果浏览器支持原生的JSON对象，会直接使用原生对象的方法，否则使用自定义实现的方法。</p>
-
-								</div>
 								<div class="method_param">
 									<h3>参数:</h3>
-										<p>
+										<div class="param_item">
 											<b class="param_name">obj</b>
 											<span class="param_type">JSONType</span>
-											JSON对象
-										</p>
+												<div class="text_content param_comment">
+													<p>JSON对象</p>
+
+												</div>
+										</div>
 								</div>
 								<div class="method_param">
 									<h3>返回:</h3>
-										<p>
+										<div class="param_item">
 											<span class="param_type">string</span>
-											序列化成后的字符串
-										</p>
+												<div class="text_content param_comment">
+													<p>序列化成后的字符串</p>
+
+												</div>
+										</div>
 								</div>
 
 						</div>
@@ -659,24 +597,26 @@ jQuery的$().html()方法支持传入String和Function类型的参数，但是Mu
 							<h2>JSON.parse
 									<span>(string)</span><span class="return_type">  ⇒ JSONType</span>
 							</h2>
-								<div class="method_detail">
-									<p>把一个JSON字符串转换为标准JSON对象，如果浏览器支持原生的JSON对象，会直接使用原生对象的方法，否则使用自定义实现的方法。</p>
-
-								</div>
 								<div class="method_param">
 									<h3>参数:</h3>
-										<p>
+										<div class="param_item">
 											<b class="param_name">string</b>
 											<span class="param_type">string</span>
-											JSON字符串
-										</p>
+												<div class="text_content param_comment">
+													<p>JSON字符串</p>
+
+												</div>
+										</div>
 								</div>
 								<div class="method_param">
 									<h3>返回:</h3>
-										<p>
+										<div class="param_item">
 											<span class="param_type">JSONType</span>
-											标准JSON对象
-										</p>
+												<div class="text_content param_comment">
+													<p>标准JSON对象</p>
+
+												</div>
+										</div>
 								</div>
 
 						</div>
@@ -685,24 +625,26 @@ jQuery的$().html()方法支持传入String和Function类型的参数，但是Mu
 							<h2>$.parseJSON
 									<span>(string)</span><span class="return_type">  ⇒ JSONType</span>
 							</h2>
-								<div class="method_detail">
-									<p>JSON.parse()的别名</p>
-
-								</div>
 								<div class="method_param">
 									<h3>参数:</h3>
-										<p>
+										<div class="param_item">
 											<b class="param_name">string</b>
 											<span class="param_type">string</span>
-											JSON字符串
-										</p>
+												<div class="text_content param_comment">
+													<p>JSON字符串</p>
+
+												</div>
+										</div>
 								</div>
 								<div class="method_param">
 									<h3>返回:</h3>
-										<p>
+										<div class="param_item">
 											<span class="param_type">JSONType</span>
-											标准JSON对象
-										</p>
+												<div class="text_content param_comment">
+													<p>标准JSON对象</p>
+
+												</div>
+										</div>
 								</div>
 
 						</div>
@@ -711,27 +653,32 @@ jQuery的$().html()方法支持传入String和Function类型的参数，但是Mu
 							<h2>$.getScript
 									<span>(url, callback, opts)</span>
 							</h2>
-								<div class="method_detail">
-									<p>加载js</p>
-
-								</div>
 								<div class="method_param">
 									<h3>参数:</h3>
-										<p>
+										<div class="param_item">
 											<b class="param_name">url</b>
 											<span class="param_type">String</span>
-											js文件路径
-										</p>
-										<p>
+												<div class="text_content param_comment">
+													<p>js文件路径</p>
+
+												</div>
+										</div>
+										<div class="param_item">
 											<b class="param_name">callback</b>
 											<span class="param_type">Function</span>
-											加载完成后的回调
-										</p>
-										<p>
+												<div class="text_content param_comment">
+													<p>加载完成后的回调</p>
+
+												</div>
+										</div>
+										<div class="param_item">
 											<b class="param_name">opts</b>
 											<span class="param_type">Array</span>
-											传给回调的参数
-										</p>
+												<div class="text_content param_comment">
+													<p>传给回调的参数</p>
+
+												</div>
+										</div>
 								</div>
 
 						</div>
@@ -740,17 +687,16 @@ jQuery的$().html()方法支持传入String和Function类型的参数，但是Mu
 							<h2>$.getCSS
 									<span>(url)</span>
 							</h2>
-								<div class="method_detail">
-									<p>加载css</p>
-
-								</div>
 								<div class="method_param">
 									<h3>参数:</h3>
-										<p>
+										<div class="param_item">
 											<b class="param_name">url</b>
 											<span class="param_type">String</span>
-											css文件路径
-										</p>
+												<div class="text_content param_comment">
+													<p>css文件路径</p>
+
+												</div>
+										</div>
 								</div>
 
 						</div>
@@ -759,17 +705,16 @@ jQuery的$().html()方法支持传入String和Function类型的参数，但是Mu
 							<h2>Storage.clear
 									<span>(prefix)</span>
 							</h2>
-								<div class="method_detail">
-									<p>清除本地存贮数据</p>
-
-								</div>
 								<div class="method_param">
 									<h3>参数:</h3>
-										<p>
+										<div class="param_item">
 											<b class="param_name">prefix</b>
 											<span class="param_type">String</span>
-											可选，如果包含此参数，则只删除包含此前缀的项，否则清除全部缓存
-										</p>
+												<div class="text_content param_comment">
+													<p>可选，如果包含此参数，则只删除包含此前缀的项，否则清除全部缓存</p>
+
+												</div>
+										</div>
 								</div>
 
 						</div>
@@ -778,53 +723,32 @@ jQuery的$().html()方法支持传入String和Function类型的参数，但是Mu
 							<h2>Notification.fire
 									<span>(notificationName, argArray, thisArg)</span>
 							</h2>
-								<div class="method_detail">
-									<p>触发一个通知，这个函数会遍历执行注册给这个通知名的函数</p>
-
-								</div>
 								<div class="method_param">
 									<h3>参数:</h3>
-										<p>
+										<div class="param_item">
 											<b class="param_name">notificationName</b>
 											<span class="param_type">String</span>
-											通知名
-										</p>
-										<p>
+												<div class="text_content param_comment">
+													<p>通知名</p>
+
+												</div>
+										</div>
+										<div class="param_item">
 											<b class="param_name">argArray</b>
 											<span class="param_type">Array | Obj</span>
-											可选，要传递给函数的参数列表
-										</p>
-										<p>
+												<div class="text_content param_comment">
+													<p>可选，要传递给函数的参数列表</p>
+
+												</div>
+										</div>
+										<div class="param_item">
 											<b class="param_name">thisArg</b>
 											<span class="param_type">Obj</span>
-											可选，函数的this指针，默认为window对象
-										</p>
-								</div>
+												<div class="text_content param_comment">
+													<p>可选，函数的this指针，默认为window对象</p>
 
-						</div>
-						<a name="getElSearchString"></a>
-						<div class="method_item">
-							<h2>getElSearchString
-									<span>(el)</span><span class="return_type">  ⇒ string</span>
-							</h2>
-								<div class="method_detail">
-									<p>获取指定DOM对象的链接地址的queryString</p>
-
-								</div>
-								<div class="method_param">
-									<h3>参数:</h3>
-										<p>
-											<b class="param_name">el</b>
-											<span class="param_type">Element</span>
-											要获取参数的DOM对象
-										</p>
-								</div>
-								<div class="method_param">
-									<h3>返回:</h3>
-										<p>
-											<span class="param_type">string</span>
-											
-										</p>
+												</div>
+										</div>
 								</div>
 
 						</div>
@@ -833,22 +757,24 @@ jQuery的$().html()方法支持传入String和Function类型的参数，但是Mu
 							<h2>setQueryString
 									<span>(el, data)</span>
 							</h2>
-								<div class="method_detail">
-									<p>设置指定DOM对象或者页面的URL中的指定的GET参数的值</p>
-
-								</div>
 								<div class="method_param">
 									<h3>参数:</h3>
-										<p>
+										<div class="param_item">
 											<b class="param_name">el</b>
 											<span class="param_type">Element</span>
-											设置这个DOM对象的url
-										</p>
-										<p>
+												<div class="text_content param_comment">
+													<p>设置这个DOM对象的url</p>
+
+												</div>
+										</div>
+										<div class="param_item">
 											<b class="param_name">data</b>
 											<span class="param_type">Object</span>
-											要设置的GET参数，以键值对的方式提供
-										</p>
+												<div class="text_content param_comment">
+													<p>要设置的GET参数，以键值对的方式提供</p>
+
+												</div>
+										</div>
 								</div>
 
 						</div>
@@ -857,24 +783,26 @@ jQuery的$().html()方法支持传入String和Function类型的参数，但是Mu
 							<h2>$.param
 									<span>(obj)</span><span class="return_type">  ⇒ string</span>
 							</h2>
-								<div class="method_detail">
-									<p>把一个Object对象序列化成查询字符串形式</p>
-
-								</div>
 								<div class="method_param">
 									<h3>参数:</h3>
-										<p>
+										<div class="param_item">
 											<b class="param_name">obj</b>
 											<span class="param_type">Object</span>
-											需要序列化的Object
-										</p>
+												<div class="text_content param_comment">
+													<p>需要序列化的Object</p>
+
+												</div>
+										</div>
 								</div>
 								<div class="method_param">
 									<h3>返回:</h3>
-										<p>
+										<div class="param_item">
 											<span class="param_type">string</span>
-											序列化的查询字符串
-										</p>
+												<div class="text_content param_comment">
+													<p>序列化的查询字符串</p>
+
+												</div>
+										</div>
 								</div>
 
 						</div>
@@ -883,24 +811,59 @@ jQuery的$().html()方法支持传入String和Function类型的参数，但是Mu
 							<h2>$.paramData
 									<span>(queryString)</span><span class="return_type">  ⇒ Object</span>
 							</h2>
-								<div class="method_detail">
-									<p>把查询字符串转换为Object对象</p>
-
-								</div>
 								<div class="method_param">
 									<h3>参数:</h3>
-										<p>
+										<div class="param_item">
 											<b class="param_name">queryString</b>
 											<span class="param_type">string</span>
-											查询字符串
-										</p>
+												<div class="text_content param_comment">
+													<p>查询字符串</p>
+
+												</div>
+										</div>
 								</div>
 								<div class="method_param">
 									<h3>返回:</h3>
-										<p>
+										<div class="param_item">
 											<span class="param_type">Object</span>
-											Object对象
-										</p>
+												<div class="text_content param_comment">
+													<p>Object对象</p>
+
+												</div>
+										</div>
+								</div>
+
+						</div>
+						<a name="$.query"></a>
+						<div class="method_item">
+							<h2>$.query
+									<span>([key], [value])</span><span class="return_type">  ⇒ string=</span>
+							</h2>
+								<div class="method_param">
+									<h3>参数:</h3>
+										<div class="param_item">
+											<b class="param_name">key</b>
+											<span class="param_type">string=</span>
+										</div>
+										<div class="param_item">
+											<b class="param_name">value</b>
+											<span class="param_type">string=</span>
+										</div>
+								</div>
+								<div class="method_param">
+									<h3>返回:</h3>
+										<div class="param_item">
+											<span class="param_type">string=</span>
+												<div class="text_content param_comment">
+													<p>指定的key的value；</p>
+<ol>
+<li>如果不传入key和value，则返回完整的查询字符串；</li>
+<li>如果只传了key，则返回查询字符串中对应的key的值</li>
+<li>如果传了key和value，则设置查询字符串中对应的key值为value，无返回值</li>
+</ol>
+
+												</div>
+										</div>
 								</div>
 
 						</div>
@@ -909,24 +872,26 @@ jQuery的$().html()方法支持传入String和Function类型的参数，但是Mu
 							<h2>Cookie.get
 									<span>(name)</span><span class="return_type">  ⇒ ?string</span>
 							</h2>
-								<div class="method_detail">
-									<p>读取指定的Cookie</p>
-
-								</div>
 								<div class="method_param">
 									<h3>参数:</h3>
-										<p>
+										<div class="param_item">
 											<b class="param_name">name</b>
 											<span class="param_type">string</span>
-											要获取的Cookie名称
-										</p>
+												<div class="text_content param_comment">
+													<p>要获取的Cookie名称</p>
+
+												</div>
+										</div>
 								</div>
 								<div class="method_param">
 									<h3>返回:</h3>
-										<p>
+										<div class="param_item">
 											<span class="param_type">?string</span>
-											对应的Cookie值，如果不存在，返回null
-										</p>
+												<div class="text_content param_comment">
+													<p>对应的Cookie值，如果不存在，返回null</p>
+
+												</div>
+										</div>
 								</div>
 
 						</div>
@@ -935,17 +900,16 @@ jQuery的$().html()方法支持传入String和Function类型的参数，但是Mu
 							<h2>Cookie.remove
 									<span>(name)</span>
 							</h2>
-								<div class="method_detail">
-									<p>删除指定的Cookie</p>
-
-								</div>
 								<div class="method_param">
 									<h3>参数:</h3>
-										<p>
+										<div class="param_item">
 											<b class="param_name">name</b>
 											<span class="param_type">string</span>
-											要删除的Cookie名称
-										</p>
+												<div class="text_content param_comment">
+													<p>要删除的Cookie名称</p>
+
+												</div>
+										</div>
 								</div>
 
 						</div>
@@ -954,24 +918,26 @@ jQuery的$().html()方法支持传入String和Function类型的参数，但是Mu
 							<h2>$.toArray
 									<span>(elements)</span><span class="return_type">  ⇒ Array</span>
 							</h2>
-								<div class="method_detail">
-									<p>把DOM集合转换为数组，由elem.querySelector()得到的DOM集合为动态集合，有时候需要转化为常规数组</p>
-
-								</div>
 								<div class="method_param">
 									<h3>参数:</h3>
-										<p>
+										<div class="param_item">
 											<b class="param_name">elements</b>
 											<span class="param_type">(Array.<(Element)>|{length: number})</span>
-											数组或者类似数组的DOM集合
-										</p>
+												<div class="text_content param_comment">
+													<p>数组或者类似数组的DOM集合</p>
+
+												</div>
+										</div>
 								</div>
 								<div class="method_param">
 									<h3>返回:</h3>
-										<p>
+										<div class="param_item">
 											<span class="param_type">Array</span>
-											DOM数组
-										</p>
+												<div class="text_content param_comment">
+													<p>DOM数组</p>
+
+												</div>
+										</div>
 								</div>
 
 						</div>
@@ -980,24 +946,18 @@ jQuery的$().html()方法支持传入String和Function类型的参数，但是Mu
 							<h2>.each
 									<span>(fn)</span><span class="return_type">  ⇒ $</span>
 							</h2>
-								<div class="method_detail">
-									<p>迭代一个{$}对象，对其中的每个子元素执行一个方法</p>
-
-								</div>
 								<div class="method_param">
 									<h3>参数:</h3>
-										<p>
+										<div class="param_item">
 											<b class="param_name">fn</b>
 											<span class="param_type">function(number=, Element=)</span>
-											
-										</p>
+										</div>
 								</div>
 								<div class="method_param">
 									<h3>返回:</h3>
-										<p>
+										<div class="param_item">
 											<span class="param_type">$</span>
-											
-										</p>
+										</div>
 								</div>
 
 						</div>
@@ -1006,24 +966,18 @@ jQuery的$().html()方法支持传入String和Function类型的参数，但是Mu
 							<h2>.add
 									<span>(selector)</span><span class="return_type">  ⇒ $</span>
 							</h2>
-								<div class="method_detail">
-									<p>在现有的DOM集合中加入新的集合并返回</p>
-
-								</div>
 								<div class="method_param">
 									<h3>参数:</h3>
-										<p>
+										<div class="param_item">
 											<b class="param_name">selector</b>
 											<span class="param_type">(Element|$|String)</span>
-											
-										</p>
+										</div>
 								</div>
 								<div class="method_param">
 									<h3>返回:</h3>
-										<p>
+										<div class="param_item">
 											<span class="param_type">$</span>
-											
-										</p>
+										</div>
 								</div>
 
 						</div>
@@ -1032,29 +986,30 @@ jQuery的$().html()方法支持传入String和Function类型的参数，但是Mu
 							<h2>.slice
 									<span>(start, [end])</span><span class="return_type">  ⇒ $</span>
 							</h2>
-								<div class="method_detail">
-									<p>使用指定的开始和结束位置创建一个新的DOM集合</p>
-
-								</div>
 								<div class="method_param">
 									<h3>参数:</h3>
-										<p>
+										<div class="param_item">
 											<b class="param_name">start</b>
 											<span class="param_type">number</span>
-											指定开始的位置，如果为负值，则从尾部开始计算偏移
-										</p>
-										<p>
+												<div class="text_content param_comment">
+													<p>指定开始的位置，如果为负值，则从尾部开始计算偏移</p>
+
+												</div>
+										</div>
+										<div class="param_item">
 											<b class="param_name">end</b>
 											<span class="param_type">number=</span>
-											指定开始的位置，如果为负值，则从尾部开始计算偏移，如果不指定，则默认到末尾的位置
-										</p>
+												<div class="text_content param_comment">
+													<p>指定开始的位置，如果为负值，则从尾部开始计算偏移，如果不指定，则默认到末尾的位置</p>
+
+												</div>
+										</div>
 								</div>
 								<div class="method_param">
 									<h3>返回:</h3>
-										<p>
+										<div class="param_item">
 											<span class="param_type">$</span>
-											
-										</p>
+										</div>
 								</div>
 
 						</div>
@@ -1063,16 +1018,11 @@ jQuery的$().html()方法支持传入String和Function类型的参数，但是Mu
 							<h2>.first
 									<span>()</span><span class="return_type">  ⇒ $</span>
 							</h2>
-								<div class="method_detail">
-									<p>返回DOM集合中的第一个对象</p>
-
-								</div>
 								<div class="method_param">
 									<h3>返回:</h3>
-										<p>
+										<div class="param_item">
 											<span class="param_type">$</span>
-											
-										</p>
+										</div>
 								</div>
 
 						</div>
@@ -1081,16 +1031,11 @@ jQuery的$().html()方法支持传入String和Function类型的参数，但是Mu
 							<h2>.last
 									<span>()</span><span class="return_type">  ⇒ $</span>
 							</h2>
-								<div class="method_detail">
-									<p>返回DOM集合中的最后一个对象</p>
-
-								</div>
 								<div class="method_param">
 									<h3>返回:</h3>
-										<p>
+										<div class="param_item">
 											<span class="param_type">$</span>
-											
-										</p>
+										</div>
 								</div>
 
 						</div>
@@ -1099,24 +1044,22 @@ jQuery的$().html()方法支持传入String和Function类型的参数，但是Mu
 							<h2>.eq
 									<span>(index)</span><span class="return_type">  ⇒ $</span>
 							</h2>
-								<div class="method_detail">
-									<p>返回DOM集合中的最后一个对象</p>
-
-								</div>
 								<div class="method_param">
 									<h3>参数:</h3>
-										<p>
+										<div class="param_item">
 											<b class="param_name">index</b>
 											<span class="param_type">number</span>
-											从0开始的索引数字
-										</p>
+												<div class="text_content param_comment">
+													<p>从0开始的索引数字</p>
+
+												</div>
+										</div>
 								</div>
 								<div class="method_param">
 									<h3>返回:</h3>
-										<p>
+										<div class="param_item">
 											<span class="param_type">$</span>
-											
-										</p>
+										</div>
 								</div>
 
 						</div>
@@ -1125,24 +1068,22 @@ jQuery的$().html()方法支持传入String和Function类型的参数，但是Mu
 							<h2>.get
 									<span>([index])</span><span class="return_type">  ⇒ (Element|Array.<Element>|{length: number})</span>
 							</h2>
-								<div class="method_detail">
-									<p>返回一个或者多个$对象中的原生DOM对象</p>
-
-								</div>
 								<div class="method_param">
 									<h3>参数:</h3>
-										<p>
+										<div class="param_item">
 											<b class="param_name">index</b>
 											<span class="param_type">number=</span>
-											从0开始的索引数字
-										</p>
+												<div class="text_content param_comment">
+													<p>从0开始的索引数字</p>
+
+												</div>
+										</div>
 								</div>
 								<div class="method_param">
 									<h3>返回:</h3>
-										<p>
+										<div class="param_item">
 											<span class="param_type">(Element|Array.<Element>|{length: number})</span>
-											
-										</p>
+										</div>
 								</div>
 
 						</div>
@@ -1151,29 +1092,22 @@ jQuery的$().html()方法支持传入String和Function类型的参数，但是Mu
 							<h2>$.is
 									<span>(element, selector)</span><span class="return_type">  ⇒ boolean</span>
 							</h2>
-								<div class="method_detail">
-									<p>检查一个DOM节点是否符合指定的选择符</p>
-
-								</div>
 								<div class="method_param">
 									<h3>参数:</h3>
-										<p>
+										<div class="param_item">
 											<b class="param_name">element</b>
 											<span class="param_type">Element</span>
-											
-										</p>
-										<p>
+										</div>
+										<div class="param_item">
 											<b class="param_name">selector</b>
 											<span class="param_type">string</span>
-											
-										</p>
+										</div>
 								</div>
 								<div class="method_param">
 									<h3>返回:</h3>
-										<p>
+										<div class="param_item">
 											<span class="param_type">boolean</span>
-											
-										</p>
+										</div>
 								</div>
 
 						</div>
@@ -1182,24 +1116,18 @@ jQuery的$().html()方法支持传入String和Function类型的参数，但是Mu
 							<h2>.is
 									<span>(selector)</span><span class="return_type">  ⇒ boolean</span>
 							</h2>
-								<div class="method_detail">
-									<p>检查当前集合中的每个DOM节点是否符合指定的选择符，如果至少有一个符合，则返回true</p>
-
-								</div>
 								<div class="method_param">
 									<h3>参数:</h3>
-										<p>
+										<div class="param_item">
 											<b class="param_name">selector</b>
 											<span class="param_type">string</span>
-											
-										</p>
+										</div>
 								</div>
 								<div class="method_param">
 									<h3>返回:</h3>
-										<p>
+										<div class="param_item">
 											<span class="param_type">boolean</span>
-											
-										</p>
+										</div>
 								</div>
 
 						</div>
@@ -1208,24 +1136,18 @@ jQuery的$().html()方法支持传入String和Function类型的参数，但是Mu
 							<h2>.filter
 									<span>(selector)</span><span class="return_type">  ⇒ $</span>
 							</h2>
-								<div class="method_detail">
-									<p>使用选择符过滤当前DOM集合，并返回一个新的集合</p>
-
-								</div>
 								<div class="method_param">
 									<h3>参数:</h3>
-										<p>
+										<div class="param_item">
 											<b class="param_name">selector</b>
 											<span class="param_type">string</span>
-											
-										</p>
+										</div>
 								</div>
 								<div class="method_param">
 									<h3>返回:</h3>
-										<p>
+										<div class="param_item">
 											<span class="param_type">$</span>
-											
-										</p>
+										</div>
 								</div>
 
 						</div>
@@ -1234,29 +1156,26 @@ jQuery的$().html()方法支持传入String和Function类型的参数，但是Mu
 							<h2>.closest
 									<span>([selector], [context])</span><span class="return_type">  ⇒ $</span>
 							</h2>
-								<div class="method_detail">
-									<p>对当前DOM集合中的每个DOM对象沿DOM树向上查找，将第一个符合筛选的对象（含当前对象）放入返回的结果集中</p>
-
-								</div>
 								<div class="method_param">
 									<h3>参数:</h3>
-										<p>
+										<div class="param_item">
 											<b class="param_name">selector</b>
 											<span class="param_type">string=</span>
-											
-										</p>
-										<p>
+										</div>
+										<div class="param_item">
 											<b class="param_name">context</b>
 											<span class="param_type">Element=</span>
-											原生DOM对象，如果传了这个参数，返回的结果会在这个对象范围内进行查找
-										</p>
+												<div class="text_content param_comment">
+													<p>原生DOM对象，如果传了这个参数，返回的结果会在这个对象范围内进行查找</p>
+
+												</div>
+										</div>
 								</div>
 								<div class="method_param">
 									<h3>返回:</h3>
-										<p>
+										<div class="param_item">
 											<span class="param_type">$</span>
-											
-										</p>
+										</div>
 								</div>
 
 						</div>
@@ -1265,24 +1184,22 @@ jQuery的$().html()方法支持传入String和Function类型的参数，但是Mu
 							<h2>.parent
 									<span>([selector])</span><span class="return_type">  ⇒ $</span>
 							</h2>
-								<div class="method_detail">
-									<p>当前DOM集合中的每个DOM对象的直接父节点的集合</p>
-
-								</div>
 								<div class="method_param">
 									<h3>参数:</h3>
-										<p>
+										<div class="param_item">
 											<b class="param_name">selector</b>
 											<span class="param_type">string=</span>
-											选择符，如果传了此参数，将对结果集进行筛选
-										</p>
+												<div class="text_content param_comment">
+													<p>选择符，如果传了此参数，将对结果集进行筛选</p>
+
+												</div>
+										</div>
 								</div>
 								<div class="method_param">
 									<h3>返回:</h3>
-										<p>
+										<div class="param_item">
 											<span class="param_type">$</span>
-											
-										</p>
+										</div>
 								</div>
 
 						</div>
@@ -1291,24 +1208,22 @@ jQuery的$().html()方法支持传入String和Function类型的参数，但是Mu
 							<h2>.parents
 									<span>([selector])</span><span class="return_type">  ⇒ $</span>
 							</h2>
-								<div class="method_detail">
-									<p>当前DOM集合中的每个DOM对象的所有父节点的集合</p>
-
-								</div>
 								<div class="method_param">
 									<h3>参数:</h3>
-										<p>
+										<div class="param_item">
 											<b class="param_name">selector</b>
 											<span class="param_type">string=</span>
-											选择符，如果传了此参数，将对结果集进行筛选
-										</p>
+												<div class="text_content param_comment">
+													<p>选择符，如果传了此参数，将对结果集进行筛选</p>
+
+												</div>
+										</div>
 								</div>
 								<div class="method_param">
 									<h3>返回:</h3>
-										<p>
+										<div class="param_item">
 											<span class="param_type">$</span>
-											
-										</p>
+										</div>
 								</div>
 
 						</div>
@@ -1317,24 +1232,22 @@ jQuery的$().html()方法支持传入String和Function类型的参数，但是Mu
 							<h2>.children
 									<span>([selector])</span><span class="return_type">  ⇒ $</span>
 							</h2>
-								<div class="method_detail">
-									<p>当前DOM集合中的每个DOM对象的直接子节点的集合</p>
-
-								</div>
 								<div class="method_param">
 									<h3>参数:</h3>
-										<p>
+										<div class="param_item">
 											<b class="param_name">selector</b>
 											<span class="param_type">string=</span>
-											选择符，如果传了此参数，将对结果集进行筛选
-										</p>
+												<div class="text_content param_comment">
+													<p>选择符，如果传了此参数，将对结果集进行筛选</p>
+
+												</div>
+										</div>
 								</div>
 								<div class="method_param">
 									<h3>返回:</h3>
-										<p>
+										<div class="param_item">
 											<span class="param_type">$</span>
-											
-										</p>
+										</div>
 								</div>
 
 						</div>
@@ -1343,16 +1256,11 @@ jQuery的$().html()方法支持传入String和Function类型的参数，但是Mu
 							<h2>.contents
 									<span>()</span><span class="return_type">  ⇒ $</span>
 							</h2>
-								<div class="method_detail">
-									<p>当前DOM集合中的每个DOM对象的直接子节点的集合，包含文本和注释节点</p>
-
-								</div>
 								<div class="method_param">
 									<h3>返回:</h3>
-										<p>
+										<div class="param_item">
 											<span class="param_type">$</span>
-											
-										</p>
+										</div>
 								</div>
 
 						</div>
@@ -1361,24 +1269,22 @@ jQuery的$().html()方法支持传入String和Function类型的参数，但是Mu
 							<h2>.find
 									<span>(selector)</span><span class="return_type">  ⇒ $</span>
 							</h2>
-								<div class="method_detail">
-									<p>使用选择符对当前DOM结果集进行筛选，返回一个新的DOM集合，如果selector为空的话返回结果为空</p>
-
-								</div>
 								<div class="method_param">
 									<h3>参数:</h3>
-										<p>
+										<div class="param_item">
 											<b class="param_name">selector</b>
 											<span class="param_type">string</span>
-											选择符
-										</p>
+												<div class="text_content param_comment">
+													<p>选择符</p>
+
+												</div>
+										</div>
 								</div>
 								<div class="method_param">
 									<h3>返回:</h3>
-										<p>
+										<div class="param_item">
 											<span class="param_type">$</span>
-											
-										</p>
+										</div>
 								</div>
 
 						</div>
@@ -1389,10 +1295,9 @@ jQuery的$().html()方法支持传入String和Function类型的参数，但是Mu
 							</h2>
 								<div class="method_param">
 									<h3>返回:</h3>
-										<p>
+										<div class="param_item">
 											<span class="param_type">number</span>
-											
-										</p>
+										</div>
 								</div>
 
 						</div>
@@ -1401,16 +1306,11 @@ jQuery的$().html()方法支持传入String和Function类型的参数，但是Mu
 							<h2>.remove
 									<span>()</span><span class="return_type">  ⇒ $</span>
 							</h2>
-								<div class="method_detail">
-									<p>移除DOM对象</p>
-
-								</div>
 								<div class="method_param">
 									<h3>返回:</h3>
-										<p>
+										<div class="param_item">
 											<span class="param_type">$</span>
-											
-										</p>
+										</div>
 								</div>
 
 						</div>
@@ -1419,24 +1319,18 @@ jQuery的$().html()方法支持传入String和Function类型的参数，但是Mu
 							<h2>$.parseHTML
 									<span>(html)</span><span class="return_type">  ⇒ Array.<(Element)></span>
 							</h2>
-								<div class="method_detail">
-									<p>使用HTML创建片段并用数组形式返回其中的DOM对象</p>
-
-								</div>
 								<div class="method_param">
 									<h3>参数:</h3>
-										<p>
+										<div class="param_item">
 											<b class="param_name">html</b>
 											<span class="param_type">string</span>
-											
-										</p>
+										</div>
 								</div>
 								<div class="method_param">
 									<h3>返回:</h3>
-										<p>
+										<div class="param_item">
 											<span class="param_type">Array.<(Element)></span>
-											
-										</p>
+										</div>
 								</div>
 
 						</div>
@@ -1445,24 +1339,22 @@ jQuery的$().html()方法支持传入String和Function类型的参数，但是Mu
 							<h2>.prepend
 									<span>(childElement)</span><span class="return_type">  ⇒ $</span>
 							</h2>
-								<div class="method_detail">
-									<p>在指定的父对象中前置插入DOM对象</p>
-
-								</div>
 								<div class="method_param">
 									<h3>参数:</h3>
-										<p>
+										<div class="param_item">
 											<b class="param_name">childElement</b>
 											<span class="param_type">...(Element|$|String|Number|Array.<(Element|$)>)</span>
-											单个DOM对象或者包含DOM集合的数组
-										</p>
+												<div class="text_content param_comment">
+													<p>单个DOM对象或者包含DOM集合的数组</p>
+
+												</div>
+										</div>
 								</div>
 								<div class="method_param">
 									<h3>返回:</h3>
-										<p>
+										<div class="param_item">
 											<span class="param_type">$</span>
-											
-										</p>
+										</div>
 								</div>
 
 						</div>
@@ -1471,24 +1363,22 @@ jQuery的$().html()方法支持传入String和Function类型的参数，但是Mu
 							<h2>.prependTo
 									<span>(targetElement)</span><span class="return_type">  ⇒ $</span>
 							</h2>
-								<div class="method_detail">
-									<p>把DOM对象前置插入到指定的父对象中</p>
-
-								</div>
 								<div class="method_param">
 									<h3>参数:</h3>
-										<p>
+										<div class="param_item">
 											<b class="param_name">targetElement</b>
 											<span class="param_type">(Element|$|String)</span>
-											单个DOM对象或者包含DOM集合的数组
-										</p>
+												<div class="text_content param_comment">
+													<p>单个DOM对象或者包含DOM集合的数组</p>
+
+												</div>
+										</div>
 								</div>
 								<div class="method_param">
 									<h3>返回:</h3>
-										<p>
+										<div class="param_item">
 											<span class="param_type">$</span>
-											
-										</p>
+										</div>
 								</div>
 
 						</div>
@@ -1497,24 +1387,22 @@ jQuery的$().html()方法支持传入String和Function类型的参数，但是Mu
 							<h2>.append
 									<span>(childElement)</span><span class="return_type">  ⇒ $</span>
 							</h2>
-								<div class="method_detail">
-									<p>在指定的父对象中插入一个DOM对象</p>
-
-								</div>
 								<div class="method_param">
 									<h3>参数:</h3>
-										<p>
+										<div class="param_item">
 											<b class="param_name">childElement</b>
 											<span class="param_type">...(Element|$|String|Number|Array.<(Element|$)>)</span>
-											单个DOM对象或者包含DOM集合的数组
-										</p>
+												<div class="text_content param_comment">
+													<p>单个DOM对象或者包含DOM集合的数组</p>
+
+												</div>
+										</div>
 								</div>
 								<div class="method_param">
 									<h3>返回:</h3>
-										<p>
+										<div class="param_item">
 											<span class="param_type">$</span>
-											
-										</p>
+										</div>
 								</div>
 
 						</div>
@@ -1523,24 +1411,22 @@ jQuery的$().html()方法支持传入String和Function类型的参数，但是Mu
 							<h2>.appendTo
 									<span>(targetElement)</span><span class="return_type">  ⇒ $</span>
 							</h2>
-								<div class="method_detail">
-									<p>把DOM对象插入到指定的父对象中</p>
-
-								</div>
 								<div class="method_param">
 									<h3>参数:</h3>
-										<p>
+										<div class="param_item">
 											<b class="param_name">targetElement</b>
 											<span class="param_type">(Element|$|String)</span>
-											单个DOM对象或者包含DOM集合的数组
-										</p>
+												<div class="text_content param_comment">
+													<p>单个DOM对象或者包含DOM集合的数组</p>
+
+												</div>
+										</div>
 								</div>
 								<div class="method_param">
 									<h3>返回:</h3>
-										<p>
+										<div class="param_item">
 											<span class="param_type">$</span>
-											
-										</p>
+										</div>
 								</div>
 
 						</div>
@@ -1549,24 +1435,22 @@ jQuery的$().html()方法支持传入String和Function类型的参数，但是Mu
 							<h2>.before
 									<span>(targetElement)</span><span class="return_type">  ⇒ $</span>
 							</h2>
-								<div class="method_detail">
-									<p>在指定的对象前插入DOM对象</p>
-
-								</div>
 								<div class="method_param">
 									<h3>参数:</h3>
-										<p>
+										<div class="param_item">
 											<b class="param_name">targetElement</b>
 											<span class="param_type">...(Element|$|String|Number|Array.<(Element|$)>)</span>
-											单个DOM对象或者包含DOM集合的数组
-										</p>
+												<div class="text_content param_comment">
+													<p>单个DOM对象或者包含DOM集合的数组</p>
+
+												</div>
+										</div>
 								</div>
 								<div class="method_param">
 									<h3>返回:</h3>
-										<p>
+										<div class="param_item">
 											<span class="param_type">$</span>
-											
-										</p>
+										</div>
 								</div>
 
 						</div>
@@ -1575,24 +1459,22 @@ jQuery的$().html()方法支持传入String和Function类型的参数，但是Mu
 							<h2>.insertBefore
 									<span>(targetElement)</span><span class="return_type">  ⇒ $</span>
 							</h2>
-								<div class="method_detail">
-									<p>把DOM对象插入到指定的对象前面</p>
-
-								</div>
 								<div class="method_param">
 									<h3>参数:</h3>
-										<p>
+										<div class="param_item">
 											<b class="param_name">targetElement</b>
 											<span class="param_type">(Element|$|String)</span>
-											单个DOM对象或者包含DOM集合的数组
-										</p>
+												<div class="text_content param_comment">
+													<p>单个DOM对象或者包含DOM集合的数组</p>
+
+												</div>
+										</div>
 								</div>
 								<div class="method_param">
 									<h3>返回:</h3>
-										<p>
+										<div class="param_item">
 											<span class="param_type">$</span>
-											
-										</p>
+										</div>
 								</div>
 
 						</div>
@@ -1601,24 +1483,22 @@ jQuery的$().html()方法支持传入String和Function类型的参数，但是Mu
 							<h2>.after
 									<span>(targetElement)</span><span class="return_type">  ⇒ $</span>
 							</h2>
-								<div class="method_detail">
-									<p>在指定的对象后面插入DOM对象</p>
-
-								</div>
 								<div class="method_param">
 									<h3>参数:</h3>
-										<p>
+										<div class="param_item">
 											<b class="param_name">targetElement</b>
 											<span class="param_type">...(Element|$|String|Number|Array.<(Element|$)>)</span>
-											单个DOM对象或者包含DOM集合的数组
-										</p>
+												<div class="text_content param_comment">
+													<p>单个DOM对象或者包含DOM集合的数组</p>
+
+												</div>
+										</div>
 								</div>
 								<div class="method_param">
 									<h3>返回:</h3>
-										<p>
+										<div class="param_item">
 											<span class="param_type">$</span>
-											
-										</p>
+										</div>
 								</div>
 
 						</div>
@@ -1627,24 +1507,22 @@ jQuery的$().html()方法支持传入String和Function类型的参数，但是Mu
 							<h2>.insertAfter
 									<span>(targetElement)</span><span class="return_type">  ⇒ $</span>
 							</h2>
-								<div class="method_detail">
-									<p>把DOM对象插入到指定的对象后面</p>
-
-								</div>
 								<div class="method_param">
 									<h3>参数:</h3>
-										<p>
+										<div class="param_item">
 											<b class="param_name">targetElement</b>
 											<span class="param_type">(Element|$|String)</span>
-											单个DOM对象或者包含DOM集合的数组
-										</p>
+												<div class="text_content param_comment">
+													<p>单个DOM对象或者包含DOM集合的数组</p>
+
+												</div>
+										</div>
 								</div>
 								<div class="method_param">
 									<h3>返回:</h3>
-										<p>
+										<div class="param_item">
 											<span class="param_type">$</span>
-											
-										</p>
+										</div>
 								</div>
 
 						</div>
@@ -1653,29 +1531,34 @@ jQuery的$().html()方法支持传入String和Function类型的参数，但是Mu
 							<h2>$.clone
 									<span>(element, [cloneDataAndEvents])</span><span class="return_type">  ⇒ Element</span>
 							</h2>
-								<div class="method_detail">
-									<p>复制一个DOM对象，返回复制后的新集合</p>
-
-								</div>
 								<div class="method_param">
 									<h3>参数:</h3>
-										<p>
+										<div class="param_item">
 											<b class="param_name">element</b>
 											<span class="param_type">Element</span>
-											要复制的DOM对象
-										</p>
-										<p>
+												<div class="text_content param_comment">
+													<p>要复制的DOM对象</p>
+
+												</div>
+										</div>
+										<div class="param_item">
 											<b class="param_name">cloneDataAndEvents</b>
 											<span class="param_type">boolean=</span>
-											是否复制data和事件
-										</p>
+												<div class="text_content param_comment">
+													<p>是否复制data和事件</p>
+
+												</div>
+										</div>
 								</div>
 								<div class="method_param">
 									<h3>返回:</h3>
-										<p>
+										<div class="param_item">
 											<span class="param_type">Element</span>
-											复制的DOM对象
-										</p>
+												<div class="text_content param_comment">
+													<p>复制的DOM对象</p>
+
+												</div>
+										</div>
 								</div>
 
 						</div>
@@ -1684,24 +1567,22 @@ jQuery的$().html()方法支持传入String和Function类型的参数，但是Mu
 							<h2>.clone
 									<span>([cloneDataAndEvents])</span><span class="return_type">  ⇒ $</span>
 							</h2>
-								<div class="method_detail">
-									<p>复制一个DOM集合，返回复制后的新集合</p>
-
-								</div>
 								<div class="method_param">
 									<h3>参数:</h3>
-										<p>
+										<div class="param_item">
 											<b class="param_name">cloneDataAndEvents</b>
 											<span class="param_type">boolean=</span>
-											是否复制data和事件。出于性能和使用的可能性考虑，此方法不复制子对象的data和事件（如果需要用到的话可以自行实现）
-										</p>
+												<div class="text_content param_comment">
+													<p>是否复制data和事件。出于性能和使用的可能性考虑，此方法不复制子对象的data和事件（如果需要用到的话可以自行实现）</p>
+
+												</div>
+										</div>
 								</div>
 								<div class="method_param">
 									<h3>返回:</h3>
-										<p>
+										<div class="param_item">
 											<span class="param_type">$</span>
-											
-										</p>
+										</div>
 								</div>
 
 						</div>
@@ -1710,29 +1591,22 @@ jQuery的$().html()方法支持传入String和Function类型的参数，但是Mu
 							<h2>.data
 									<span>([key], [value])</span><span class="return_type">  ⇒ *</span>
 							</h2>
-								<div class="method_detail">
-									<p>给DOM对象添加数据</p>
-
-								</div>
 								<div class="method_param">
 									<h3>参数:</h3>
-										<p>
+										<div class="param_item">
 											<b class="param_name">key</b>
 											<span class="param_type">(string|Object)=</span>
-											
-										</p>
-										<p>
+										</div>
+										<div class="param_item">
 											<b class="param_name">value</b>
 											<span class="param_type">*=</span>
-											
-										</p>
+										</div>
 								</div>
 								<div class="method_param">
 									<h3>返回:</h3>
-										<p>
+										<div class="param_item">
 											<span class="param_type">*</span>
-											
-										</p>
+										</div>
 								</div>
 
 						</div>
@@ -1741,24 +1615,18 @@ jQuery的$().html()方法支持传入String和Function类型的参数，但是Mu
 							<h2>.removeData
 									<span>([key])</span><span class="return_type">  ⇒ $</span>
 							</h2>
-								<div class="method_detail">
-									<p>移除DOM对象上的数据</p>
-
-								</div>
 								<div class="method_param">
 									<h3>参数:</h3>
-										<p>
+										<div class="param_item">
 											<b class="param_name">key</b>
 											<span class="param_type">?string=</span>
-											
-										</p>
+										</div>
 								</div>
 								<div class="method_param">
 									<h3>返回:</h3>
-										<p>
+										<div class="param_item">
 											<span class="param_type">$</span>
-											
-										</p>
+										</div>
 								</div>
 
 						</div>
@@ -1769,18 +1637,16 @@ jQuery的$().html()方法支持传入String和Function类型的参数，但是Mu
 							</h2>
 								<div class="method_param">
 									<h3>参数:</h3>
-										<p>
+										<div class="param_item">
 											<b class="param_name">fn</b>
 											<span class="param_type">Function</span>
-											
-										</p>
+										</div>
 								</div>
 								<div class="method_param">
 									<h3>返回:</h3>
-										<p>
+										<div class="param_item">
 											<span class="param_type">$</span>
-											
-										</p>
+										</div>
 								</div>
 
 						</div>
@@ -1791,18 +1657,16 @@ jQuery的$().html()方法支持传入String和Function类型的参数，但是Mu
 							</h2>
 								<div class="method_param">
 									<h3>参数:</h3>
-										<p>
+										<div class="param_item">
 											<b class="param_name">fn</b>
 											<span class="param_type">Function</span>
-											
-										</p>
+										</div>
 								</div>
 								<div class="method_param">
 									<h3>返回:</h3>
-										<p>
+										<div class="param_item">
 											<span class="param_type">$</span>
-											
-										</p>
+										</div>
 								</div>
 
 						</div>
@@ -1811,29 +1675,22 @@ jQuery的$().html()方法支持传入String和Function类型的参数，但是Mu
 							<h2>.css
 									<span>(key, [value])</span><span class="return_type">  ⇒ $</span>
 							</h2>
-								<div class="method_detail">
-									<p>设置DOM对象集合的css或者读取集合中第一个DOM对象的css</p>
-
-								</div>
 								<div class="method_param">
 									<h3>参数:</h3>
-										<p>
+										<div class="param_item">
 											<b class="param_name">key</b>
 											<span class="param_type">(string|Object)</span>
-											
-										</p>
-										<p>
+										</div>
+										<div class="param_item">
 											<b class="param_name">value</b>
 											<span class="param_type">string=</span>
-											
-										</p>
+										</div>
 								</div>
 								<div class="method_param">
 									<h3>返回:</h3>
-										<p>
+										<div class="param_item">
 											<span class="param_type">$</span>
-											
-										</p>
+										</div>
 								</div>
 
 						</div>
@@ -1842,16 +1699,11 @@ jQuery的$().html()方法支持传入String和Function类型的参数，但是Mu
 							<h2>.offset
 									<span>()</span><span class="return_type">  ⇒ {left:number, top:number}</span>
 							</h2>
-								<div class="method_detail">
-									<p>返回DOM对象相对于文档左上角的偏移</p>
-
-								</div>
 								<div class="method_param">
 									<h3>返回:</h3>
-										<p>
+										<div class="param_item">
 											<span class="param_type">{left:number, top:number}</span>
-											
-										</p>
+										</div>
 								</div>
 
 						</div>
@@ -1860,24 +1712,18 @@ jQuery的$().html()方法支持传入String和Function类型的参数，但是Mu
 							<h2>.html
 									<span>([html])</span><span class="return_type">  ⇒ ($|string)=</span>
 							</h2>
-								<div class="method_detail">
-									<p>获取DOM对象集合中第一个对象的innerHTML或者设置DOM对象集合的innerHTML</p>
-
-								</div>
 								<div class="method_param">
 									<h3>参数:</h3>
-										<p>
+										<div class="param_item">
 											<b class="param_name">html</b>
 											<span class="param_type">(string|number)=</span>
-											
-										</p>
+										</div>
 								</div>
 								<div class="method_param">
 									<h3>返回:</h3>
-										<p>
+										<div class="param_item">
 											<span class="param_type">($|string)=</span>
-											
-										</p>
+										</div>
 								</div>
 
 						</div>
@@ -1886,16 +1732,11 @@ jQuery的$().html()方法支持传入String和Function类型的参数，但是Mu
 							<h2>.empty
 									<span>()</span><span class="return_type">  ⇒ $</span>
 							</h2>
-								<div class="method_detail">
-									<p>移除DOM对象集合中对象的子对象</p>
-
-								</div>
 								<div class="method_param">
 									<h3>返回:</h3>
-										<p>
+										<div class="param_item">
 											<span class="param_type">$</span>
-											
-										</p>
+										</div>
 								</div>
 
 						</div>
@@ -1904,24 +1745,18 @@ jQuery的$().html()方法支持传入String和Function类型的参数，但是Mu
 							<h2>.val
 									<span>([value])</span><span class="return_type">  ⇒ ($|string)=</span>
 							</h2>
-								<div class="method_detail">
-									<p>设置DOM对象集合的value或者读取集合中第一个DOM对象的value</p>
-
-								</div>
 								<div class="method_param">
 									<h3>参数:</h3>
-										<p>
+										<div class="param_item">
 											<b class="param_name">value</b>
 											<span class="param_type">(string|number)=</span>
-											
-										</p>
+										</div>
 								</div>
 								<div class="method_param">
 									<h3>返回:</h3>
-										<p>
+										<div class="param_item">
 											<span class="param_type">($|string)=</span>
-											
-										</p>
+										</div>
 								</div>
 
 						</div>
@@ -1932,23 +1767,20 @@ jQuery的$().html()方法支持传入String和Function类型的参数，但是Mu
 							</h2>
 								<div class="method_param">
 									<h3>参数:</h3>
-										<p>
+										<div class="param_item">
 											<b class="param_name">name</b>
 											<span class="param_type">(string|Object)</span>
-											
-										</p>
-										<p>
+										</div>
+										<div class="param_item">
 											<b class="param_name">value</b>
 											<span class="param_type">(string|number)=</span>
-											
-										</p>
+										</div>
 								</div>
 								<div class="method_param">
 									<h3>返回:</h3>
-										<p>
+										<div class="param_item">
 											<span class="param_type">($|string)=</span>
-											
-										</p>
+										</div>
 								</div>
 
 						</div>
@@ -1959,18 +1791,16 @@ jQuery的$().html()方法支持传入String和Function类型的参数，但是Mu
 							</h2>
 								<div class="method_param">
 									<h3>参数:</h3>
-										<p>
+										<div class="param_item">
 											<b class="param_name">name</b>
 											<span class="param_type">string</span>
-											
-										</p>
+										</div>
 								</div>
 								<div class="method_param">
 									<h3>返回:</h3>
-										<p>
+										<div class="param_item">
 											<span class="param_type">$</span>
-											
-										</p>
+										</div>
 								</div>
 
 						</div>
@@ -1979,24 +1809,18 @@ jQuery的$().html()方法支持传入String和Function类型的参数，但是Mu
 							<h2>.hasClass
 									<span>(value)</span><span class="return_type">  ⇒ boolean</span>
 							</h2>
-								<div class="method_detail">
-									<p>判断对象是否拥有指定的className</p>
-
-								</div>
 								<div class="method_param">
 									<h3>参数:</h3>
-										<p>
+										<div class="param_item">
 											<b class="param_name">value</b>
 											<span class="param_type">string</span>
-											
-										</p>
+										</div>
 								</div>
 								<div class="method_param">
 									<h3>返回:</h3>
-										<p>
+										<div class="param_item">
 											<span class="param_type">boolean</span>
-											
-										</p>
+										</div>
 								</div>
 
 						</div>
@@ -2005,24 +1829,22 @@ jQuery的$().html()方法支持传入String和Function类型的参数，但是Mu
 							<h2>.addClass
 									<span>(value)</span><span class="return_type">  ⇒ $</span>
 							</h2>
-								<div class="method_detail">
-									<p>给对象添加一个className</p>
-
-								</div>
 								<div class="method_param">
 									<h3>参数:</h3>
-										<p>
+										<div class="param_item">
 											<b class="param_name">value</b>
 											<span class="param_type">string</span>
-											要添加的className
-										</p>
+												<div class="text_content param_comment">
+													<p>要添加的className</p>
+
+												</div>
+										</div>
 								</div>
 								<div class="method_param">
 									<h3>返回:</h3>
-										<p>
+										<div class="param_item">
 											<span class="param_type">$</span>
-											
-										</p>
+										</div>
 								</div>
 
 						</div>
@@ -2031,24 +1853,22 @@ jQuery的$().html()方法支持传入String和Function类型的参数，但是Mu
 							<h2>.removeClass
 									<span>([value])</span><span class="return_type">  ⇒ $</span>
 							</h2>
-								<div class="method_detail">
-									<p>移除对象的className</p>
-
-								</div>
 								<div class="method_param">
 									<h3>参数:</h3>
-										<p>
+										<div class="param_item">
 											<b class="param_name">value</b>
 											<span class="param_type">string=</span>
-											要移除的className，如果value为空，移除对象的全部className
-										</p>
+												<div class="text_content param_comment">
+													<p>要移除的className，如果value为空，移除对象的全部className</p>
+
+												</div>
+										</div>
 								</div>
 								<div class="method_param">
 									<h3>返回:</h3>
-										<p>
+										<div class="param_item">
 											<span class="param_type">$</span>
-											
-										</p>
+										</div>
 								</div>
 
 						</div>
@@ -2057,29 +1877,26 @@ jQuery的$().html()方法支持传入String和Function类型的参数，但是Mu
 							<h2>.toggleClass
 									<span>([value], [如果为TRUE，则执行addClass操作，如果为FALSE，执行removeClass])</span><span class="return_type">  ⇒ $</span>
 							</h2>
-								<div class="method_detail">
-									<p>移除对象的className</p>
-
-								</div>
 								<div class="method_param">
 									<h3>参数:</h3>
-										<p>
+										<div class="param_item">
 											<b class="param_name">value</b>
 											<span class="param_type">string=</span>
-											要移除的className，如果value为空，移除对象的全部className
-										</p>
-										<p>
+												<div class="text_content param_comment">
+													<p>要移除的className，如果value为空，移除对象的全部className</p>
+
+												</div>
+										</div>
+										<div class="param_item">
 											<b class="param_name">如果为TRUE，则执行addClass操作，如果为FALSE，执行removeClass</b>
 											<span class="param_type">boolean=</span>
-											
-										</p>
+										</div>
 								</div>
 								<div class="method_param">
 									<h3>返回:</h3>
-										<p>
+										<div class="param_item">
 											<span class="param_type">$</span>
-											
-										</p>
+										</div>
 								</div>
 
 						</div>
@@ -2088,24 +1905,26 @@ jQuery的$().html()方法支持传入String和Function类型的参数，但是Mu
 							<h2>.serialize
 									<span>(returnObject)</span><span class="return_type">  ⇒ (string|Object)</span>
 							</h2>
-								<div class="method_detail">
-									<p>序列化一个表单对象</p>
-
-								</div>
 								<div class="method_param">
 									<h3>参数:</h3>
-										<p>
+										<div class="param_item">
 											<b class="param_name">returnObject</b>
 											<span class="param_type">boolean</span>
-											是否返回object对象，如果不传，返回一个queryString形式的字符串
-										</p>
+												<div class="text_content param_comment">
+													<p>是否返回object对象，如果不传，返回一个queryString形式的字符串</p>
+
+												</div>
+										</div>
 								</div>
 								<div class="method_param">
 									<h3>返回:</h3>
-										<p>
+										<div class="param_item">
 											<span class="param_type">(string|Object)</span>
-											返回一个queryString形式的字符串或者object对象
-										</p>
+												<div class="text_content param_comment">
+													<p>返回一个queryString形式的字符串或者object对象</p>
+
+												</div>
+										</div>
 								</div>
 
 						</div>
@@ -2114,10 +1933,6 @@ jQuery的$().html()方法支持传入String和Function类型的参数，但是Mu
 							<h2>.showFormTip
 									<span>()</span>
 							</h2>
-								<div class="method_detail">
-									<p>在表单中显示一条提示</p>
-
-								</div>
 
 						</div>
 						<a name="$.event"></a>
@@ -2127,18 +1942,16 @@ jQuery的$().html()方法支持传入String和Function类型的参数，但是Mu
 							</h2>
 								<div class="method_param">
 									<h3>参数:</h3>
-										<p>
+										<div class="param_item">
 											<b class="param_name">e</b>
 											<span class="param_type">(Event|$.event)</span>
-											
-										</p>
+										</div>
 								</div>
 								<div class="method_param">
 									<h3>返回:</h3>
-										<p>
+										<div class="param_item">
 											<span class="param_type">$.event</span>
-											
-										</p>
+										</div>
 								</div>
 
 						</div>
@@ -2154,32 +1967,24 @@ jQuery的$().html()方法支持传入String和Function类型的参数，但是Mu
 							<h2>$.addEvent
 									<span>(type, element, fn, capture)</span>
 							</h2>
-								<div class="method_detail">
-									<p>给DOM对象绑定事件</p>
-
-								</div>
 								<div class="method_param">
 									<h3>参数:</h3>
-										<p>
+										<div class="param_item">
 											<b class="param_name">type</b>
 											<span class="param_type">string</span>
-											
-										</p>
-										<p>
+										</div>
+										<div class="param_item">
 											<b class="param_name">element</b>
 											<span class="param_type">Element</span>
-											
-										</p>
-										<p>
+										</div>
+										<div class="param_item">
 											<b class="param_name">fn</b>
 											<span class="param_type">function(Event=)</span>
-											
-										</p>
-										<p>
+										</div>
+										<div class="param_item">
 											<b class="param_name">capture</b>
 											<span class="param_type">boolean</span>
-											
-										</p>
+										</div>
 								</div>
 
 						</div>
@@ -2190,11 +1995,10 @@ jQuery的$().html()方法支持传入String和Function类型的参数，但是Mu
 							</h2>
 								<div class="method_param">
 									<h3>参数:</h3>
-										<p>
+										<div class="param_item">
 											<b class="param_name">evt</b>
 											<span class="param_type">Event</span>
-											
-										</p>
+										</div>
 								</div>
 
 						</div>
@@ -2203,29 +2007,30 @@ jQuery的$().html()方法支持传入String和Function类型的参数，但是Mu
 							<h2>.trigger
 									<span>(type, [data])</span><span class="return_type">  ⇒ $</span>
 							</h2>
-								<div class="method_detail">
-									<p>触发DOM集合的制定事件</p>
-
-								</div>
 								<div class="method_param">
 									<h3>参数:</h3>
-										<p>
+										<div class="param_item">
 											<b class="param_name">type</b>
 											<span class="param_type">String</span>
-											事件类型
-										</p>
-										<p>
+												<div class="text_content param_comment">
+													<p>事件类型</p>
+
+												</div>
+										</div>
+										<div class="param_item">
 											<b class="param_name">data</b>
 											<span class="param_type">*=</span>
-											传给Event对象的自定义数据，可以在事件传播过程中传递
-										</p>
+												<div class="text_content param_comment">
+													<p>传给Event对象的自定义数据，可以在事件传播过程中传递</p>
+
+												</div>
+										</div>
 								</div>
 								<div class="method_param">
 									<h3>返回:</h3>
-										<p>
+										<div class="param_item">
 											<span class="param_type">$</span>
-											
-										</p>
+										</div>
 								</div>
 
 						</div>
@@ -2234,15 +2039,6 @@ jQuery的$().html()方法支持传入String和Function类型的参数，但是Mu
 							<h2>$.touchEvent
 									<span>()</span>
 							</h2>
-								<div class="method_detail">
-									<p>实现触屏的点击事件委托
-它做的事情：</p>
-<ol>
-<li>去掉click事件在移动浏览器中的延迟</li>
-<li>实现被点击对象的按压效果</li>
-</ol>
-
-								</div>
 
 						</div>
 						<a name="$.touchEvent.elTarget"></a>
@@ -2250,10 +2046,6 @@ jQuery的$().html()方法支持传入String和Function类型的参数，但是Mu
 							<h2>$.touchEvent.elTarget
 									<span>()</span>
 							</h2>
-								<div class="method_detail">
-									<p>保留一个target引用，在touchend中分配点击事件给这个target</p>
-
-								</div>
 
 						</div>
 						<a name="$.touchEvent.startPoint"></a>
@@ -2261,10 +2053,6 @@ jQuery的$().html()方法支持传入String和Function类型的参数，但是Mu
 							<h2>$.touchEvent.startPoint
 									<span>()</span>
 							</h2>
-								<div class="method_detail">
-									<p>事件触发点相对于窗口的坐标</p>
-
-								</div>
 
 						</div>
 						<a name=".click"></a>
@@ -2272,24 +2060,22 @@ jQuery的$().html()方法支持传入String和Function类型的参数，但是Mu
 							<h2>.click
 									<span>(fn)</span><span class="return_type">  ⇒ $</span>
 							</h2>
-								<div class="method_detail">
-									<p>给DOM集合绑定点击事件或者触发点击事件</p>
-
-								</div>
 								<div class="method_param">
 									<h3>参数:</h3>
-										<p>
+										<div class="param_item">
 											<b class="param_name">fn</b>
 											<span class="param_type">Function</span>
-											绑定的事件
-										</p>
+												<div class="text_content param_comment">
+													<p>绑定的事件</p>
+
+												</div>
+										</div>
 								</div>
 								<div class="method_param">
 									<h3>返回:</h3>
-										<p>
+										<div class="param_item">
 											<span class="param_type">$</span>
-											
-										</p>
+										</div>
 								</div>
 
 						</div>
@@ -2298,24 +2084,22 @@ jQuery的$().html()方法支持传入String和Function类型的参数，但是Mu
 							<h2>.mousedown
 									<span>(fn)</span><span class="return_type">  ⇒ $</span>
 							</h2>
-								<div class="method_detail">
-									<p>给DOM集合绑定mousedown事件或者触发mousedown事件</p>
-
-								</div>
 								<div class="method_param">
 									<h3>参数:</h3>
-										<p>
+										<div class="param_item">
 											<b class="param_name">fn</b>
 											<span class="param_type">Function</span>
-											绑定的事件
-										</p>
+												<div class="text_content param_comment">
+													<p>绑定的事件</p>
+
+												</div>
+										</div>
 								</div>
 								<div class="method_param">
 									<h3>返回:</h3>
-										<p>
+										<div class="param_item">
 											<span class="param_type">$</span>
-											
-										</p>
+										</div>
 								</div>
 
 						</div>
@@ -2324,24 +2108,22 @@ jQuery的$().html()方法支持传入String和Function类型的参数，但是Mu
 							<h2>.mouseup
 									<span>(fn)</span><span class="return_type">  ⇒ $</span>
 							</h2>
-								<div class="method_detail">
-									<p>给DOM集合绑定mouseup事件或者触发mouseup事件</p>
-
-								</div>
 								<div class="method_param">
 									<h3>参数:</h3>
-										<p>
+										<div class="param_item">
 											<b class="param_name">fn</b>
 											<span class="param_type">Function</span>
-											绑定的事件
-										</p>
+												<div class="text_content param_comment">
+													<p>绑定的事件</p>
+
+												</div>
+										</div>
 								</div>
 								<div class="method_param">
 									<h3>返回:</h3>
-										<p>
+										<div class="param_item">
 											<span class="param_type">$</span>
-											
-										</p>
+										</div>
 								</div>
 
 						</div>
@@ -2350,24 +2132,22 @@ jQuery的$().html()方法支持传入String和Function类型的参数，但是Mu
 							<h2>.mousemove
 									<span>(fn)</span><span class="return_type">  ⇒ $</span>
 							</h2>
-								<div class="method_detail">
-									<p>给DOM集合绑定mousemove事件或者触发mousemove事件</p>
-
-								</div>
 								<div class="method_param">
 									<h3>参数:</h3>
-										<p>
+										<div class="param_item">
 											<b class="param_name">fn</b>
 											<span class="param_type">Function</span>
-											绑定的事件
-										</p>
+												<div class="text_content param_comment">
+													<p>绑定的事件</p>
+
+												</div>
+										</div>
 								</div>
 								<div class="method_param">
 									<h3>返回:</h3>
-										<p>
+										<div class="param_item">
 											<span class="param_type">$</span>
-											
-										</p>
+										</div>
 								</div>
 
 						</div>
@@ -2376,24 +2156,22 @@ jQuery的$().html()方法支持传入String和Function类型的参数，但是Mu
 							<h2>.mouseover
 									<span>(fn)</span><span class="return_type">  ⇒ $</span>
 							</h2>
-								<div class="method_detail">
-									<p>给DOM集合绑定mouseover事件或者触发mouseover事件</p>
-
-								</div>
 								<div class="method_param">
 									<h3>参数:</h3>
-										<p>
+										<div class="param_item">
 											<b class="param_name">fn</b>
 											<span class="param_type">Function</span>
-											绑定的事件
-										</p>
+												<div class="text_content param_comment">
+													<p>绑定的事件</p>
+
+												</div>
+										</div>
 								</div>
 								<div class="method_param">
 									<h3>返回:</h3>
-										<p>
+										<div class="param_item">
 											<span class="param_type">$</span>
-											
-										</p>
+										</div>
 								</div>
 
 						</div>
@@ -2402,24 +2180,22 @@ jQuery的$().html()方法支持传入String和Function类型的参数，但是Mu
 							<h2>.mouseout
 									<span>(fn)</span><span class="return_type">  ⇒ $</span>
 							</h2>
-								<div class="method_detail">
-									<p>给DOM集合绑定mouseout事件或者触发mouseout事件</p>
-
-								</div>
 								<div class="method_param">
 									<h3>参数:</h3>
-										<p>
+										<div class="param_item">
 											<b class="param_name">fn</b>
 											<span class="param_type">Function</span>
-											绑定的事件
-										</p>
+												<div class="text_content param_comment">
+													<p>绑定的事件</p>
+
+												</div>
+										</div>
 								</div>
 								<div class="method_param">
 									<h3>返回:</h3>
-										<p>
+										<div class="param_item">
 											<span class="param_type">$</span>
-											
-										</p>
+										</div>
 								</div>
 
 						</div>
@@ -2428,24 +2204,22 @@ jQuery的$().html()方法支持传入String和Function类型的参数，但是Mu
 							<h2>.blur
 									<span>(fn)</span><span class="return_type">  ⇒ $</span>
 							</h2>
-								<div class="method_detail">
-									<p>给DOM集合绑定失焦事件或者触发失焦事件</p>
-
-								</div>
 								<div class="method_param">
 									<h3>参数:</h3>
-										<p>
+										<div class="param_item">
 											<b class="param_name">fn</b>
 											<span class="param_type">Function</span>
-											绑定的事件
-										</p>
+												<div class="text_content param_comment">
+													<p>绑定的事件</p>
+
+												</div>
+										</div>
 								</div>
 								<div class="method_param">
 									<h3>返回:</h3>
-										<p>
+										<div class="param_item">
 											<span class="param_type">$</span>
-											
-										</p>
+										</div>
 								</div>
 
 						</div>
@@ -2454,24 +2228,22 @@ jQuery的$().html()方法支持传入String和Function类型的参数，但是Mu
 							<h2>.focus
 									<span>(fn)</span><span class="return_type">  ⇒ $</span>
 							</h2>
-								<div class="method_detail">
-									<p>给DOM集合绑定聚焦事件或者触发聚焦事件</p>
-
-								</div>
 								<div class="method_param">
 									<h3>参数:</h3>
-										<p>
+										<div class="param_item">
 											<b class="param_name">fn</b>
 											<span class="param_type">Function</span>
-											绑定的事件
-										</p>
+												<div class="text_content param_comment">
+													<p>绑定的事件</p>
+
+												</div>
+										</div>
 								</div>
 								<div class="method_param">
 									<h3>返回:</h3>
-										<p>
+										<div class="param_item">
 											<span class="param_type">$</span>
-											
-										</p>
+										</div>
 								</div>
 
 						</div>
@@ -2480,24 +2252,22 @@ jQuery的$().html()方法支持传入String和Function类型的参数，但是Mu
 							<h2>.unload
 									<span>(fn)</span><span class="return_type">  ⇒ $</span>
 							</h2>
-								<div class="method_detail">
-									<p>给DOM集合绑定unload事件或者触发unload事件</p>
-
-								</div>
 								<div class="method_param">
 									<h3>参数:</h3>
-										<p>
+										<div class="param_item">
 											<b class="param_name">fn</b>
 											<span class="param_type">Function</span>
-											绑定的事件
-										</p>
+												<div class="text_content param_comment">
+													<p>绑定的事件</p>
+
+												</div>
+										</div>
 								</div>
 								<div class="method_param">
 									<h3>返回:</h3>
-										<p>
+										<div class="param_item">
 											<span class="param_type">$</span>
-											
-										</p>
+										</div>
 								</div>
 
 						</div>
@@ -2506,24 +2276,22 @@ jQuery的$().html()方法支持传入String和Function类型的参数，但是Mu
 							<h2>.change
 									<span>(fn)</span><span class="return_type">  ⇒ $</span>
 							</h2>
-								<div class="method_detail">
-									<p>给DOM集合绑定change事件或者触发change事件</p>
-
-								</div>
 								<div class="method_param">
 									<h3>参数:</h3>
-										<p>
+										<div class="param_item">
 											<b class="param_name">fn</b>
 											<span class="param_type">Function</span>
-											绑定的事件
-										</p>
+												<div class="text_content param_comment">
+													<p>绑定的事件</p>
+
+												</div>
+										</div>
 								</div>
 								<div class="method_param">
 									<h3>返回:</h3>
-										<p>
+										<div class="param_item">
 											<span class="param_type">$</span>
-											
-										</p>
+										</div>
 								</div>
 
 						</div>
@@ -2532,24 +2300,22 @@ jQuery的$().html()方法支持传入String和Function类型的参数，但是Mu
 							<h2>.select
 									<span>(fn)</span><span class="return_type">  ⇒ $</span>
 							</h2>
-								<div class="method_detail">
-									<p>给DOM集合绑定select事件或者触发select事件</p>
-
-								</div>
 								<div class="method_param">
 									<h3>参数:</h3>
-										<p>
+										<div class="param_item">
 											<b class="param_name">fn</b>
 											<span class="param_type">Function</span>
-											绑定的事件
-										</p>
+												<div class="text_content param_comment">
+													<p>绑定的事件</p>
+
+												</div>
+										</div>
 								</div>
 								<div class="method_param">
 									<h3>返回:</h3>
-										<p>
+										<div class="param_item">
 											<span class="param_type">$</span>
-											
-										</p>
+										</div>
 								</div>
 
 						</div>
@@ -2558,24 +2324,22 @@ jQuery的$().html()方法支持传入String和Function类型的参数，但是Mu
 							<h2>.submit
 									<span>(fn)</span><span class="return_type">  ⇒ $</span>
 							</h2>
-								<div class="method_detail">
-									<p>给DOM集合绑定submit事件或者触发submit事件</p>
-
-								</div>
 								<div class="method_param">
 									<h3>参数:</h3>
-										<p>
+										<div class="param_item">
 											<b class="param_name">fn</b>
 											<span class="param_type">Function</span>
-											绑定的事件
-										</p>
+												<div class="text_content param_comment">
+													<p>绑定的事件</p>
+
+												</div>
+										</div>
 								</div>
 								<div class="method_param">
 									<h3>返回:</h3>
-										<p>
+										<div class="param_item">
 											<span class="param_type">$</span>
-											
-										</p>
+										</div>
 								</div>
 
 						</div>
@@ -2584,24 +2348,22 @@ jQuery的$().html()方法支持传入String和Function类型的参数，但是Mu
 							<h2>.keydown
 									<span>(fn)</span><span class="return_type">  ⇒ $</span>
 							</h2>
-								<div class="method_detail">
-									<p>给DOM集合绑定keydown事件或者触发keydown事件</p>
-
-								</div>
 								<div class="method_param">
 									<h3>参数:</h3>
-										<p>
+										<div class="param_item">
 											<b class="param_name">fn</b>
 											<span class="param_type">Function</span>
-											绑定的事件
-										</p>
+												<div class="text_content param_comment">
+													<p>绑定的事件</p>
+
+												</div>
+										</div>
 								</div>
 								<div class="method_param">
 									<h3>返回:</h3>
-										<p>
+										<div class="param_item">
 											<span class="param_type">$</span>
-											
-										</p>
+										</div>
 								</div>
 
 						</div>
@@ -2610,24 +2372,22 @@ jQuery的$().html()方法支持传入String和Function类型的参数，但是Mu
 							<h2>.keypress
 									<span>(fn)</span><span class="return_type">  ⇒ $</span>
 							</h2>
-								<div class="method_detail">
-									<p>给DOM集合绑定keypress事件或者触发keypress事件</p>
-
-								</div>
 								<div class="method_param">
 									<h3>参数:</h3>
-										<p>
+										<div class="param_item">
 											<b class="param_name">fn</b>
 											<span class="param_type">Function</span>
-											绑定的事件
-										</p>
+												<div class="text_content param_comment">
+													<p>绑定的事件</p>
+
+												</div>
+										</div>
 								</div>
 								<div class="method_param">
 									<h3>返回:</h3>
-										<p>
+										<div class="param_item">
 											<span class="param_type">$</span>
-											
-										</p>
+										</div>
 								</div>
 
 						</div>
@@ -2636,24 +2396,22 @@ jQuery的$().html()方法支持传入String和Function类型的参数，但是Mu
 							<h2>.keyup
 									<span>(fn)</span><span class="return_type">  ⇒ $</span>
 							</h2>
-								<div class="method_detail">
-									<p>给DOM集合绑定keyup事件或者触发keyup事件</p>
-
-								</div>
 								<div class="method_param">
 									<h3>参数:</h3>
-										<p>
+										<div class="param_item">
 											<b class="param_name">fn</b>
 											<span class="param_type">Function</span>
-											绑定的事件
-										</p>
+												<div class="text_content param_comment">
+													<p>绑定的事件</p>
+
+												</div>
+										</div>
 								</div>
 								<div class="method_param">
 									<h3>返回:</h3>
-										<p>
+										<div class="param_item">
 											<span class="param_type">$</span>
-											
-										</p>
+										</div>
 								</div>
 
 						</div>
@@ -2662,24 +2420,22 @@ jQuery的$().html()方法支持传入String和Function类型的参数，但是Mu
 							<h2>.error
 									<span>(fn)</span><span class="return_type">  ⇒ $</span>
 							</h2>
-								<div class="method_detail">
-									<p>给DOM集合绑定error事件或者触发error事件</p>
-
-								</div>
 								<div class="method_param">
 									<h3>参数:</h3>
-										<p>
+										<div class="param_item">
 											<b class="param_name">fn</b>
 											<span class="param_type">Function</span>
-											绑定的事件
-										</p>
+												<div class="text_content param_comment">
+													<p>绑定的事件</p>
+
+												</div>
+										</div>
 								</div>
 								<div class="method_param">
 									<h3>返回:</h3>
-										<p>
+										<div class="param_item">
 											<span class="param_type">$</span>
-											
-										</p>
+										</div>
 								</div>
 
 						</div>
@@ -2688,24 +2444,22 @@ jQuery的$().html()方法支持传入String和Function类型的参数，但是Mu
 							<h2>.contextmenu
 									<span>(fn)</span><span class="return_type">  ⇒ $</span>
 							</h2>
-								<div class="method_detail">
-									<p>给DOM集合绑定contextmenu事件或者触发keyup事件</p>
-
-								</div>
 								<div class="method_param">
 									<h3>参数:</h3>
-										<p>
+										<div class="param_item">
 											<b class="param_name">fn</b>
 											<span class="param_type">Function</span>
-											绑定的事件
-										</p>
+												<div class="text_content param_comment">
+													<p>绑定的事件</p>
+
+												</div>
+										</div>
 								</div>
 								<div class="method_param">
 									<h3>返回:</h3>
-										<p>
+										<div class="param_item">
 											<span class="param_type">$</span>
-											
-										</p>
+										</div>
 								</div>
 
 						</div>
@@ -2714,24 +2468,22 @@ jQuery的$().html()方法支持传入String和Function类型的参数，但是Mu
 							<h2>.scroll
 									<span>(fn)</span><span class="return_type">  ⇒ $</span>
 							</h2>
-								<div class="method_detail">
-									<p>给DOM集合绑定scroll事件</p>
-
-								</div>
 								<div class="method_param">
 									<h3>参数:</h3>
-										<p>
+										<div class="param_item">
 											<b class="param_name">fn</b>
 											<span class="param_type">Function</span>
-											绑定的事件
-										</p>
+												<div class="text_content param_comment">
+													<p>绑定的事件</p>
+
+												</div>
+										</div>
 								</div>
 								<div class="method_param">
 									<h3>返回:</h3>
-										<p>
+										<div class="param_item">
 											<span class="param_type">$</span>
-											
-										</p>
+										</div>
 								</div>
 
 						</div>
@@ -2740,10 +2492,6 @@ jQuery的$().html()方法支持传入String和Function类型的参数，但是Mu
 							<h2>send
 									<span>()</span>
 							</h2>
-								<div class="method_detail">
-									<p>发送一个请求</p>
-
-								</div>
 
 						</div>
 						<a name="xmlhttp.onerror"></a>
@@ -2751,10 +2499,6 @@ jQuery的$().html()方法支持传入String和Function类型的参数，但是Mu
 							<h2>xmlhttp.onerror
 									<span>()</span>
 							</h2>
-								<div class="method_detail">
-									<p>没有网络连接</p>
-
-								</div>
 
 						</div>
 						<a name="$.ajax"></a>
@@ -2764,10 +2508,9 @@ jQuery的$().html()方法支持传入String和Function类型的参数，但是Mu
 							</h2>
 								<div class="method_param">
 									<h3>返回:</h3>
-										<p>
+										<div class="param_item">
 											<span class="param_type">ajaxObj</span>
-											
-										</p>
+										</div>
 								</div>
 
 						</div>
@@ -2778,10 +2521,9 @@ jQuery的$().html()方法支持传入String和Function类型的参数，但是Mu
 							</h2>
 								<div class="method_param">
 									<h3>返回:</h3>
-										<p>
+										<div class="param_item">
 											<span class="param_type">ajaxObj</span>
-											
-										</p>
+										</div>
 								</div>
 
 						</div>
@@ -2792,10 +2534,9 @@ jQuery的$().html()方法支持传入String和Function类型的参数，但是Mu
 							</h2>
 								<div class="method_param">
 									<h3>返回:</h3>
-										<p>
+										<div class="param_item">
 											<span class="param_type">ajaxObj</span>
-											
-										</p>
+										</div>
 								</div>
 
 						</div>

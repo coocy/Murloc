@@ -28,10 +28,12 @@ body,td{
 }
 a{
 	text-decoration:none;
-	color:#d80c18;
+	color:#A00E0E;
 	-webkit-touch-callout:none;
 }
-
+a:hover{
+	text-decoration:underline;
+}
 textarea,
 input[type="text"],
 input[type="password"],
@@ -115,11 +117,11 @@ select{
 }
 .titlebar h1{
 	padding:.5em 0;
-	background:url(logo@2x.png) 0 50% no-repeat;
+	background:url(logo@2x.png) .5em 50% no-repeat;
 	background-size:auto 40px;
-	text-indent:2em;
+	text-indent:2.5em;
 	color:#8A2809;
-	font-family:'League Gothic',Impact;
+	font-family:'League Gothic',Helvetica;
 	font-weight:normal;
 }
 .titlebar h1 span{
@@ -138,6 +140,7 @@ select{
 .sidebar .method_list a:hover{
 	background-color:#eee;
 	color:#444;
+	text-decoration:none;
 }
 .sidebar .footer{
 	padding:1em;
@@ -200,7 +203,7 @@ select{
 	padding:.8em 0 .3em;
 	font-size:1em;
 }
-.method_param p{
+.method_param .param_item{
 	position:relative;
 	padding-left:1.2em;
 }
@@ -211,7 +214,7 @@ select{
 .method_param .param_type{
 	margin-right:.3em;
 }
-.method_param p:before{
+.method_param .param_item:before{
 	content:"";
 	display:block;
 	position:absolute;
@@ -221,6 +224,9 @@ select{
 	border-radius:3px;
 	left:.5em;
 	top:.7em;
+}
+.param_item .param_comment{
+	padding:.5em 0;
 }
 .param_type{
 	color:#888;
@@ -255,4 +261,7 @@ code{
 .text_content h3{
 	padding:.5em 0;
 	color:#000;
+}
+.text_content ol{
+	margin:.2em 0;
 }

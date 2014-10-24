@@ -1,4 +1,5 @@
 /**
+ * @preserve
  * Murloc JavaScript Library v@VERSION
  * https://github.com/coocy/Murloc
  *

@@ -67,7 +67,7 @@ $.prototype.css =  function(key, value) {
 			var _value =  key[k];
 			k = $.camelCase(k);
 			k = correctCssKey(k, element);
-			if (_value !== '' && !isNaN(_value) && 'opacity|zIndex|lineHeight|zoom|fontWeight'.indexOf(k) < 0) {
+			if (_value !== '' && !isNaN(_value) && 'opacity|zIndex|lineHeight|zoom|fontWeight'.indexOf(k) < 0 && k.indexOf('Duration') < 0) {
 				_value += 'px';
 			}
 

@@ -36,7 +36,7 @@ var
 	UA = NA.userAgent,
 
 	/** @type {boolean} */
-	IsAndroid = (/Android|HTC/i.test(UA) || /Linux/i.test(NA.platform + '')), /* HTC Flyer平板的UA字符串中不包含Android关键词 */
+	IsAndroid = (/Android|HTC/i.test(UA) || (IsTouch && /Linux/i.test(NA.platform + ''))), /* HTC Flyer平板的UA字符串中不包含Android关键词 */
 
 	/** @type {boolean} */
 	IsIPad = !IsAndroid && /iPad/i.test(UA),

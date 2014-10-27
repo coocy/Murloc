@@ -16,7 +16,7 @@
 
  	},
  	always: function(ajaxObj, statusText) {
-	
+
  	},
  * 	...
  * }); //写入数据并发送POST请求，如果是GET请求则使用$().get(getUrl)方法
@@ -44,6 +44,7 @@ ajaxObj.prototype = {
 			options.url = url;
 		} else if ('object' == typeof url) {
 			settings = url;
+			options.url = settings.url;
 		} else {
 			url = '';
 		}
@@ -174,7 +175,7 @@ ajaxObj.prototype = {
 
 			/* ZTE中兴手机自带浏览器发送的Accept头导致某些服务端解析出错，强制覆盖一下 */
 			xmlhttp.setRequestHeader('Accept', '*/*');
-			
+
 			this.timoutFired = false;
 			xmlhttp.send(queryString);
 			this.isLoading =  true;
@@ -226,7 +227,7 @@ ajaxObj.prototype = {
 			self.abort();
 			self.timoutFired = true;
 			self._onFail('timeout');
-		}.bind({timer: this.timer}), options.timeout * 1000); 
+		}.bind({timer: this.timer}), options.timeout * 1000);
 
 	},
 

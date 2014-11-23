@@ -252,13 +252,33 @@ $.ajax = function(url, settings) {
 /**
  * @return {ajaxObj}
  */
-$.get = function(url, settings) {
-	return new ajaxObj(url, settings).get();
+$.get = function(url, data, callback, type) {
+	if ($.isFunction(data)) {
+		type = type || callback;
+		callback = data;
+		data = undefined;
+	}
+
+	return new ajaxObj(url, {
+		dataType: type,
+		data: data,
+		success: callback
+	}).get();
 };
 
 /**
  * @return {ajaxObj}
  */
-$.post = function(url, settings) {
-	return new ajaxObj(url, settings).post();
+$.post = function(url, data, callback, type) {
+	if ($.isFunction(data)) {
+		type = type || callback;
+		callback = data;
+		data = undefined;
+	}
+
+	return new ajaxObj(url, {
+		dataType: type,
+		data: data,
+		success: callback
+	}).post();
 };

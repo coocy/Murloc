@@ -244,10 +244,14 @@ var $ = function(selector, context) {
 		return selector;
 	} else
 
+	if ($.isFunction(selector)) {
+		$.ready(selector);
+	} else
+
 	if (selector.length) { //数组或者类数组
 		this.context = _concat.apply([], selector);
 		this.length = this.context.length;
-	}
+	} else
 
 	return this;
 };

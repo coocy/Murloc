@@ -41,6 +41,9 @@
 		$(document).ready(makeHandler("f"));
 		equal(order.pop(), "f", "Event handler should execute immediately");
 
+		$(makeHandler("g"));
+		equal(order.pop(), "g", "Event handler should execute immediately");
+
 	});
 
 })();

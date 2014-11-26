@@ -181,7 +181,7 @@ if (IsAndroid) {
 
 /**
  * @constructor
- * @param {(Element|$|string)=} selector
+ * @param {(Element|$|string|Function)=} selector
  * @param {(Element|$|string)=} context (可选)
  * @return {$}
 */

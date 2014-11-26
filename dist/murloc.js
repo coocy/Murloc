@@ -1,4 +1,5 @@
 /**
+ * @preserve
  * Murloc JavaScript Library v@VERSION
  * https://github.com/coocy/Murloc
  *
@@ -50,7 +51,7 @@ var
 	UA = NA.userAgent,
 
 	/** @type {boolean} */
-	IsAndroid = (/Android|HTC/i.test(UA) || /Linux/i.test(NA.platform + '')), /* HTC Flyer平板的UA字符串中不包含Android关键词 */
+	IsAndroid = (/Android|HTC/i.test(UA) || (IsTouch && /Linux/i.test(NA.platform + ''))), /* HTC Flyer平板的UA字符串中不包含Android关键词 */
 
 	/** @type {boolean} */
 	IsIPad = !IsAndroid && /iPad/i.test(UA),
@@ -195,7 +196,7 @@ if (IsAndroid) {
 
 /**
  * @constructor
- * @param {(Element|$|string)=} selector
+ * @param {(Element|$|string|Function)=} selector
  * @param {(Element|$|string)=} context (可选)
  * @return {$}
 */
@@ -258,10 +259,14 @@ var $ = function(selector, context) {
 		return selector;
 	} else
 
+	if ($.isFunction(selector)) {
+		$.ready(selector);
+	} else
+
 	if (selector.length) { //数组或者类数组
 		this.context = _concat.apply([], selector);
 		this.length = this.context.length;
-	}
+	} else
 
 	return this;
 };
@@ -2667,8 +2672,10 @@ $.parseJSON = JSON.parse;
  */
 
 /**
- * 工具类
- * author binnng
+ * 加载js
+ * @param {String} url js文件路径
+ * @param {Function} callback 加载完成后的回调
+ * @param {Array} opts 传给回调的参数
  */
 
 $.getScript = function(url, callback, opts) {
@@ -2695,6 +2702,10 @@ $.getScript = function(url, callback, opts) {
 	elHead.appendChild(elScript);
 };
 
+/**
+ * 加载css
+ * @param {String} url css文件路径
+ */
 $.getCSS = function(url) {
 	var elHead = DOC.getElementsByTagName('head')[0] || DOC.body,
 		elLink = DOC.createElement('link');
@@ -2839,49 +2850,6 @@ var Notification = {
 var URL = {
 
 	/**
-	 * 根据传入的query字符串返回键值对形式的对象
-	 * @param {string} queryString query字符串
-	 * @return {Object}
-	 */
-	getQueryData: function(queryString) {
-		
-		/* 去掉字符串前面的"?"，并把&amp;转换为& */
-		queryString = queryString.replace(/^\?+/, '').replace(/&amp;/, '&');
-		var querys = queryString.split('&'),
-			i = querys.length,
-			_URLParms = {},
-			item;
-		
-		while (i--) {
-			item = querys[i].split('=');
-			if (item[0]) {
-				var value = item[1] || '';
-				try {
-					value = decodeURIComponent(value);
-				} catch(e) {
-					value = unescape(value);
-				}
-				_URLParms[decodeURIComponent(item[0])] =  value;
-			}
-		}
-		return _URLParms;
-	},
-
-	/**
-	 * 获取当前页面或者指定DOM对象的URL中的指定的GET参数的值
-	 * @param {string} key 要获取的GET参数的键
-	 * @param {Element} el 如此传递此参数，则获取这个DOM对象的url，如果不传则获取当前页面的url
-	 * @return {?string}
-	 */
-	getQueryString: function(key, el) {
-		var parms,
-			queryString = el ? URL.getElSearchString(el) : WIN.location.search.substring(1);
-
-		parms = URL.getQueryData(queryString);
-		return (key in parms) ? parms[key] : null;
-	},
-
-	/**
 	 * 获取指定DOM对象的链接地址的queryString
 	 * @param {Element} el 要获取参数的DOM对象
 	 * @return {string}
@@ -2892,7 +2860,7 @@ var URL = {
 			searchString = el.search || '';
 		if (!searchString) {
 			var hrefString = ('FORM' == el.nodeName ? el.getAttribute('action') : el.getAttribute('href')),
-				pos = hrefString.indexOf('?');	
+				pos = hrefString.indexOf('?');
 			if (-1 !== pos) {
 				searchString = hrefString.slice(pos);
 			}
@@ -2913,7 +2881,7 @@ var URL = {
 			_key,
 			_value,
 			hrefString = '';
-			
+
 		/* 非<A>对象没有search属性 */
 		if (!elSearch) {
 			/** @type {string} */
@@ -2950,53 +2918,104 @@ var URL = {
 				_searchString = hrefString.slice(startPos + 1, endPos);
 			}
 		}
-		
-		var URLParms = URL.getQueryData(_searchString), /* 获取对象原有的GET参数 */
+
+		var URLParms = $.paramData(_searchString), /* 获取对象原有的GET参数 */
 			_result = [];
 
 		/* 把新参数和对象原有的GET参数合并 */
 		for (_key in data) {
 			URLParms[_key] = data[_key];
 		}
-		
+
 		for (_key in URLParms) {
 			_value = URLParms[_key];
 			_result.push(_key + (_value ? ('=' + encodeURIComponent(_value)) : ''));
 		}
 		if (_result.length < 1) return;
-		
+
 		var newSearchString = '?' + _result.join('&');
-	
+
 		if (elSearch) {
 			elTag.search = newSearchString;
 		} else {
 			var attri = ('FORM' == nodeName) ? 'action' : 'href';
 			el.attr(attri, hrefString.slice(0, startPos) + newSearchString + hrefString.slice(endPos));
 		}
-	},
-
-	/**
-	 * 参数对象转为查询字符串片段
-	 */
-	objToQueryString: function(obj) {
-		var result = [], key, value, i;
-		for (key in obj) {
-			value = obj[key];
-			if (value instanceof Array) {
-				for (i = value.length; i--;) {
-					result.push(key + '[]=' + encodeURIComponent(value[i]));
-				}
-			} else {
-				result.push(key + '=' + encodeURIComponent('undefined' === typeof value ? '' : value));
-			}
-		}
-		return result.join('&');
 	}
 };
 
+/**
+ * 把一个Object对象序列化成查询字符串形式
+ * @param {Object} obj 需要序列化的Object
+ * @return {string} 序列化的查询字符串
+ */
 $.param = function(obj) {
-	return URL.objToQueryString(obj);
-}
+	var result = [], key, value, i;
+	for (key in obj) {
+		value = obj[key];
+		if (value instanceof Array) {
+			for (i = value.length; i--;) {
+				result.push(key + '[]=' + encodeURIComponent(value[i]));
+			}
+		} else {
+			result.push(key + '=' + encodeURIComponent(undefined === value ? '' : value));
+		}
+	}
+	return result.join('&');
+};
+
+/**
+ * 把查询字符串转换为Object对象
+ * @param {string} queryString 查询字符串
+ * @return {Object} Object对象
+ */
+$.paramData = function(queryString) {
+
+	//去掉字符串前面的"?"，并把&amp;转换为&
+	queryString = queryString.replace(/^\?+/, '').replace(/&amp;/, '&');
+	var querys = queryString.split('&'),
+		i = querys.length,
+		parms = {},
+		item;
+
+	while (i--) {
+		item = querys[i].split('=');
+		if (item[0]) {
+			var value = item[1] || '';
+			try {
+				value = decodeURIComponent(value);
+			} catch(e) {
+				value = unescape(value);
+			}
+			parms[decodeURIComponent(item[0])] =  value;
+		}
+	}
+	return parms;
+};
+
+/**
+ * 获取或者设置当前页面的查询字符串中指定的key的值
+ * @param {string=} key
+ * @param {string=} value
+ * @return {string=} 指定的key的value；
+ * 1. 如果不传入key和value，则返回完整的查询字符串；
+ * 2. 如果只传了key，则返回查询字符串中对应的key的值
+ * 3. 如果传了key和value，则设置查询字符串中对应的key值为value，无返回值
+ */
+$.query = function(key, value) {
+	var queryString = WIN.location.search.substring(1),
+		argLength = arguments.length;
+	if (argLength < 1) {
+		return queryString;
+	} else {
+		var paramData = $.paramData(queryString);
+		if (argLength < 2) {
+			return paramData[key];
+		} else {
+			paramData[key] = value;
+		}
+	}
+};
 
 $.getUrlParam = function(key, el) {
 	return URL.getQueryString(key, el);
@@ -3814,9 +3833,8 @@ $.prototype.data = function(key, value) {
 	// $(selector).data(obj[, undefined])
 	if ('string' === typeof key) {
 		var _key = {};
-		if (undefined !== value) {
-			_key[key + ''] = value;
-		}
+		        _key[key + ''] = value;
+
 		key = _key;
 	}
 
@@ -4066,7 +4084,7 @@ $.prototype.css =  function(key, value) {
 			var _value =  key[k];
 			k = $.camelCase(k);
 			k = correctCssKey(k, element);
-			if (_value !== '' && !isNaN(_value) && 'opacity|zIndex|lineHeight|zoom|fontWeight'.indexOf(k) < 0) {
+			if (_value !== '' && !isNaN(_value) && 'opacity|zIndex|lineHeight|zoom|fontWeight'.indexOf(k) < 0 && k.indexOf('Duration') < 0) {
 				_value += 'px';
 			}
 
@@ -5328,6 +5346,7 @@ ajaxObj.prototype = {
 			options.url = url;
 		} else if ('object' == typeof url) {
 			settings = url;
+			options.url = settings.url;
 		} else {
 			url = '';
 		}
@@ -5458,7 +5477,6 @@ ajaxObj.prototype = {
 
 			/* ZTE中兴手机自带浏览器发送的Accept头导致某些服务端解析出错，强制覆盖一下 */
 			xmlhttp.setRequestHeader('Accept', '*/*');
-			
 			this.timoutFired = false;
 			xmlhttp.send(queryString);
 			this.isLoading =  true;
@@ -5508,7 +5526,7 @@ ajaxObj.prototype = {
 			self.abort();
 			self.timoutFired = true;
 			self._onFail('timeout');
-		}.bind({timer: this.timer}), options.timeout * 1000); 
+		}.bind({timer: this.timer}), options.timeout * 1000);
 
 	},
 
@@ -5533,15 +5551,35 @@ $.ajax = function(url, settings) {
 /**
  * @return {ajaxObj}
  */
-$.get = function(url, settings) {
-	return new ajaxObj(url, settings).get();
+$.get = function(url, data, callback, type) {
+	if ($.isFunction(data)) {
+		type = type || callback;
+		callback = data;
+		data = undefined;
+	}
+
+	return new ajaxObj(url, {
+		dataType: type,
+		data: data,
+		success: callback
+	}).get();
 };
 
 /**
  * @return {ajaxObj}
  */
-$.post = function(url, settings) {
-	return new ajaxObj(url, settings).post();
+$.post = function(url, data, callback, type) {
+	if ($.isFunction(data)) {
+		type = type || callback;
+		callback = data;
+		data = undefined;
+	}
+
+	return new ajaxObj(url, {
+		dataType: type,
+		data: data,
+		success: callback
+	}).post();
 };
 
 /**

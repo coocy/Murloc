@@ -9,5 +9,6 @@ var Compressor = require('./compress.js');
 
 //生成压缩文件
 (new Compressor).compress('../src/Murloc.js', '../dist/murloc.min.js', {
-	'compilation_level': 'SIMPLE_OPTIMIZATIONS'
+	'compilation_level': 'SIMPLE_OPTIMIZATIONS',
+	'output_wrapper': '(function(){%output%;window.$=$})()'
 });

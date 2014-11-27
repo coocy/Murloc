@@ -3833,8 +3833,9 @@ $.prototype.data = function(key, value) {
 	// $(selector).data(obj[, undefined])
 	if ('string' === typeof key) {
 		var _key = {};
-		        _key[key + ''] = value;
-
+		if (undefined !== value) {
+			_key[key + ''] = value;
+		}
 		key = _key;
 	}
 
@@ -5326,6 +5327,7 @@ $.prototype.scroll = function(fn) {
  */
 
 var blankFn = function() {};
+var IsSupportFormData = ('undefined' !== typeof FormData);
 
 /**
  * Ajax object
@@ -5358,6 +5360,7 @@ ajaxObj.prototype = {
 		options.done = settings.done || settings.success || blankFn;
 		options.fail = settings.fail || settings.error || blankFn;
 		options.always = settings.always || settings.complete || blankFn;
+		options.uploadProgress = settings.uploadProgress || null;
 
 		//Settings
 		options.cache = !!settings.cache;
@@ -5460,9 +5463,17 @@ ajaxObj.prototype = {
 
 			var data = options.data,
 				queryString = ('string' == typeof data) ? data : $.param(data),
-				url = options.url;
+				url = options.url,
+				useFormData = false;
 
-			if ('GET' == options.type) {
+			if (IsSupportFormData && (true === data instanceof(FormData))) {
+				queryString = data;
+				useFormData = true;
+			} else {
+				queryString = ('string' == typeof data) ? data : $.param(data);
+			}
+
+			if ('GET' == options.type && !useFormData) {
 
 				/* 如果原url后包含queryString的话则将新数据使用&附加到末尾 */
 				var c = '';
@@ -5472,7 +5483,13 @@ ajaxObj.prototype = {
 				xmlhttp.open('get', url + c + queryString, true);
 			} else {
 				xmlhttp.open('post', url, true);
-				xmlhttp.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
+				if (useFormData) {
+					if ('upload' in xmlhttp) {
+						xmlhttp['upload']['onprogress'] = options.uploadProgress;
+					}
+				} else {
+					xmlhttp.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
+				}
 			}
 
 			/* ZTE中兴手机自带浏览器发送的Accept头导致某些服务端解析出错，强制覆盖一下 */
@@ -5581,6 +5598,5 @@ $.post = function(url, data, callback, type) {
 		success: callback
 	}).post();
 };
-
 /**
  */

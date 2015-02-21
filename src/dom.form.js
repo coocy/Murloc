@@ -26,7 +26,7 @@ $.prototype.serialize = function(returnObject) {
 		if ('FORM' == elementNodeName) {
 			$().extend(result, $(element.elements).serialize(true));
 		} else {
-			var elementName = element.name, 
+			var elementName = element.name,
 				elementType,
 				elementValue;
 
@@ -48,11 +48,11 @@ $.prototype.serialize = function(returnObject) {
 				} else {
 					addValue(elementName, elementValue);
 				}
-			}		
+			}
 		}
 	});
 
-	return returnObject ? result : $().param(result);
+	return returnObject ? result : $.param(result);
 };
 
 /**

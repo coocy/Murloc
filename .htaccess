@@ -4,11 +4,11 @@ Options +FollowSymLinks -Indexes
 
 <IfModule mod_rewrite.c>
  RewriteEngine On
- 
- RewriteRule ^.+\.min\.js$ _include/compress_test.php [L]
+
+ #RewriteRule ^.+\.min\.js$ _include/compress_test.php [L]
  RewriteRule ^.+\.(js|css)$ _include/static.php [L]
  RewriteRule ^.+\.js\.html$ _include/compress_test.php [L]
- 
+
 
 
 </IfModule>

@@ -197,6 +197,9 @@ Compressor.prototype = {
 					compressParamsArray.push('--' + paramName + ' ' + _key + '=' + paramValue[_key]);
 				}
 			} else {
+				if (paramValue !== '') {
+					paramValue =  '\'' + paramValue.replace('\'', '\\\\\'') + '\'';
+				}
 				compressParamsArray.push('--' + paramName + ' ' + paramValue);
 			}
 		}

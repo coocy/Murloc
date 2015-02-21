@@ -1,5 +1,5 @@
 /**
- * @requires ../../src/Murloc.js
+ * @requires ../../../src/Murloc.js
  */
 
 $('table td').on('click', function(e) {

@@ -5,7 +5,9 @@
  *
  * Includes Sizzle.js
  * http://sizzlejs.com/
- *
+ */
+
+/**
  * Date: @DATE
  *
  * ==ClosureCompiler==

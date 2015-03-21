@@ -5,7 +5,7 @@
 	<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 	<meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0" />
 	<meta content="" name="description" />
-	<link rel="stylesheet" type="text/css" href="${www_root}test/styles/styles.css" />
+	<link rel="stylesheet" type="text/css" href="styles/styles.css" />
 	<style type="text/css">
 		body{
 			-webkit-user-select:none;
@@ -57,11 +57,11 @@
 </head>
 <body>
 	<div class="wrap">
-		<p><a href="">Jump Link</a></p>
+		<p><a href="" rel="external">Jump Link</a></p>
 		<div id="box_div"><p id="box_p">box</div>
 		<div class="div_a">div A</div>
 		<div class="div_b">div B</div>
-		
+
 		<a class="link" href="#link">Link</a>
 
 		<table>
@@ -77,8 +77,10 @@
 
 		<br />
 
+		<button rel="external">click</button>
+
 		<textarea rows="5" cols="10"></textarea>
-	
+
 	</div>
 
 	<form action="event.html">
@@ -86,13 +88,20 @@
 		<input type="hidden" name="form" value="1" />
 	</form>
 
-	<iframe frameborder="0" src="${www_root}test/scripts/event.js.html"></iframe>
+	<!-- <iframe frameborder="0" src="scripts/event.js.html"></iframe> -->
 
 
-	<script type="text/javascript" src="${www_root}test/scripts/event.js"></script>
+	<!-- <script type="text/javascript" src="scΩripts/event.js"></script> -->
+	<script type="text/javascript" src="../../dist/murloc.min.js"></script>
+	<script type="text/javascript">
+		$('button').click(function() {
+		    	console.log(this);
+		    	return false;
+		})
+	</script>
 
-		
+
 	</div>
-	
+
 </body>
 </html>

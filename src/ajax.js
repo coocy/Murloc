@@ -26,6 +26,8 @@
 var blankFn = function() {};
 var IsSupportFormData = ('undefined' !== typeof FormData);
 
+$._ajaxPrefilters = null;
+
 /**
  * Ajax object
  * @constructor
@@ -154,6 +156,13 @@ ajaxObj.prototype = {
 		} else {
 			this._onFail('error');
 			return this;
+		}
+
+		if ($._ajaxPrefilters) {
+			var originalOptions = $.copy(options);
+			for (var i = 0, l = $._ajaxPrefilters.length; i < l; i++) {
+				$._ajaxPrefilters[i](options, originalOptions, this);
+			}
 		}
 
 		if (false !== options.beforeSend(this, options)) {
@@ -297,4 +306,16 @@ $.post = function(url, data, callback, type) {
 		data: data,
 		success: callback
 	}).post();
+};
+
+/**
+ * Ajax的全局预处理方法
+ * @param {function(Object=, Object=, ajaxObj=)} fn
+ * @return {$}
+ */
+$.ajaxPrefilter = function(fn) {
+	if (!$._ajaxPrefilters) {
+		$._ajaxPrefilters = [];
+	}
+	$._ajaxPrefilters.push(fn);
 };

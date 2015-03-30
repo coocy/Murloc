@@ -201,6 +201,13 @@ ajaxObj.prototype = {
 			/* ZTE中兴手机自带浏览器发送的Accept头导致某些服务端解析出错，强制覆盖一下 */
 			xmlhttp.setRequestHeader('Accept', '*/*');
 
+			var headers = options.headers;
+			if (headers) {
+				for (var key in headers) {
+					xmlhttp.setRequestHeader(key, headers[key]);
+				}
+			}
+
 			this.timoutFired = false;
 			xmlhttp.send(queryString);
 			this.isLoading =  true;

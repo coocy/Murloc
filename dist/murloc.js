@@ -5332,6 +5332,8 @@ $.prototype.scroll = function(fn) {
 var blankFn = function() {};
 var IsSupportFormData = ('undefined' !== typeof FormData);
 
+$._ajaxPrefilters = null;
+
 /**
  * Ajax object
  * @constructor
@@ -5462,6 +5464,13 @@ ajaxObj.prototype = {
 			return this;
 		}
 
+		if ($._ajaxPrefilters) {
+			var originalOptions = $.copy(options);
+			for (var i = 0, l = $._ajaxPrefilters.length; i < l; i++) {
+				$._ajaxPrefilters[i](options, originalOptions, this);
+			}
+		}
+
 		if (false !== options.beforeSend(this, options)) {
 
 			var data = options.data,
@@ -5497,6 +5506,12 @@ ajaxObj.prototype = {
 
 			/* ZTE中兴手机自带浏览器发送的Accept头导致某些服务端解析出错，强制覆盖一下 */
 			xmlhttp.setRequestHeader('Accept', '*/*');
+			var headers = options.headers;
+			if (headers) {
+				for (var key in headers) {
+					xmlhttp.setRequestHeader(key, headers[key]);
+				}
+			}
 			this.timoutFired = false;
 			xmlhttp.send(queryString);
 			this.isLoading =  true;
@@ -5601,5 +5616,18 @@ $.post = function(url, data, callback, type) {
 		success: callback
 	}).post();
 };
+
+/**
+ * Ajax的全局预处理方法
+ * @param {function(Object=, Object=, ajaxObj=)} fn
+ * @return {$}
+ */
+$.ajaxPrefilter = function(fn) {
+	if (!$._ajaxPrefilters) {
+		$._ajaxPrefilters = [];
+	}
+	$._ajaxPrefilters.push(fn);
+};
+
 /**
  */

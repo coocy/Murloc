@@ -67,8 +67,8 @@ $.prototype.css =  function(key, value) {
 			var _value =  key[k];
 			k = $.camelCase(k);
 			k = correctCssKey(k, element);
-			if (_value !== '' && !isNaN(_value) && 'opacity|zIndex|lineHeight|zoom|fontWeight'.indexOf(k) < 0 && k.indexOf('Duration') < 0) {
-				_value += 'px';
+			if (_value !== '' && !isNaN(_value) && 'opacity|zIndex|lineHeight|zoom|fontWeight'.indexOf(k) < 0) {
+				_value += (k.indexOf('Duration') < 0) ? 'px': 'ms';
 			}
 
 			//IE下，设置不支持的css属性会出错

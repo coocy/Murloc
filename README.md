@@ -1,3 +1,5 @@
+
+
 # Murloc (两栖怪)
 
 （目前Murloc的web端兼容还在不断开发完善中，在移动端已经可以稳定使用）
@@ -39,7 +41,7 @@ Murloc不使用其它类库中的手动或者自动的模块按需加载方式�
 <html>
 <head>
   <title>Title</title>
-	<sctipt type="text/javascript">
+	<script type="text/javascript">
 		var s = document.createElement('script');
 		s.src = '{js_src}';
 		document.getElementsByTagName('head')[0].appendChild(s);
